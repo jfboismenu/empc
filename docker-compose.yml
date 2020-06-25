@@ -1,0 +1,6 @@
+version: '3'
+services:
+  i8086-compiler:
+    build: .
+    volumes:
+      - ".:/empc"
