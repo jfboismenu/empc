@@ -22,12 +22,21 @@
 
 all: empc tests runtests
 
+docker-image:
+	docker-compose build
+
 empc:
 	mkdir -p build
 	g++ empc.cpp -o build/libempc.so -shared -fPIC
 
 tests: empc
-	echo "tests"
+	cp tests/test_simple.py build/test_simple.py
+	docker-compose run --rm i8086-compiler bash /empc/tests/build_simple.sh /empc/build /empc/tests 8086
+	tests/build_simple.sh build tests x64
 
 runtests: tests
-	echo "runtests"
+	cd build && pytest
+
+.PHONY: clean
+clean:
+	rm -rf build

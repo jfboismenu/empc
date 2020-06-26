@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # MIT License
 #
 # Copyright (c) 2020 Jean-François Boismenu
@@ -21,13 +20,19 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from pathlib import Path
-import os
+from ctypes import CDLL, c_short, pointer, POINTER
+import pytest
 
-src = Path("/opt/sourceryg++-2016.11/bin")
-dst = Path("/usr/local/bin")
-assert src.exists()
-assert dst.exists()
 
-for executable in os.listdir(src):
-    os.symlink(src / executable, dst / executable.replace("ia16-elf-", ""))
+@pytest.fixture(scope="session")
+def lib():
+    dl = CDLL("libtestsimple.x64.so")
+    dl.test_movshort.argtypes = (POINTER(c_short),)
+    dl.test_movshort.restype = None
+    return dl
+
+
+def test_movshort(lib):
+    word = c_short(32)
+    lib.test_movshort(pointer(word))
+    assert word.value == 3

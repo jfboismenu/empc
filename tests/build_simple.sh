@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env bash
 # MIT License
 #
 # Copyright (c) 2020 Jean-François Boismenu
@@ -21,13 +21,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from pathlib import Path
-import os
+set -e
 
-src = Path("/opt/sourceryg++-2016.11/bin")
-dst = Path("/usr/local/bin")
-assert src.exists()
-assert dst.exists()
+OUTPUT_DIR=$1
+TESTS_ROOT=$2
+CPU_TARGET=$3
 
-for executable in os.listdir(src):
-    os.symlink(src / executable, dst / executable.replace("ia16-elf-", ""))
+if [ ${CPU_TARGET} == x64 ]; then
+    g++ $TESTS_ROOT/test_simple.cpp -o $OUTPUT_DIR/libtestsimple.x64.so -O0 -shared -fPIC
+else
+    g++ -o $OUTPUT_DIR/test_simple.o         -O0 -c $TESTS_ROOT/test_simple.cpp
+    ld  -o $OUTPUT_DIR/libtestsimple.8086.so -shared $OUTPUT_DIR/test_simple.o
+    objdump -Mi8086 -S $OUTPUT_DIR/libtestsimple.8086.so
+fi
