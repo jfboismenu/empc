@@ -20,33 +20,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-exclude: "docker/source.*"
-repos:
-  - repo: https://github.com/Lucas-C/pre-commit-hooks
-    rev: v1.1.7
-    hooks:
-    - id: forbid-crlf
-    - id: remove-crlf
-    - id: forbid-tabs
-    - id: remove-tabs
-    - id: insert-license
-      files: (\.yaml$)|(\.yml$)
-    - id: insert-license
-      files: (\.c$)|(\.h$)|(\.cpp$)
-      args: [--comment-style, //]
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.1.0
-    hooks:
-    - id: check-ast
-      language_version: python3
-    - id: check-case-conflict
-    - id: check-executables-have-shebangs
-    - id: check-merge-conflict
-    - id: end-of-file-fixer
-    - id: requirements-txt-fixer
-    - id: trailing-whitespace
-  - repo: https://github.com/ambv/black
-    rev: 19.10b0
-    hooks:
-    - id: black
-      language_version: python3
+all: empc tests runtests
+
+empc:
+	mkdir -p build
+	g++ empc.cpp -o build/libempc.so -shared -fPIC
+
+tests: empc
+	echo "tests"
+
+runtests: tests
+	echo "runtests"
