@@ -34,6 +34,14 @@ repos:
     - id: insert-license
       files: (\.c$)|(\.h$)|(\.cpp$)
       args: [--comment-style, //]
+
+  - repo: https://gitlab.com/daverona/pre-commit-cpp
+    rev: 0.6.0          # use the most recent version
+    hooks:
+    - id: clang-format  # formatter of C/C++ code based on a style guide: LLVM, Google, Chromium, Mozilla, and WebKit available
+      args: [-style=WebKit]
+    - id: cppcheck      # static analyzer of C/C++ code
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.1.0
     hooks:

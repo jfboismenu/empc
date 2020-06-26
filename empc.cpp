@@ -21,47 +21,64 @@
 // SOFTWARE.
 
 union MainRegisters {
-    struct {
+    struct
+    {
     public:
         unsigned char al;
         unsigned char ah;
+
     private:
         short _pad0;
+
     public:
         unsigned char bl;
         unsigned char bh;
+
     private:
         short _pad1;
+
     public:
         unsigned char cl;
         unsigned char ch;
+
     private:
         short _pad2;
+
     public:
         unsigned char dl;
         unsigned char dh;
+
     private:
         short _pad3;
     } r8;
-    struct {
+    struct
+    {
     public:
         short ax;
+
     private:
         short _pad0;
+
     public:
         short bx;
+
     private:
         short _pad1;
+
     public:
         short cx;
+
     private:
         short _pad2;
+
     public:
         short dx;
+
     private:
         short _pad3;
     } r16;
-    struct {
+    struct
+    {
         int eax;
         int ebx;
         int ecx;
@@ -70,25 +87,34 @@ union MainRegisters {
 };
 
 union IndexRegisters {
-    struct {
+    struct
+    {
     public:
         short si;
+
     private:
         short _pad0;
+
     public:
         short di;
+
     private:
         short _pad1;
+
     public:
         short bp;
+
     private:
         short _pad2;
+
     public:
         short sp;
+
     private:
         short _pad3;
     } r16;
-    struct {
+    struct
+    {
         int esi;
         int edi;
         int ebp;
@@ -119,14 +145,13 @@ public:
     SegmentSelectors ss;
 };
 
-
-class CPU
-{
+class CPU {
 private:
     Registers _regs;
 };
 
-extern "C" int foo()
+extern "C" int
+foo()
 {
     return 0;
 }
