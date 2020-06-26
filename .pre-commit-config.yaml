@@ -20,10 +20,26 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-FROM centos
-RUN yum -y install bzip2 which python3
-RUN mkdir /tmp/docker
-COPY docker/* /tmp/docker/
-RUN mkdir -p /opt
-RUN tar xjvf /tmp/docker/sourceryg++-2016.11-64-ia16-elf-x86_64-linux-gnu.tar.bz2 -C /opt
-RUN /tmp/docker/symlink-sourcery.py
+exclude: "docker/source.*"
+repos:
+  - repo: https://github.com/Lucas-C/pre-commit-hooks
+    rev: v1.1.7
+    hooks:
+    - id: insert-license
+      files: (\.yaml$)|((\.yml$))
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.1.0
+    hooks:
+    - id: check-ast
+      language_version: python3
+    - id: check-case-conflict
+    - id: check-executables-have-shebangs
+    - id: check-merge-conflict
+    - id: end-of-file-fixer
+    - id: requirements-txt-fixer
+    - id: trailing-whitespace
+  - repo: https://github.com/ambv/black
+    rev: 19.10b0
+    hooks:
+    - id: black
+      language_version: python3
