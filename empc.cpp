@@ -150,8 +150,53 @@ private:
     Registers _regs;
 };
 
-extern "C" int
-foo()
+// resets regs, including sp and bp.
+extern "C" void
+reset()
+{
+}
+
+extern "C" void
+write_memory(int start, void* data, int size)
+{
+}
+
+extern "C" void
+push_byte(unsigned char byte)
+{
+}
+
+extern "C" void
+push_word(unsigned short word)
+{
+}
+
+extern "C" unsigned char
+pop_byte()
+{
+    return 0;
+}
+
+extern "C" unsigned short
+pop_word()
+{
+    return 0;
+}
+
+extern "C" void
+call(unsigned int addr)
+{
+    // Execute until the program counter is set to the return value
+}
+
+extern "C" unsigned char
+read_byte(unsigned int addr)
+{
+    return 0;
+}
+
+extern "C" unsigned short
+read_word(unsigned int addr)
 {
     return 0;
 }

@@ -24,3 +24,7 @@ extern "C" void test_movshort(short* word)
 {
     *word = 3;
 }
+
+extern "C" void test_ret()
+{
+}
