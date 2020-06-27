@@ -20,19 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-BUILD_DIR=build
+BUILD_DIR=../build
+SRC_DIR=../src
 
-all: empc tests runtests
-
-empc:
-	cd src && make
-
-tests: empc
-	cd tests && make
-
-runtests: tests
-	cd build && pytest
-
-.PHONY: clean
-clean:
-	rm -rf $(BUILD_DIR)
+all:
+	nasm -f bin test_mov.asm -o "$(BUILD_DIR)/test_mov.bin"
+	g++ test_instructions.cpp -I "$(SRC_DIR)" -Wall -Werror -O3 -std=c++2a -shared -fPIC -o "$(BUILD_DIR)/libtest-instructions.so"
+	cp *.py "$(BUILD_DIR)"
