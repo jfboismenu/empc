@@ -26,9 +26,17 @@
 
 namespace empc {
 
+template <typename MemoryAccessor>
 class CPU {
+public:
+    CPU();
+    void emulate_once();
+    const Registers& registers() const;
+    Registers& registers();
+
 private:
-    // Registers _regs;
+    MemoryAccessor _memory;
+    Registers _regs;
 };
 
 }
