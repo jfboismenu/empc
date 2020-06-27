@@ -20,4 +20,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <cpu/cpu.imp.h>
+#pragma once
+
+#include <empc/cpu/cpu.h>
+
+namespace empc {
+
+template <typename MemoryAccessor>
+CPU<MemoryAccessor>::CPU(MemoryAccessor& memory)
+    : _memory(memory)
+{
+}
+
+template <typename MemoryAccessor>
+void CPU<MemoryAccessor>::emulate_once()
+{
+}
+
+template <typename MemoryAccessor>
+const Registers& CPU<MemoryAccessor>::registers() const
+{
+    return _regs;
+}
+
+template <typename MemoryAccessor>
+Registers& CPU<MemoryAccessor>::registers()
+{
+    return _regs;
+}
+
+}

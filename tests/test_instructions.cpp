@@ -20,10 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <cpu/registers.h>
+#include <empc/cpu/cpu.imp.h>
+#include <empc/memory/memory_buffer.imp.h>
 
 namespace {
-empc::Registers regs {};
+empc::Registers regs;
+empc::MemoryBuffer<1024 * 1024> memory;
+empc::CPU cpu(memory);
+
 }
 
 namespace empc {
@@ -35,8 +39,9 @@ reset()
 }
 
 extern "C" void
-write_memory(int start, void* data, int size)
+write_memory(address start, byte const* const data, size_t const size)
 {
+    memory.write_region(start, data, size);
 }
 
 extern "C" void

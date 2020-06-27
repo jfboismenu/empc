@@ -21,10 +21,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#pragma once
+
+#include <empc/base/types.h>
+
 namespace empc {
-using byte = unsigned char;
-using word = unsigned short;
-using dword = unsigned int;
 
 union MainRegisters {
     struct
