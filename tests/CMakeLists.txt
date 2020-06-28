@@ -20,10 +20,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-BUILD_DIR=../build
-SRC_DIR=../src
+cmake_minimum_required (VERSION 3.17)
+project (empc-tests)
+enable_testing()
 
-all:
-	nasm -f bin test_mov.asm -o "$(BUILD_DIR)/test_mov.bin"
-	g++ test_instructions.cpp -I "$(SRC_DIR)" -Wall -Werror -O3 -std=c++2a -shared -fPIC -o "$(BUILD_DIR)/libtest-instructions.so"
-	cp *.py "$(BUILD_DIR)"
+set(CMAKE_CXX_STANDARD 20)
+
+include_directories(empc-tests INTERFACE "/usr/local/include")
+include_directories(empc-tests INTERFACE ".")
+include_directories(empc-tests INTERFACE "../src")
+
+FILE(GLOB CppTestsSources */*.cpp)
+add_executable(empc_tests empc_tests.cpp ${CppTestsSources})
+add_test(empc-tests empc_tests)

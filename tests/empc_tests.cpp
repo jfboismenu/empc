@@ -20,28 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#pragma once
+#define CATCH_CONFIG_MAIN
 
-#include <array>
-#include <empc/base/types.h>
-
-namespace empc {
-
-template <size_t _Size>
-class MemoryBuffer {
-public:
-    MemoryBuffer();
-
-    byte read_byte(address) const;
-    void write_byte(address, byte);
-
-    word read_word(address) const;
-    void write_word(address, word);
-
-    void write_region(address, byte const*, size_t size);
-
-private:
-    std::array<byte, _Size> _bytes;
-};
-
-}
+#include <catch2/catch.hpp>

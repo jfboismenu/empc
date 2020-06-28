@@ -21,9 +21,16 @@
 // SOFTWARE.
 
 #include <empc/memory/memory_buffer.h>
+#include <iostream>
 #include <memory>
 
 namespace empc {
+
+template <size_t _Size>
+MemoryBuffer<_Size>::MemoryBuffer()
+    : _bytes { decltype(_bytes)() }
+{
+}
 
 template <size_t _Size>
 byte MemoryBuffer<_Size>::read_byte(address addr) const
@@ -40,7 +47,7 @@ void MemoryBuffer<_Size>::write_byte(address addr, byte data)
 template <size_t _Size>
 word MemoryBuffer<_Size>::read_word(address addr) const
 {
-    return static_cast<const word&>(_bytes[addr]);
+    return reinterpret_cast<const word&>(_bytes[addr]);
 }
 
 template <size_t _Size>

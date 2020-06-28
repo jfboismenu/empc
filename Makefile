@@ -28,10 +28,11 @@ empc:
 	cd src && make
 
 tests: empc
-	cd tests && make
+	cd tests && cmake -B ../build
+	cd build && make
 
 runtests: tests
-	cd build && pytest
+	python3 -m pytest tests
 
 .PHONY: clean
 clean:

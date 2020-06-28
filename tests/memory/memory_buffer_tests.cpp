@@ -20,28 +20,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#pragma once
+#include <catch2/catch.hpp>
+#include <empc/memory/memory_buffer.imp.h>
 
-#include <array>
-#include <empc/base/types.h>
+TEST_CASE("Memory Buffer", "[memory]")
+{
+    empc::MemoryBuffer<16> buffer;
 
-namespace empc {
+    buffer.write_byte(0, 1);
+    REQUIRE(buffer.read_byte(0) == 1);
+    REQUIRE(buffer.read_word(0) == 1);
 
-template <size_t _Size>
-class MemoryBuffer {
-public:
-    MemoryBuffer();
+    buffer.write_byte(1, 2);
+    REQUIRE(buffer.read_byte(0) == 1);
+    REQUIRE(buffer.read_byte(1) == 2);
+    REQUIRE(buffer.read_word(0) == 513);
+    REQUIRE(buffer.read_word(1) == 2);
 
-    byte read_byte(address) const;
-    void write_byte(address, byte);
+    buffer.write_word(0, 0);
+    REQUIRE(buffer.read_word(0) == 0);
+    REQUIRE(buffer.read_byte(0) == 0);
+    REQUIRE(buffer.read_word(1) == 0);
 
-    word read_word(address) const;
-    void write_word(address, word);
-
-    void write_region(address, byte const*, size_t size);
-
-private:
-    std::array<byte, _Size> _bytes;
-};
-
+    buffer.write_word(0, 1026);
+    REQUIRE(buffer.read_byte(0) == 2);
+    REQUIRE(buffer.read_byte(1) == 4);
 }
