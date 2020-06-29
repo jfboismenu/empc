@@ -20,13 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-enable_testing()
-
-
 include_directories(empc-tests INTERFACE "/usr/local/include")
 include_directories(empc-tests INTERFACE ".")
-include_directories(empc-tests INTERFACE "../src")
 
-FILE(GLOB CppTestsSources */*.cpp)
-add_executable(empc_tests empc_tests.cpp ${CppTestsSources})
-add_test(empc-tests empc_tests)
+FILE(GLOB CppEmpcSources empc/*/*.cpp empc/*.cpp)
+add_library(empc MODULE ${CppEmpcSources})
+
+    # g++ empc/*/*.cpp empc/*.cpp -I . -o $(BUILD_DIR)/libempc.so -Wall -Werror -std=c++2a -shared -fPIC
