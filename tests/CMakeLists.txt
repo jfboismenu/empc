@@ -20,9 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-enable_testing()
-
-
 include_directories(empc-tests INTERFACE "/usr/local/include")
 include_directories(empc-tests INTERFACE ".")
 include_directories(empc-tests INTERFACE "../src")
