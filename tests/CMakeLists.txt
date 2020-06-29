@@ -24,6 +24,21 @@ include_directories(empc-tests INTERFACE "/usr/local/include")
 include_directories(empc-tests INTERFACE ".")
 include_directories(empc-tests INTERFACE "../src")
 
+# Grab all CPP files to run C++ runs
 FILE(GLOB CppTestsSources */*.cpp)
 add_executable(empc_tests empc_tests.cpp ${CppTestsSources})
 add_test(empc-tests empc_tests)
+
+# Compile all assembly files.
+add_custom_command(OUTPUT test_mov.bin COMMAND nasm -f bin "${CMAKE_CURRENT_SOURCE_DIR}/test_mov.asm" -o "${CMAKE_CURRENT_BINARY_DIR}/test_mov.bin")
+# Add them to a custom target for assemblies.
+add_custom_target(assemblies ALL DEPENDS test_mov.bin)
+
+# Compile the C++ test library to the build folder.
+add_library(test-instructions MODULE test_instructions.cpp)
+
+# Copy the Python test to the build folder.
+configure_file(test_instructions.py test_instructions.py COPYONLY)
+
+# Register a test that can be invoked with python 3.
+add_test(test_instructions COMMAND python3 -m pytest test_instructions.py)
