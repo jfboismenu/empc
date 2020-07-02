@@ -35,6 +35,7 @@ public:
     Registers& registers();
 
 private:
+    byte _read_instruction_byte() const;
     MemoryAccessor& _memory;
     Registers _regs;
 };

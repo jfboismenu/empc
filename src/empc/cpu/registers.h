@@ -139,8 +139,6 @@ public:
     word cs;
     word ds;
     word es;
-    word fs;
-    word gs;
     word ss;
 };
 

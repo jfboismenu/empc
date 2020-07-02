@@ -52,8 +52,8 @@ def empc():
         (word_p, "cs"),
         (word_p, "ds"),
         (word_p, "es"),
-        (word_p, "fs"),
-        (word_p, "gs"),
+        # (word_p, "fs"),
+        # (word_p, "gs"),
         (word_p, "ss"),
     ]
 
@@ -112,8 +112,8 @@ def test_read_write_registers(empc):
         cs=10,
         ds=11,
         es=12,
-        fs=13,
-        gs=14,
+        # fs=13,
+        # gs=14,
         ss=15,
     )
     registers = empc.read_registers()
@@ -130,6 +130,6 @@ def test_read_write_registers(empc):
     assert registers.cs == 10
     assert registers.ds == 11
     assert registers.es == 12
-    assert registers.fs == 13
-    assert registers.gs == 14
+    # assert registers.fs == 13
+    # assert registers.gs == 14
     assert registers.ss == 15

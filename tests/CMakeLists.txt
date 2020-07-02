@@ -20,13 +20,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-include_directories(empc-tests INTERFACE "/usr/local/include")
+find_package(Catch2 REQUIRED)
+
 include_directories(empc-tests INTERFACE ".")
 include_directories(empc-tests INTERFACE "../src")
 
 # Grab all CPP files to run C++ runs
 FILE(GLOB CppTestsSources */*.cpp)
 add_executable(empc_tests empc_tests.cpp ${CppTestsSources})
+target_link_libraries(empc_tests Catch2::Catch2)
+
 add_test(empc-tests empc_tests)
 
 # Compile all assembly files.

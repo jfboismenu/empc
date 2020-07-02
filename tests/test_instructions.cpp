@@ -62,8 +62,8 @@ read_registers(
     word* cs,
     word* ds,
     word* es,
-    word* fs,
-    word* gs,
+    // word* fs,
+    // word* gs,
     word* ss)
 {
     *eax = regs.mr.r32.eax;
@@ -81,8 +81,8 @@ read_registers(
     *cs = regs.ss.cs;
     *ds = regs.ss.ds;
     *es = regs.ss.es;
-    *fs = regs.ss.fs;
-    *gs = regs.ss.gs;
+    // *fs = regs.ss.fs;
+    // *gs = regs.ss.gs;
     *ss = regs.ss.ss;
 }
 
@@ -111,8 +111,8 @@ write_registers(
     word* cs,
     word* ds,
     word* es,
-    word* fs,
-    word* gs,
+    // word* fs,
+    // word* gs,
     word* ss)
 {
     write_if_set(eax, regs.mr.r32.eax);
@@ -127,8 +127,8 @@ write_registers(
     write_if_set(cs, regs.ss.cs);
     write_if_set(ds, regs.ss.ds);
     write_if_set(es, regs.ss.es);
-    write_if_set(fs, regs.ss.fs);
-    write_if_set(gs, regs.ss.gs);
+    // write_if_set(fs, regs.ss.fs);
+    // write_if_set(gs, regs.ss.gs);
     write_if_set(ss, regs.ss.ss);
 }
 

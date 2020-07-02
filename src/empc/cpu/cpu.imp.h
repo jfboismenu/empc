@@ -37,6 +37,12 @@ void CPU<MemoryAccessor>::emulate_once()
 {
 }
 
+// template <typename MemoryAccessor>
+// byte CPU<MemoryAccessor>::_read_() const
+// {
+
+// }
+
 template <typename MemoryAccessor>
 const Registers& CPU<MemoryAccessor>::registers() const
 {
