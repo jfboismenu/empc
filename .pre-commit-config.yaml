@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-exclude: "docker/source.*"
+exclude: "(docker/source.*)|(\\.vscode)"
 repos:
   - repo: https://github.com/Lucas-C/pre-commit-hooks
     rev: v1.1.7
