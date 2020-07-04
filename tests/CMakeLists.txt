@@ -20,7 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-find_package(Catch2 REQUIRED)
+conan_cmake_run(REQUIRES Catch2/2.11.1@catchorg/stable BASIC_SETUP CMAKE_TARGETS BUILD missing)
+
 
 include_directories(empc-tests INTERFACE ".")
 include_directories(empc-tests INTERFACE "../src")
@@ -28,7 +29,7 @@ include_directories(empc-tests INTERFACE "../src")
 # Grab all CPP files to run C++ runs
 FILE(GLOB CppTestsSources */*.cpp)
 add_executable(empc_tests empc_tests.cpp ${CppTestsSources})
-target_link_libraries(empc_tests Catch2::Catch2)
+target_link_libraries(empc_tests CONAN_PKG::Catch2)
 
 add_test(empc-tests empc_tests)
 
