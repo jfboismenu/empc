@@ -20,40 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <empc/memory/memory_buffer.h>
-#include <iostream>
-#include <memory>
+#include <catch2/catch.hpp>
+#include <empc/base/types.h>
 
-namespace empc {
-
-inline MemoryBuffer::MemoryBuffer(size_t size)
-    : _bytes(size, byte { 0 })
+TEST_CASE("Types", "[types]")
 {
-}
+    SECTION("words can be split")
+    {
+        // In memory this is 3412;
+        word value(0x1234);
+        REQUIRE(split(value).second == 0x12);
+        REQUIRE(split(value).first == 0x34);
+    }
 
-inline byte MemoryBuffer::read_byte(address addr) const
-{
-    return _bytes[addr];
-}
-
-inline void MemoryBuffer::write_byte(address addr, byte data)
-{
-    _bytes[addr] = data;
-}
-
-inline word MemoryBuffer::read_word(address addr) const
-{
-    return reinterpret_cast<const word&>(_bytes[addr]);
-}
-
-inline void MemoryBuffer::write_word(address addr, word data)
-{
-    reinterpret_cast<word&>(_bytes[addr]) = data;
-}
-
-inline void MemoryBuffer::write_region(address addr, byte const* const data, size_t size)
-{
-    memcpy(&_bytes[addr], data, size);
-}
-
+    SECTION("dwords can be split")
+    {
+        // In memory this is 3412;
+        dword value(0x12345678);
+        REQUIRE(split(value).second == 0x1234);
+        REQUIRE(split(value).first == 0x5678);
+    }
 }

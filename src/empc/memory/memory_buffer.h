@@ -22,15 +22,14 @@
 
 #pragma once
 
-#include <array>
 #include <empc/base/types.h>
+#include <vector>
 
 namespace empc {
 
-template <size_t _Size>
 class MemoryBuffer {
 public:
-    MemoryBuffer();
+    MemoryBuffer(size_t size);
 
     byte read_byte(address) const;
     void write_byte(address, byte);
@@ -41,7 +40,7 @@ public:
     void write_region(address, byte const*, size_t size);
 
 private:
-    std::array<byte, _Size> _bytes;
+    std::vector<byte> _bytes;
 };
 
 }

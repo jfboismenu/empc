@@ -20,4 +20,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <empc/cpu/cpu.imp.h>
+#include <empc/cpu/cpu.h>
+#include <empc/cpu/cpu.jmp.hpp>
+#include <empc/memory/memory_buffer.imp.h>
+
+namespace empc {
+
+CPU::CPU(MemoryBuffer& memory)
+    : _memory(memory)
+{
+}
+
+void CPU::emulate_once()
+{
+}
+
+const Registers& CPU::registers() const
+{
+    return _regs;
+}
+
+Registers& CPU::registers()
+{
+    return _regs;
+}
+
+}

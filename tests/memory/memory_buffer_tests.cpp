@@ -25,7 +25,7 @@
 
 TEST_CASE("Memory Buffer", "[memory]")
 {
-    empc::MemoryBuffer<16> buffer;
+    empc::MemoryBuffer buffer { 16 };
 
     buffer.write_byte(0, 1);
     REQUIRE(buffer.read_byte(0) == 1);

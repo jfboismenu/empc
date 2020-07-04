@@ -24,6 +24,4 @@ include_directories(empc-tests INTERFACE "/usr/local/include")
 include_directories(empc-tests INTERFACE ".")
 
 FILE(GLOB CppEmpcSources empc/*/*.cpp empc/*.cpp)
-add_library(empc MODULE ${CppEmpcSources})
-
-    # g++ empc/*/*.cpp empc/*.cpp -I . -o $(BUILD_DIR)/libempc.so -Wall -Werror -std=c++2a -shared -fPIC
+add_library(empc SHARED ${CppEmpcSources})

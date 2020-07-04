@@ -23,20 +23,20 @@
 #pragma once
 
 #include <empc/cpu/registers.h>
+#include <empc/memory/memory_buffer.h>
 
 namespace empc {
 
-template <typename MemoryAccessor>
 class CPU {
 public:
-    CPU(MemoryAccessor& memory);
+    CPU(MemoryBuffer& memory);
     void emulate_once();
     const Registers& registers() const;
     Registers& registers();
 
 private:
     byte _read_instruction_byte() const;
-    MemoryAccessor& _memory;
+    MemoryBuffer& _memory;
     Registers _regs;
 };
 

@@ -27,71 +27,65 @@
 
 namespace empc {
 
-union MainRegisters {
-    struct
-    {
-    public:
-        byte al;
-        byte ah;
+#define EMPC_GP_REG_DECL(reg)   \
+    const byte& reg##l() const; \
+    byte& reg##l();             \
+    const byte& reg##h() const; \
+    byte& reg##h();             \
+    const word& reg##x() const; \
+    word& reg##x();
 
-    private:
-        [[maybe_unused]] word __pad0;
+class GeneralPurposeRegisters {
+public:
+    GeneralPurposeRegisters();
 
-    public:
-        byte bl;
-        byte bh;
+    // Defines const not consts accessors for
+    // registers combinations {a,b,c,d}{l,h,x}
+    EMPC_GP_REG_DECL(a);
+    EMPC_GP_REG_DECL(b);
+    EMPC_GP_REG_DECL(c);
+    EMPC_GP_REG_DECL(d);
 
-    private:
-        [[maybe_unused]] word __pad1;
-
-    public:
-        byte cl;
-        byte ch;
-
-    private:
-        [[maybe_unused]] word __pad2;
-
-    public:
-        byte dl;
-        byte dh;
-
-    private:
-        [[maybe_unused]] word __pad3;
-    } r8;
-    struct
-    {
-    public:
-        word ax;
-
-    private:
-        [[maybe_unused]] word __pad0;
-
-    public:
-        word bx;
-
-    private:
-        [[maybe_unused]] word __pad1;
-
-    public:
-        word cx;
-
-    private:
-        [[maybe_unused]] word __pad2;
-
-    public:
-        word dx;
-
-    private:
-        [[maybe_unused]] word __pad3;
-    } r16;
-    struct
-    {
-        dword eax;
-        dword ebx;
-        dword ecx;
-        dword edx;
-    } r32;
+private:
+    union {
+        struct
+        {
+            byte al;
+            byte ah;
+            byte bl;
+            byte bh;
+            byte cl;
+            byte ch;
+            byte dl;
+            byte dh;
+        } r8;
+        struct
+        {
+            word ax;
+            word bx;
+            word cx;
+            word dx;
+        } r16;
+    } _regs;
 };
+
+inline GeneralPurposeRegisters::GeneralPurposeRegisters()
+    : _regs { .r16 = { 0, 0, 0, 0 } }
+{
+}
+
+#define EMPC_GP_REG_IMP(reg)                                                                \
+    inline const byte& GeneralPurposeRegisters::reg##l() const { return _regs.r8.reg##l; }  \
+    inline byte& GeneralPurposeRegisters::reg##l() { return _regs.r8.reg##l; }              \
+    inline const byte& GeneralPurposeRegisters::reg##h() const { return _regs.r8.reg##h; }  \
+    inline byte& GeneralPurposeRegisters::reg##h() { return _regs.r8.reg##h; }              \
+    inline const word& GeneralPurposeRegisters::reg##x() const { return _regs.r16.reg##x; } \
+    inline word& GeneralPurposeRegisters::reg##x() { return _regs.r16.reg##x; }
+
+EMPC_GP_REG_IMP(a);
+EMPC_GP_REG_IMP(b);
+EMPC_GP_REG_IMP(c);
+EMPC_GP_REG_IMP(d);
 
 union IndexRegisters {
     struct
@@ -129,7 +123,7 @@ union IndexRegisters {
     } r32;
 };
 
-union ProgramCounter {
+union InstructionPointer {
     word r16;
     dword r32;
 };
@@ -144,9 +138,9 @@ public:
 
 struct Registers {
 public:
-    MainRegisters mr;
+    GeneralPurposeRegisters mr;
     IndexRegisters ir;
-    ProgramCounter pc;
+    InstructionPointer pc;
     SegmentSelectors ss;
 };
 }

@@ -21,7 +21,3 @@
 // SOFTWARE.
 
 #include <empc/memory/memory_buffer.imp.h>
-
-namespace empc {
-template class MemoryBuffer<4>;
-}

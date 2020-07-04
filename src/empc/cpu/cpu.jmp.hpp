@@ -20,39 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#pragma once
-
-#include <empc/cpu/cpu.h>
+#include <empc/cpu/registers.h>
 
 namespace empc {
 
-template <typename MemoryAccessor>
-CPU<MemoryAccessor>::CPU(MemoryAccessor& memory)
-    : _memory(memory)
+void jmp_absolute_real_mode(
+    Registers& regs, word far, word offset)
 {
-}
-
-template <typename MemoryAccessor>
-void CPU<MemoryAccessor>::emulate_once()
-{
-}
-
-// template <typename MemoryAccessor>
-// byte CPU<MemoryAccessor>::_read_() const
-// {
-
-// }
-
-template <typename MemoryAccessor>
-const Registers& CPU<MemoryAccessor>::registers() const
-{
-    return _regs;
-}
-
-template <typename MemoryAccessor>
-Registers& CPU<MemoryAccessor>::registers()
-{
-    return _regs;
+    regs.ss.cs = far;
+    regs.pc.r16 = offset;
 }
 
 }

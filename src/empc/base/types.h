@@ -20,9 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#include <utility>
+
+#pragma once
+
 namespace {
 using byte = unsigned char;
 using word = unsigned short;
 using dword = unsigned int;
 using address = unsigned int;
+
+inline std::pair<byte, byte> split(word value)
+{
+    return std::make_pair<byte, byte>(
+        static_cast<byte>(value),
+        static_cast<byte>(value >> 8));
+}
+
+inline std::pair<word, word> split(dword value)
+{
+    return std::make_pair<word, word>(
+        static_cast<word>(value),
+        static_cast<word>(value >> 16));
+}
 }
