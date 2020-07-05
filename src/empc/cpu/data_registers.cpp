@@ -20,23 +20,4 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#pragma once
-
-#include <empc/memory/memory_buffer.h>
-
-namespace empc {
-
-class CPU {
-public:
-    CPU(MemoryBuffer& memory);
-    void emulate_once();
-    // const Registers& registers() const;
-    // Registers& registers();
-
-private:
-    byte _read_instruction_byte() const;
-    MemoryBuffer& _memory;
-    // Registers _regs;
-};
-
-}
+#include <empc/cpu/data_registers.h>

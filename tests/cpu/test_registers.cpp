@@ -21,7 +21,9 @@
 // SOFTWARE.
 
 #include <catch2/catch.hpp>
-#include <empc/cpu/registers.h>
+#include <empc/cpu/data_registers.h>
+#include <empc/cpu/pointer_and_index_registers.h>
+#include <empc/cpu/segment_registers.h>
 
 TEST_CASE("Register tests", "[registers]")
 {
@@ -59,5 +61,35 @@ TEST_CASE("Register tests", "[registers]")
             REQUIRE(regs.cx() == 0xE0F0);
             REQUIRE(regs.dx() == 0x0010);
         }
+
+        SECTION("Pointer and index registers can read and write")
+        {
+            empc::PointerAndIndexRegisters regs;
+
+            regs.si() = 0x12;
+            regs.di() = 0x34;
+            regs.bp() = 0x56;
+            regs.sp() = 0x78;
+
+            REQUIRE(regs.si() == 0x12);
+            REQUIRE(regs.di() == 0x34);
+            REQUIRE(regs.bp() == 0x56);
+            REQUIRE(regs.sp() == 0x78);
+        }
+    }
+
+    SECTION("Segment registers")
+    {
+        empc::SegmentRegisters regs;
+
+        regs.cs() = 0x12;
+        regs.ds() = 0x34;
+        regs.es() = 0x56;
+        regs.ss() = 0x78;
+
+        REQUIRE(regs.cs() == 0x12);
+        REQUIRE(regs.ds() == 0x34);
+        REQUIRE(regs.es() == 0x56);
+        REQUIRE(regs.ss() == 0x78);
     }
 }

@@ -20,18 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <empc/cpu/registers.h>
-
 namespace empc {
-
-template <typename Operand>
-class JmpPtr16_16 {
-public:
-    void execute();
-
-private:
-    Operand CS;
-    Operand IP;
-};
 
 }

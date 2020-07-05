@@ -24,7 +24,6 @@
 #pragma once
 
 #include <empc/base/types.h>
-#include <empc/cpu/registers_common.h>
 
 namespace empc {
 
@@ -46,6 +45,14 @@ private:
     word _bp;
     word _sp;
 };
+
+PointerAndIndexRegisters::PointerAndIndexRegisters()
+    : _si { 0 }
+    , _di { 0 }
+    , _bp { 0 }
+    , _sp { 0 }
+{
+}
 
 inline const word& PointerAndIndexRegisters::si() const
 {

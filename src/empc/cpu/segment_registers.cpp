@@ -1,4 +1,3 @@
-
 // MIT License
 //
 // Copyright (c) 2020 Jean-François Boismenu
@@ -21,8 +20,4 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#pragma once
-
-#include <empc/cpu/data_registers.h>
-#include <empc/cpu/pointer_and_index_registers.h>
 #include <empc/cpu/segment_registers.h>

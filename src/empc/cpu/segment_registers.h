@@ -24,7 +24,6 @@
 #pragma once
 
 #include <empc/base/types.h>
-#include <empc/cpu/registers_common.h>
 
 namespace empc {
 
