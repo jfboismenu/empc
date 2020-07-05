@@ -20,29 +20,44 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <empc/cpu/cpu.h>
-#include <empc/cpu/cpu.jmp.hpp>
-#include <empc/memory/memory_buffer.imp.h>
+#include <catch2/catch.hpp>
+#include <empc/cpu/registers.h>
 
-namespace empc {
-
-CPU::CPU(MemoryBuffer& memory)
-    : _memory(memory)
+TEST_CASE("Register tests", "[registers]")
 {
-}
+    SECTION("General Purpose Registers")
+    {
+        SECTION("Data registers can read and write")
+        {
+            empc::DataRegisters regs;
 
-void CPU::emulate_once()
-{
-}
+            regs.al() = 0x01;
+            regs.ah() = 0x02;
+            regs.bl() = 0x03;
+            regs.bh() = 0x04;
+            regs.cl() = 0x06;
+            regs.ch() = 0x07;
+            regs.dl() = 0x08;
+            regs.dh() = 0x09;
 
-// const Registers& CPU::registers() const
-// {
-//     return _regs;
-// }
+            REQUIRE(regs.al() == 0x01);
+            REQUIRE(regs.ah() == 0x02);
+            REQUIRE(regs.bl() == 0x03);
+            REQUIRE(regs.bh() == 0x04);
+            REQUIRE(regs.cl() == 0x06);
+            REQUIRE(regs.ch() == 0x07);
+            REQUIRE(regs.dl() == 0x08);
+            REQUIRE(regs.dh() == 0x09);
 
-// Registers& CPU::registers()
-// {
-//     return _regs;
-// }
+            regs.ax() = 0xA0B0;
+            regs.bx() = 0xC0D0;
+            regs.cx() = 0xE0F0;
+            regs.dx() = 0x0010;
 
+            REQUIRE(regs.ax() == 0xA0B0);
+            REQUIRE(regs.bx() == 0xC0D0);
+            REQUIRE(regs.cx() == 0xE0F0);
+            REQUIRE(regs.dx() == 0x0010);
+        }
+    }
 }

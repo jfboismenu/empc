@@ -8,7 +8,7 @@
             "name": "(lldb) Lancer",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/tests/empc_tests",
+            "program": "${workspaceFolder}/build/tests/bin/empc_tests",
             "args": ["-s"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

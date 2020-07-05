@@ -1,3 +1,4 @@
+
 // MIT License
 //
 // Copyright (c) 2020 Jean-François Boismenu
@@ -20,29 +21,71 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <empc/cpu/cpu.h>
-#include <empc/cpu/cpu.jmp.hpp>
-#include <empc/memory/memory_buffer.imp.h>
+#pragma once
+
+#include <empc/base/types.h>
+#include <empc/cpu/registers_common.h>
 
 namespace empc {
 
-CPU::CPU(MemoryBuffer& memory)
-    : _memory(memory)
+class SegmentRegisters {
+public:
+    SegmentRegisters();
+
+    const word& cs() const;
+    word& cs();
+    const word& ds() const;
+    word& ds();
+    const word& es() const;
+    word& es();
+    const word& ss() const;
+    word& ss();
+
+private:
+    word _cs;
+    word _ds;
+    word _es;
+    word _ss;
+};
+
+inline SegmentRegisters::SegmentRegisters()
+    : _cs { 0 }
+    , _ds { 0 }
+    , _es { 0 }
+    , _ss { 0 }
 {
 }
 
-void CPU::emulate_once()
+inline const word& SegmentRegisters::cs() const
 {
+    return _cs;
 }
-
-// const Registers& CPU::registers() const
-// {
-//     return _regs;
-// }
-
-// Registers& CPU::registers()
-// {
-//     return _regs;
-// }
-
+inline word& SegmentRegisters::cs()
+{
+    return _cs;
+}
+inline const word& SegmentRegisters::ds() const
+{
+    return _ds;
+}
+inline word& SegmentRegisters::ds()
+{
+    return _ds;
+}
+inline const word& SegmentRegisters::es() const
+{
+    return _es;
+}
+inline word& SegmentRegisters::es()
+{
+    return _es;
+}
+inline const word& SegmentRegisters::ss() const
+{
+    return _ss;
+}
+inline word& SegmentRegisters::ss()
+{
+    return _ss;
+}
 }

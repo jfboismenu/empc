@@ -31,13 +31,13 @@ class CPU {
 public:
     CPU(MemoryBuffer& memory);
     void emulate_once();
-    const Registers& registers() const;
-    Registers& registers();
+    // const Registers& registers() const;
+    // Registers& registers();
 
 private:
     byte _read_instruction_byte() const;
     MemoryBuffer& _memory;
-    Registers _regs;
+    // Registers _regs;
 };
 
 }

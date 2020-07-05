@@ -1,3 +1,4 @@
+
 // MIT License
 //
 // Copyright (c) 2020 Jean-François Boismenu
@@ -20,29 +21,64 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <empc/cpu/cpu.h>
-#include <empc/cpu/cpu.jmp.hpp>
-#include <empc/memory/memory_buffer.imp.h>
+#pragma once
+
+#include <empc/base/types.h>
+#include <empc/cpu/registers_common.h>
 
 namespace empc {
 
-CPU::CPU(MemoryBuffer& memory)
-    : _memory(memory)
+class PointerAndIndexRegisters {
+public:
+    PointerAndIndexRegisters();
+    const word& di() const;
+    word& di();
+    const word& si() const;
+    word& si();
+    const word& bp() const;
+    word& bp();
+    const word& sp() const;
+    word& sp();
+
+private:
+    word _si;
+    word _di;
+    word _bp;
+    word _sp;
+};
+
+inline const word& PointerAndIndexRegisters::si() const
 {
+    return _si;
+}
+inline const word& PointerAndIndexRegisters::di() const
+{
+    return _di;
+}
+inline const word& PointerAndIndexRegisters::bp() const
+{
+    return _bp;
+}
+inline const word& PointerAndIndexRegisters::sp() const
+{
+    return _sp;
 }
 
-void CPU::emulate_once()
+inline word& PointerAndIndexRegisters::si()
 {
+    return _si;
 }
-
-// const Registers& CPU::registers() const
-// {
-//     return _regs;
-// }
-
-// Registers& CPU::registers()
-// {
-//     return _regs;
-// }
+inline word& PointerAndIndexRegisters::di()
+{
+    return _di;
+}
+inline word& PointerAndIndexRegisters::bp()
+{
+    return _bp;
+}
+inline word& PointerAndIndexRegisters::sp()
+{
+    return _sp;
+}
 
 }

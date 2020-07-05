@@ -24,11 +24,14 @@
 
 namespace empc {
 
-void jmp_absolute_real_mode(
-    Registers& regs, word far, word offset)
-{
-    regs.ss.cs = far;
-    regs.pc.r16 = offset;
-}
+template <typename Operand>
+class JmpPtr16_16 {
+public:
+    void execute();
+
+private:
+    Operand CS;
+    Operand IP;
+};
 
 }
