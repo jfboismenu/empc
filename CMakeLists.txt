@@ -26,7 +26,7 @@ enable_testing()
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(CMAKE_BUILD_TYPE "Release")
+set(THIRD_PARTY_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/3rdParty")
 
 # Download automatically, you can also just copy the conan.cmake file
 if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")

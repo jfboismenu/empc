@@ -1,0 +1,3 @@
+[submodule "3rdParty/bios-8088"]
+    path = 3rdParty/bios-8088
+    url = https://github.com/jfboismenu/bios-8088.git
