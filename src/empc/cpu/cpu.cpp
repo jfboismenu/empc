@@ -35,14 +35,4 @@ void CPU::emulate_once()
 {
 }
 
-// const Registers& CPU::registers() const
-// {
-//     return _regs;
-// }
-
-// Registers& CPU::registers()
-// {
-//     return _regs;
-// }
-
 }
