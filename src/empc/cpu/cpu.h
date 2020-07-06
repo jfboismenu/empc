@@ -23,6 +23,11 @@
 #pragma once
 
 #include <empc/memory/memory_buffer.h>
+#include <empc/cpu/data_registers.h>
+#include <empc/cpu/pointer_and_index_registers.h>
+#include <empc/cpu/instruction_pointer.h>
+#include <empc/cpu/segment_registers.h>
+
 
 namespace empc {
 
@@ -30,13 +35,21 @@ class CPU {
 public:
     CPU(MemoryBuffer& memory);
     void emulate_once();
+    void reset();
     // const Registers& registers() const;
     // Registers& registers();
 
 private:
-    byte _read_instruction_byte() const;
+    byte _read_instruction_byte();
+    word _read_instruction_word();
+    address _get_program_counter() const;
     MemoryBuffer& _memory;
-    // Registers _regs;
+
+
+    DataRegisters            _dr;
+    PointerAndIndexRegisters _pair;
+    InstructionPointer       _ip;
+    SegmentRegisters         _sr;
 };
 
 }

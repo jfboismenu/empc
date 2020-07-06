@@ -31,8 +31,40 @@ CPU::CPU(MemoryBuffer& memory)
 {
 }
 
+void CPU::reset()
+{
+    // Source: The 8086 Family User's Manual, October 1979
+    // Page 2-29, table 2-4.
+
+    // FIXME: Empty flags
+    _sr.cs() = 0xFFFF;
+    _ip.ip() = 0;
+    _sr.ds() = 0;
+    _sr.es() = 0;
+    _sr.ss() = 0;
+}
+
 void CPU::emulate_once()
 {
+}
+
+byte CPU::_read_instruction_byte()
+{
+    const byte result{ _memory.read_byte(_get_program_counter()) };
+    _ip.add<byte>();
+    return result;
+}
+
+word CPU::_read_instruction_word()
+{
+    const word result{ _memory.read_word(_get_program_counter()) };
+    _ip.add<word>();
+    return result;
+}
+
+address CPU::_get_program_counter() const
+{
+    return (_sr.ss() << 0x8) + _ip.ip();
 }
 
 }

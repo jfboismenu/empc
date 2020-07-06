@@ -1,4 +1,3 @@
-
 // MIT License
 //
 // Copyright (c) 2020 Jean-François Boismenu
@@ -27,65 +26,30 @@
 
 namespace empc {
 
-class PointerAndIndexRegisters {
+class InstructionPointer {
 public:
-    PointerAndIndexRegisters();
-    const word& di() const;
-    word& di();
-    const word& si() const;
-    word& si();
-    const word& bp() const;
-    word& bp();
-    const word& sp() const;
-    word& sp();
+    const word& ip() const;
+    word& ip();
+
+    template<typename T>
+    void add()
+    {
+        _ip += sizeof(T);
+    }
 
 private:
-    word _si;
-    word _di;
-    word _bp;
-    word _sp;
+    word _ip;
 };
 
-inline PointerAndIndexRegisters::PointerAndIndexRegisters()
-    : _si { 0 }
-    , _di { 0 }
-    , _bp { 0 }
-    , _sp { 0 }
+const word& InstructionPointer::ip() const
 {
+    return _ip;
 }
 
-inline const word& PointerAndIndexRegisters::si() const
+word& InstructionPointer::ip()
 {
-    return _si;
-}
-inline const word& PointerAndIndexRegisters::di() const
-{
-    return _di;
-}
-inline const word& PointerAndIndexRegisters::bp() const
-{
-    return _bp;
-}
-inline const word& PointerAndIndexRegisters::sp() const
-{
-    return _sp;
+    return _ip;
 }
 
-inline word& PointerAndIndexRegisters::si()
-{
-    return _si;
-}
-inline word& PointerAndIndexRegisters::di()
-{
-    return _di;
-}
-inline word& PointerAndIndexRegisters::bp()
-{
-    return _bp;
-}
-inline word& PointerAndIndexRegisters::sp()
-{
-    return _sp;
-}
 
 }
