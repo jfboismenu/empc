@@ -31,7 +31,7 @@ public:
     const word& ip() const;
     word& ip();
 
-    template<typename T>
+    template <typename T>
     void add()
     {
         _ip += sizeof(T);
@@ -41,15 +41,14 @@ private:
     word _ip;
 };
 
-const word& InstructionPointer::ip() const
+inline const word& InstructionPointer::ip() const
 {
     return _ip;
 }
 
-word& InstructionPointer::ip()
+inline word& InstructionPointer::ip()
 {
     return _ip;
 }
-
 
 }

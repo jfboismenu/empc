@@ -50,14 +50,14 @@ void CPU::emulate_once()
 
 byte CPU::_read_instruction_byte()
 {
-    const byte result{ _memory.read_byte(_get_program_counter()) };
+    const byte result { _memory.read_byte(_get_program_counter()) };
     _ip.add<byte>();
     return result;
 }
 
 word CPU::_read_instruction_word()
 {
-    const word result{ _memory.read_word(_get_program_counter()) };
+    const word result { _memory.read_word(_get_program_counter()) };
     _ip.add<word>();
     return result;
 }

@@ -20,42 +20,38 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// extern "C" void
-// push_byte(unsigned char byte)
-// {
-// }
+#include <empc/empc.h>
+#include <empc/memory/memory_buffer.imp.h>
+#include <istream>
 
-// extern "C" void
-// push_word(unsigned short word)
-// {
-// }
+namespace empc {
 
-// extern "C" unsigned char
-// pop_byte()
-// {
-//     return 0;
-// }
+EmPC::EmPC()
+    : _cpu { _memory }
+    , _memory { 1024 * 1024 }
+{
+}
 
-// extern "C" unsigned short
-// pop_word()
-// {
-//     return 0;
-// }
+void EmPC::load_bios(std::istream& stream)
+{
+    _memory.write_region(0xFFFF0, stream);
+}
 
-// extern "C" void
-// call(unsigned int addr)
-// {
-//     // Execute until the program counter is set to the return value
-// }
+void EmPC::reset()
+{
+    _cpu.reset();
+}
 
-// extern "C" unsigned char
-// read_byte(unsigned int addr)
-// {
-//     return 0;
-// }
+void EmPC::emulate()
+{
+    while (true) {
+        emulate_once();
+    }
+}
 
-// extern "C" unsigned short
-// read_word(unsigned int addr)
-// {
-//     return 0;
-// }
+void EmPC::emulate_once()
+{
+    _cpu.emulate_once();
+}
+
+}

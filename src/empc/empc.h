@@ -20,47 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#include <empc/cpu/cpu.h>
 #include <empc/memory/memory_buffer.h>
-#include <iostream>
-#include <memory>
+
+#include <filesystem>
 
 namespace empc {
 
-inline MemoryBuffer::MemoryBuffer(size_t size)
-    : _bytes(size, byte { 0 })
-{
-}
+class EmPC {
+public:
+    EmPC();
+    void load_bios(std::istream& stream);
+    void reset();
+    void emulate();
+    void emulate_once();
 
-inline byte MemoryBuffer::read_byte(address addr) const
-{
-    return _bytes[addr];
-}
-
-inline void MemoryBuffer::write_byte(address addr, byte data)
-{
-    _bytes[addr] = data;
-}
-
-inline word MemoryBuffer::read_word(address addr) const
-{
-    return reinterpret_cast<const word&>(_bytes[addr]);
-}
-
-inline void MemoryBuffer::write_word(address addr, word data)
-{
-    reinterpret_cast<word&>(_bytes[addr]) = data;
-}
-
-inline void MemoryBuffer::write_region(address addr, std::istream& stream)
-{
-    char* current = reinterpret_cast<char*>(&_bytes[addr]);
-
-    // get length of file:
-    stream.seekg(0, stream.end);
-    const auto length { stream.tellg() };
-    stream.seekg(0, stream.beg);
-
-    stream.read(current, length);
-}
+private:
+    CPU _cpu;
+    MemoryBuffer _memory;
+};
 
 }

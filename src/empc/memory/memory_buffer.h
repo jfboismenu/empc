@@ -23,6 +23,7 @@
 #pragma once
 
 #include <empc/base/types.h>
+#include <iosfwd>
 #include <vector>
 
 namespace empc {
@@ -37,7 +38,7 @@ public:
     word read_word(address) const;
     void write_word(address, word);
 
-    void write_region(address, byte const*, size_t size);
+    void write_region(address, std::istream& stream);
 
 private:
     std::vector<byte> _bytes;

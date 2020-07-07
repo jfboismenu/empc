@@ -22,12 +22,11 @@
 
 #pragma once
 
-#include <empc/memory/memory_buffer.h>
 #include <empc/cpu/data_registers.h>
-#include <empc/cpu/pointer_and_index_registers.h>
 #include <empc/cpu/instruction_pointer.h>
+#include <empc/cpu/pointer_and_index_registers.h>
 #include <empc/cpu/segment_registers.h>
-
+#include <empc/memory/memory_buffer.h>
 
 namespace empc {
 
@@ -45,11 +44,10 @@ private:
     address _get_program_counter() const;
     MemoryBuffer& _memory;
 
-
-    DataRegisters            _dr;
+    DataRegisters _dr;
     PointerAndIndexRegisters _pair;
-    InstructionPointer       _ip;
-    SegmentRegisters         _sr;
+    InstructionPointer _ip;
+    SegmentRegisters _sr;
 };
 
 }
