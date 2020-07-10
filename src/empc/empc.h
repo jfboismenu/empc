@@ -36,8 +36,8 @@ public:
     void emulate_once();
 
 private:
-    CPU _cpu;
     MemoryBuffer _memory;
+    CPU _cpu;
 };
 
 }

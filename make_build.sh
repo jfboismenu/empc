@@ -1,3 +1,4 @@
+#!/usr/bin/env sh
 # MIT License
 #
 # Copyright (c) 2020 Jean-François Boismenu
@@ -20,13 +21,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-include_directories(empc-tests INTERFACE ".")
-
-conan_cmake_run(REQUIRES docopt/0.6.2@conan/stable BASIC_SETUP CMAKE_TARGETS BUILD missing BUILD_TYPE "Release")
-
-FILE(GLOB CppEmpcSources empc/*/*.cpp empc/empc.cpp)
-add_library(empclib STATIC ${CppEmpcSources})
-
-add_executable(empc empc/empc_main.cpp)
-target_link_libraries(empc empclib)
-target_link_libraries(empc CONAN_PKG::docopt)
+set -e
+rm -rf build
+mkdir build
+    cd build
+cmake -G Ninja ..

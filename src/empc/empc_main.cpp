@@ -20,49 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#pragma once
+#include <docopt.h>
+#include <empc/empc.h>
 
-#include <empc/cpu/data_registers.h>
-#include <empc/cpu/instruction_pointer.h>
-#include <empc/cpu/pointer_and_index_registers.h>
-#include <empc/cpu/segment_registers.h>
-#include <empc/memory/memory_buffer.h>
-
-namespace empc {
-
-class CPU {
-public:
-    CPU(MemoryBuffer& memory);
-    void emulate_once();
-    void reset() noexcept;
-    // const Registers& registers() const;
-    // Registers& registers();
-
-private:
-    // =============
-    // Instructions
-    // =============
-
-    template <typename Operand>
-    void _jmp_absolute(Operand offset, Operand segment) noexcept;
-    void _unknown_opcode(byte opcode) const;
-
-    // ================
-    // Utility methods
-    // ================
-    byte _read_instruction_byte() noexcept;
-    word _read_instruction_word() noexcept;
-    address _get_program_counter() const noexcept;
-
-    // =============
-    // Data members
-    // =============
-    MemoryBuffer& _memory;
-
-    DataRegisters _dr;
-    PointerAndIndexRegisters _pair;
-    InstructionPointer _ip;
-    SegmentRegisters _sr;
-};
-
+int main(int argc, char** argv)
+{
+    empc::EmPC pc;
+    return 0;
 }

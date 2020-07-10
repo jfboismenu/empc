@@ -20,8 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-conan_cmake_run(REQUIRES Catch2/2.11.1@catchorg/stable BASIC_SETUP CMAKE_TARGETS BUILD missing)
-
+conan_cmake_run(REQUIRES Catch2/2.11.1@catchorg/stable BASIC_SETUP CMAKE_TARGETS BUILD missing BUILD_TYPE "Release")
 
 include_directories(empc-tests INTERFACE ".")
 include_directories(empc-tests INTERFACE "../src")

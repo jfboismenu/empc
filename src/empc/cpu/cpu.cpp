@@ -23,6 +23,7 @@
 #include <empc/cpu/cpu.h>
 #include <empc/cpu/cpu.jmp.hpp>
 #include <empc/memory/memory_buffer.imp.h>
+#include <sstream>
 
 namespace empc {
 
@@ -31,7 +32,7 @@ CPU::CPU(MemoryBuffer& memory)
 {
 }
 
-void CPU::reset()
+void CPU::reset() noexcept
 {
     // Source: The 8086 Family User's Manual, October 1979
     // Page 2-29, table 2-4.
@@ -46,23 +47,40 @@ void CPU::reset()
 
 void CPU::emulate_once()
 {
+    const byte opcode { _read_instruction_byte() };
+
+    switch (opcode) {
+    case 0xEA: {
+        _jmp_absolute(_read_instruction_word(), _read_instruction_word());
+    } break;
+    default: {
+        _unknown_opcode(opcode);
+    } break;
+    }
 }
 
-byte CPU::_read_instruction_byte()
+void CPU::_unknown_opcode(byte opcode) const
+{
+    std::ostringstream os;
+    os << "Unexpected opcode " << std::hex << opcode << std::endl;
+    throw std::runtime_error(os.str());
+}
+
+byte CPU::_read_instruction_byte() noexcept
 {
     const byte result { _memory.read_byte(_get_program_counter()) };
     _ip.add<byte>();
     return result;
 }
 
-word CPU::_read_instruction_word()
+word CPU::_read_instruction_word() noexcept
 {
     const word result { _memory.read_word(_get_program_counter()) };
     _ip.add<word>();
     return result;
 }
 
-address CPU::_get_program_counter() const
+address CPU::_get_program_counter() const noexcept
 {
     return (_sr.ss() << 0x8) + _ip.ip();
 }
