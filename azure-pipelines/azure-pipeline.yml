@@ -22,12 +22,12 @@
 
 strategy:
   matrix:
-    'Windows':
-      image: 'windows-2019'
-      platform: windows
-    'Linux':
-      image: 'ubuntu-18.04'
-      platform: linux
+    # 'Windows':
+    #   image: 'windows-2019'
+    #   platform: windows
+    # 'Linux':
+    #   image: 'ubuntu-18.04'
+    #   platform: linux
     'macOS':
       image: 'macos-10.15'
       platform: macOS
@@ -55,8 +55,8 @@ steps:
       cd build
       ninja
     displayName: Ninja Build
-  - bash: |
-      set -e
-      cd build
-      ninja test
-    displayName: Tests
+  # - bash: |
+  #     set -e
+  #     cd build
+  #     ninja test
+  #   displayName: Tests
