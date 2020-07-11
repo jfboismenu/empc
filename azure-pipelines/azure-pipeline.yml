@@ -50,5 +50,13 @@ steps:
       cd build
       cmake -G Ninja ..
     displayName: CMake Build
-  - bash: ninja
-    displayName: Nina Build
+  - bash: |
+      set -e
+      cd build
+      ninja
+    displayName: Ninja Build
+  - bash: |
+      set -e
+      cd build
+      ninja test
+    displayName: Tests

@@ -23,4 +23,4 @@
 
 set -e
 
-sudo apt-get install nasm ninja cmake
+sudo apt-get install nasm ninja-build cmake
