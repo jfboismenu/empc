@@ -23,4 +23,4 @@
 
 set -e
 
-chocolatey cmake ninja nasm
+chocolatey install cmake ninja nasm
