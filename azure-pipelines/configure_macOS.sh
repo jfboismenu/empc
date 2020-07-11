@@ -1,3 +1,4 @@
+#!/usr/bin/env sh
 # MIT License
 #
 # Copyright (c) 2020 Jean-François Boismenu
