@@ -33,7 +33,7 @@ pool:
   vmImage: $(image)
 
 steps:
-  - bash: ./configure_$(image).sh
+  - bash: ./configure_$(System.JobDisplayName).sh
     displayName: Install tools
   - bash: |
       mkdir build
