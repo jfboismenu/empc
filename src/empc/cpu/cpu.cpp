@@ -48,7 +48,6 @@ void CPU::reset() noexcept
 void CPU::emulate_once()
 {
     const byte opcode { _read_instruction_byte() };
-
     switch (opcode) {
     case 0xEA: {
         _jmp_absolute(_read_instruction_word(), _read_instruction_word());
@@ -82,7 +81,7 @@ word CPU::_read_instruction_word() noexcept
 
 address CPU::_get_program_counter() const noexcept
 {
-    return (_sr.ss() << 0x8) + _ip.ip();
+    return (_sr.cs() << 0x4) + _ip.ip();
 }
 
 }

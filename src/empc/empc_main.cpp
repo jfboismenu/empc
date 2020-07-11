@@ -22,9 +22,35 @@
 
 #include <docopt.h>
 #include <empc/empc.h>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+
+const char USAGE[] =
+    R"(EMpathy PC emulator
+
+Usage:
+    empc --bios <path-to-bios>
+)";
 
 int main(int argc, char** argv)
 {
+    auto args = docopt::docopt(
+        USAGE,
+        { argv + 1, argv + argc },
+        true,
+        "EMpathy PC emulator 0.1");
+
+    const std::string bios_path(args["<path-to-bios>"].asString());
+    if (!std::filesystem::exists(bios_path)) {
+        std::cout << "BIOS not found on disk: " << bios_path << std::endl;
+        return -1;
+    }
+
     empc::EmPC pc;
+    std::ifstream ifs(bios_path.c_str());
+    pc.load_bios(ifs);
+    pc.reset();
+    pc.emulate_once();
     return 0;
 }

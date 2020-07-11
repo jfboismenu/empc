@@ -34,7 +34,7 @@ EmPC::EmPC()
 
 void EmPC::load_bios(std::istream& stream)
 {
-    _memory.write_region(0xFFFF0, stream);
+    _memory.write_region(0xF0000, stream);
 }
 
 void EmPC::reset()
