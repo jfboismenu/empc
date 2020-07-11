@@ -21,6 +21,9 @@
 // SOFTWARE.
 
 #include <docopt.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/spdlog.h>
+
 #include <empc/empc.h>
 #include <filesystem>
 #include <fstream>
@@ -35,6 +38,7 @@ Usage:
 
 int main(int argc, char** argv)
 {
+    auto console = spdlog::stdout_color_mt("console");
     auto args = docopt::docopt(
         USAGE,
         { argv + 1, argv + argc },
@@ -43,9 +47,11 @@ int main(int argc, char** argv)
 
     const std::string bios_path(args["<path-to-bios>"].asString());
     if (!std::filesystem::exists(bios_path)) {
-        std::cout << "BIOS not found on disk: " << bios_path << std::endl;
+        spdlog::get("console")->info("BIOS not found on disk: {}", bios_path);
         return -1;
     }
+
+    console->info("Starting emulation");
 
     empc::EmPC pc;
     std::ifstream ifs(bios_path.c_str());

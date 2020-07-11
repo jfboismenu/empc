@@ -23,6 +23,7 @@
 include_directories(empc-tests INTERFACE ".")
 
 conan_cmake_run(REQUIRES docopt/0.6.2@conan/stable BASIC_SETUP CMAKE_TARGETS BUILD missing BUILD_TYPE "Release")
+conan_cmake_run(REQUIRES spdlog/1.6.1 BASIC_SETUP CMAKE_TARGETS BUILD_TYPE "Release")
 
 FILE(GLOB CppEmpcSources empc/*/*.cpp empc/empc.cpp)
 add_library(empclib STATIC ${CppEmpcSources})
@@ -30,3 +31,4 @@ add_library(empclib STATIC ${CppEmpcSources})
 add_executable(empc empc/empc_main.cpp)
 target_link_libraries(empc empclib)
 target_link_libraries(empc CONAN_PKG::docopt)
+target_link_libraries(empc CONAN_PKG::spdlog)
