@@ -28,7 +28,7 @@ conan_cmake_run(REQUIRES spdlog/1.6.1 BASIC_SETUP CMAKE_TARGETS BUILD_TYPE "Rele
 FILE(GLOB CppEmpcSources empc/*/*.cpp empc/empc.cpp)
 add_library(empclib STATIC ${CppEmpcSources})
 
-add_executable(empc empc/empc_main.cpp)
+add_executable(empc empc/empc_main.cpp empc/empc_util.cpp)
 target_link_libraries(empc empclib)
 target_link_libraries(empc CONAN_PKG::docopt)
 target_link_libraries(empc CONAN_PKG::spdlog)

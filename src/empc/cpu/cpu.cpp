@@ -84,4 +84,25 @@ address CPU::_get_program_counter() const noexcept
     return (_sr.cs() << 0x4) + _ip.ip();
 }
 
+const DataRegisters& CPU::data_registers() const
+{
+    return _dr;
+}
+
+const SegmentRegisters& CPU::segment_registers() const
+{
+    return _sr;
+}
+
+const InstructionPointer &CPU::instruction_pointer_register() const
+{
+    return _ip;
+}
+
+const PointerAndIndexRegisters &CPU::pointer_and_index_registers() const
+{
+    return _pair;
+}
+
+
 }

@@ -20,51 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#pragma once
+#include <iosfwd>
 
-#include <empc/cpu/data_registers.h>
-#include <empc/cpu/instruction_pointer.h>
-#include <empc/cpu/pointer_and_index_registers.h>
-#include <empc/cpu/segment_registers.h>
-#include <empc/memory/memory.h>
 
 namespace empc {
+class CPU;
 
-class CPU {
-public:
-    CPU(Memory& memory);
-    void emulate_once();
-    void reset() noexcept;
-
-    const DataRegisters& data_registers() const;
-    const SegmentRegisters& segment_registers() const;
-    const InstructionPointer &instruction_pointer_register() const;
-    const PointerAndIndexRegisters &pointer_and_index_registers() const;
-
-private:
-// =============
-// Instructions
-// =============
-
-    template <typename Operand>
-    void _jmp_absolute(Operand offset, Operand segment) noexcept;
-    void _unknown_opcode(byte opcode) const;
-    address _get_program_counter() const noexcept;
-    // ================
-    // Utility methods
-    // ================
-    byte _read_instruction_byte() noexcept;
-    word _read_instruction_word() noexcept;
-
-// =============
-// Data members
-// =============
-    Memory& _memory;
-
-    DataRegisters _dr;
-    PointerAndIndexRegisters _pair;
-    InstructionPointer _ip;
-    SegmentRegisters _sr;
-};
-
+std::ostream& get_state(std::ostream& os, const CPU& cpu);
 }
