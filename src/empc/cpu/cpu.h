@@ -35,28 +35,28 @@ public:
     CPU(MemoryBuffer& memory);
     void emulate_once();
     void reset() noexcept;
-    // const Registers& registers() const;
-    // Registers& registers();
+// const Registers& registers() const;
+// Registers& registers();
 
 private:
-    // =============
-    // Instructions
-    // =============
+// =============
+// Instructions
+// =============
 
     template <typename Operand>
     void _jmp_absolute(Operand offset, Operand segment) noexcept;
     void _unknown_opcode(byte opcode) const;
 
-    // ================
-    // Utility methods
-    // ================
+// ================
+// Utility methods
+// ================
     byte _read_instruction_byte() noexcept;
     word _read_instruction_word() noexcept;
     address _get_program_counter() const noexcept;
 
-    // =============
-    // Data members
-    // =============
+// =============
+// Data members
+// =============
     MemoryBuffer& _memory;
 
     DataRegisters _dr;

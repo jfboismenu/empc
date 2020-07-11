@@ -30,8 +30,8 @@ namespace empc {
 class DataRegisters {
 public:
     DataRegisters();
-    // Defines const not consts accessors for
-    // registers combinations {a,b,c,d}{l,h,x}
+// Defines const not consts accessors for
+// registers combinations {a,b,c,d}{l,h,x}
     const byte& al() const;
     byte& al();
     const byte& ah() const;
@@ -84,7 +84,7 @@ private:
 };
 
 inline DataRegisters::DataRegisters()
-    : _regs { .r16 = { 0, 0, 0, 0 } }
+    : _regs {.r16 = { 0, 0, 0, 0 } }
 {
 }
 

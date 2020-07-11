@@ -35,12 +35,13 @@ repos:
       files: (\.c$)|(\.h$)|(\.cpp$)
       args: [--comment-style, //]
 
-  - repo: https://gitlab.com/daverona/pre-commit-cpp
-    rev: 0.6.0
+  - repo: https://github.com/pocc/pre-commit-hooks
+    rev: v1.1.1
     hooks:
-    - id: clang-format
-      args: [-style=WebKit]
-    - id: cppcheck
+    - id: uncrustify
+      args: [--replace, --no-backup]
+    # - id: cppcheck
+    #   args: [--enable=all]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.1.0
