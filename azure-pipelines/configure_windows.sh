@@ -23,4 +23,3 @@
 set -e
 
 chocolatey cmake ninja nasm
-python -m pip install conan

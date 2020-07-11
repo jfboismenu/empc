@@ -23,4 +23,3 @@
 set -e
 
 sudo apt-get install nasm ninja cmake
-python3 -m pip install conan

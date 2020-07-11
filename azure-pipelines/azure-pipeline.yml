@@ -24,16 +24,24 @@ strategy:
   matrix:
     'Windows':
       image: 'windows-2019'
+      platform: windows
     'Linux':
       image: 'ubuntu-18.04'
+      platform: linux
     'macOS':
       image: 'macos-10.15'
+      platform: macOS
 
 pool:
   vmImage: $(image)
 
 steps:
-  - bash: ./configure_$(System.JobDisplayName).sh
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: 3.8
+  - bash: |
+      ./configure_$(System.JobDisplayName).sh
+      python -m pip install conan
     displayName: Install tools
   - bash: |
       mkdir build
