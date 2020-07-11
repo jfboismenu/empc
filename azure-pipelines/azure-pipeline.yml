@@ -41,7 +41,7 @@ steps:
       versionSpec: 3.8
   - bash: |
       set -e
-      ./configure_$(platform).sh
+      azure-pipelines/configure_$(platform).sh
       python -m pip install conan
     displayName: Install tools
   - bash: |
