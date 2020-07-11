@@ -40,10 +40,12 @@ steps:
     inputs:
       versionSpec: 3.8
   - bash: |
-      ./configure_$(System.JobDisplayName).sh
+      set -e
+      ./configure_$(platform).sh
       python -m pip install conan
     displayName: Install tools
   - bash: |
+      set -e
       mkdir build
       cd build
       cmake -G Ninja ..
