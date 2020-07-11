@@ -20,4 +20,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <empc/memory/memory_buffer.imp.h>
+#pragma once
+
+#include <empc/base/types.h>
+#include <iosfwd>
+#include <vector>
+
+namespace empc {
+
+class Memory {
+public:
+    Memory(size_t size);
+
+    byte read_byte(address) const;
+    void write_byte(address, byte);
+
+    word read_word(address) const;
+    void write_word(address, word);
+
+    void write_region(address, std::istream& stream);
+
+private:
+    std::vector<byte> _bytes;
+};
+
+}

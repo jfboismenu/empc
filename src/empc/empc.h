@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 #include <empc/cpu/cpu.h>
-#include <empc/memory/memory_buffer.h>
+#include <empc/memory/memory.h>
 
 #include <filesystem>
 
@@ -36,7 +36,7 @@ public:
     void emulate_once();
 
 private:
-    MemoryBuffer _memory;
+    Memory _memory;
     CPU _cpu;
 };
 

@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 #include <empc/empc.h>
-#include <empc/memory/memory_buffer.imp.h>
+#include <empc/memory/memory.imp.h>
 #include <istream>
 
 namespace empc {

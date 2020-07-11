@@ -20,28 +20,47 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#pragma once
-
-#include <empc/base/types.h>
-#include <iosfwd>
-#include <vector>
+#include <empc/memory/memory.h>
+#include <iostream>
+#include <memory>
 
 namespace empc {
 
-class MemoryBuffer {
-public:
-    MemoryBuffer(size_t size);
+inline Memory::Memory(size_t size)
+    : _bytes(size, byte { 0 })
+{
+}
 
-    byte read_byte(address) const;
-    void write_byte(address, byte);
+inline byte Memory::read_byte(address addr) const
+{
+    return _bytes[addr];
+}
 
-    word read_word(address) const;
-    void write_word(address, word);
+inline void Memory::write_byte(address addr, byte data)
+{
+    _bytes[addr] = data;
+}
 
-    void write_region(address, std::istream& stream);
+inline word Memory::read_word(address addr) const
+{
+    return reinterpret_cast<const word&>(_bytes[addr]);
+}
 
-private:
-    std::vector<byte> _bytes;
-};
+inline void Memory::write_word(address addr, word data)
+{
+    reinterpret_cast<word&>(_bytes[addr]) = data;
+}
+
+inline void Memory::write_region(address addr, std::istream& stream)
+{
+    char* current = reinterpret_cast<char*>(&_bytes[addr]);
+
+    // get length of file:
+    stream.seekg(0, stream.end);
+    const auto length { stream.tellg() };
+    stream.seekg(0, stream.beg);
+
+    stream.read(current, length);
+}
 
 }

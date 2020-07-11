@@ -26,13 +26,13 @@
 #include <empc/cpu/instruction_pointer.h>
 #include <empc/cpu/pointer_and_index_registers.h>
 #include <empc/cpu/segment_registers.h>
-#include <empc/memory/memory_buffer.h>
+#include <empc/memory/memory.h>
 
 namespace empc {
 
 class CPU {
 public:
-    CPU(MemoryBuffer& memory);
+    CPU(Memory& memory);
     void emulate_once();
     void reset() noexcept;
 // const Registers& registers() const;
@@ -57,7 +57,7 @@ private:
 // =============
 // Data members
 // =============
-    MemoryBuffer& _memory;
+    Memory& _memory;
 
     DataRegisters _dr;
     PointerAndIndexRegisters _pair;

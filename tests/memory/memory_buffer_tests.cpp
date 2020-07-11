@@ -21,11 +21,11 @@
 // SOFTWARE.
 
 #include <catch2/catch.hpp>
-#include <empc/memory/memory_buffer.imp.h>
+#include <empc/memory/memory.imp.h>
 
-TEST_CASE("Memory Buffer", "[memory]")
+TEST_CASE("Memory", "[memory]")
 {
-    empc::MemoryBuffer buffer { 16 };
+    empc::Memory buffer { 16 };
 
     buffer.write_byte(0, 1);
     REQUIRE(buffer.read_byte(0) == 1);

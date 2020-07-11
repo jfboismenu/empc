@@ -22,12 +22,12 @@
 
 #include <empc/cpu/cpu.h>
 #include <empc/cpu/cpu.jmp.hpp>
-#include <empc/memory/memory_buffer.imp.h>
+#include <empc/memory/memory.imp.h>
 #include <sstream>
 
 namespace empc {
 
-CPU::CPU(MemoryBuffer& memory)
+CPU::CPU(Memory& memory)
     : _memory(memory)
 {
 }
