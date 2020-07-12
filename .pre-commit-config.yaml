@@ -34,6 +34,9 @@ repos:
     - id: insert-license
       files: (\.c$)|(\.h$)|(\.cpp$)
       args: [--comment-style, //]
+    - id: insert-license
+      files: (\.asm$)
+      args: [--comment-style, ;]
 
   - repo: https://github.com/pocc/pre-commit-hooks
     rev: v1.1.1
