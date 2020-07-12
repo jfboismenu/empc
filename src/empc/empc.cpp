@@ -32,6 +32,11 @@ EmPC::EmPC()
 {
 }
 
+const CPU &EmPC::cpu() const
+{
+    return _cpu;
+}
+
 void EmPC::load_bios(std::istream& stream)
 {
     _memory.write_region(0xF0000, stream);

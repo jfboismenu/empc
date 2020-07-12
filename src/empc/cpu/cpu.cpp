@@ -23,7 +23,7 @@
 #include <empc/cpu/cpu.h>
 #include <empc/cpu/cpu.jmp.hpp>
 #include <empc/memory/memory.imp.h>
-#include <sstream>
+#include <fmt/core.h>
 
 namespace empc {
 
@@ -60,9 +60,7 @@ void CPU::emulate_once()
 
 void CPU::_unknown_opcode(byte opcode) const
 {
-    std::ostringstream os;
-    os << "Unexpected opcode " << std::hex << opcode << std::endl;
-    throw std::runtime_error(os.str());
+    throw std::runtime_error(fmt::format("Unexpected opcode {:02x}", opcode));
 }
 
 byte CPU::_read_instruction_byte() noexcept

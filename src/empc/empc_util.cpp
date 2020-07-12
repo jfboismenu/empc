@@ -21,38 +21,43 @@
 // SOFTWARE.
 
 #include <empc/cpu/cpu.h>
+#include <fmt/core.h>
 #include <ostream>
 #include <iomanip>
-
-namespace {
-template<typename T>
-void write_register(std::ostream& os, T value, const char* name, const bool last=false) {
-    os << name << ": 0x" << std::hex << std::setw(4) << std::setfill('0') << value;
-    if (!last) {
-        os << " ";
-    }
-}
-}
 
 namespace empc
 {
 
-std::ostream &get_state(std::ostream& os, const CPU &cpu)
+std::string get_state(const CPU &cpu)
 {
-    write_register(os, cpu.data_registers().ax(), "ax");
-    write_register(os, cpu.data_registers().bx(), "bx");
-    write_register(os, cpu.data_registers().cx(), "cx");
-    write_register(os, cpu.data_registers().dx(), "dx");
-    write_register(os, cpu.pointer_and_index_registers().si(), "si");
-    write_register(os, cpu.pointer_and_index_registers().di(), "di");
-    write_register(os, cpu.pointer_and_index_registers().bp(), "bp");
-    write_register(os, cpu.pointer_and_index_registers().sp(), "sp");
-    write_register(os, cpu.instruction_pointer_register().ip(), "ip");
-    write_register(os, cpu.segment_registers().cs(), "cs");
-    write_register(os, cpu.segment_registers().ds(), "ds");
-    write_register(os, cpu.segment_registers().es(), "es");
-    write_register(os, cpu.segment_registers().ss(), "ss", true);
-    return os;
+    return fmt::format(
+        "ax: {:04x} "
+        "bx: {:04x} "
+        "cx: {:04x} "
+        "dx: {:04x} "
+        "si: {:04x} "
+        "di: {:04x} "
+        "bp: {:04x} "
+        "sp: {:04x} "
+        "ip: {:04x} "
+        "cs: {:04x} "
+        "ds: {:04x} "
+        "es: {:04x} "
+        "ss: {:04x} ",
+        cpu.data_registers().ax(),
+        cpu.data_registers().bx(),
+        cpu.data_registers().cx(),
+        cpu.data_registers().dx(),
+        cpu.pointer_and_index_registers().si(),
+        cpu.pointer_and_index_registers().di(),
+        cpu.pointer_and_index_registers().bp(),
+        cpu.pointer_and_index_registers().sp(),
+        cpu.instruction_pointer_register().ip(),
+        cpu.segment_registers().cs(),
+        cpu.segment_registers().ds(),
+        cpu.segment_registers().es(),
+        cpu.segment_registers().ss()
+        );
 }
 
 }

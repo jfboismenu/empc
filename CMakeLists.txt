@@ -37,5 +37,9 @@ endif()
 
 include(${CMAKE_BINARY_DIR}/conan.cmake)
 
+conan_cmake_run(REQUIRES docopt/0.6.2@conan/stable BASIC_SETUP CMAKE_TARGETS BUILD missing BUILD_TYPE "Release")
+conan_cmake_run(REQUIRES spdlog/1.6.1 BASIC_SETUP CMAKE_TARGETS BUILD_TYPE "Release")
+conan_cmake_run(REQUIRES Catch2/2.11.1@catchorg/stable BASIC_SETUP CMAKE_TARGETS BUILD missing BUILD_TYPE "Release")
+
 add_subdirectory(src)
 add_subdirectory(tests)

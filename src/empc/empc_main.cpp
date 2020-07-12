@@ -20,11 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#include <empc/empc.h>
+#include <empc/empc_util.h>
+
 #include <docopt.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 
-#include <empc/empc.h>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -57,6 +59,9 @@ int main(int argc, char** argv)
     std::ifstream ifs(bios_path.c_str());
     pc.load_bios(ifs);
     pc.reset();
-    pc.emulate_once();
+    for(;;) {
+        std::cout << empc::get_state(pc.cpu()) << std::endl;
+        pc.emulate_once();
+    }
     return 0;
 }

@@ -23,6 +23,7 @@
 
 set -e
 
+# https://askubuntu.com/questions/1192955/how-to-install-g-10-on-ubuntu-18-04
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test
 sudo apt-get update
 sudo apt-get install g++-10

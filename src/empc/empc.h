@@ -30,6 +30,7 @@ namespace empc {
 class EmPC {
 public:
     EmPC();
+    const CPU& cpu() const;
     void load_bios(std::istream& stream);
     void reset();
     void emulate();
