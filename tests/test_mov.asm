@@ -20,8 +20,9 @@
 ; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ; SOFTWARE.
 
-ORG 0xffff0000    ; 64k BIOS
-BITS 16
+; BIOS is loaded at F0000 and processors is in 16 bits mode on startup
+org 0xf0000
+bits 16
 
 ; Test moving data from a register to memory and back
 ; register, value, address
@@ -41,6 +42,7 @@ BITS 16
     mov %1, %2
 %endmacro
 
+; This is the test entry point. It will be written from 0xf0000
 test:
     reg2mem2reg ax, 0x1234, 0x9000
     reg2mem2reg bx, 0x2345, 0xA000
@@ -74,6 +76,6 @@ test:
     hlt
 
 ; PC jumps to FFFF0 on startup, so let's jump to the beginning of the test.
-TIMES   0xfff0-($-$$) DB 0x90
-    jmp test
-TIMES   0x10000-($-$$) DB 0x90
+times   0xfff0-($-$$) DB 0x90
+    jmp 0xf000:0000
+times   0x10000-($-$$) DB 0x90

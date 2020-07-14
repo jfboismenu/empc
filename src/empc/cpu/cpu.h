@@ -48,6 +48,10 @@ private:
 
     template <typename Operand>
     void _jmp_absolute(Operand offset, Operand segment) noexcept;
+
+    template <typename Operand>
+    void _jmp_near(Operand ip_offset) noexcept;
+
     void _unknown_opcode(byte opcode) const;
     address _get_program_counter() const noexcept;
     // ================

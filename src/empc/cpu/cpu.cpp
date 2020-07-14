@@ -49,6 +49,9 @@ void CPU::emulate_once()
 {
     const byte opcode { _read_instruction_byte() };
     switch (opcode) {
+    case 0xE9: {
+        _jmp_near(_read_instruction_word());
+    } break;
     case 0xEA: {
         _jmp_absolute(_read_instruction_word(), _read_instruction_word());
     } break;

@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#include <iostream>
+
 namespace empc {
 
 template <typename Operand>
@@ -28,6 +30,13 @@ void CPU::_jmp_absolute(Operand offset, Operand segment) noexcept
     static_assert(std::is_same<Operand, word>(), "Unsupported operand type.");
     _sr.cs() = segment;
     _ip.ip() = offset;
+}
+
+template <typename Operand>
+void CPU::_jmp_near(Operand ip_offset) noexcept
+{
+    static_assert(std::is_same<Operand, word>(), "Unsupported operand type.");
+    _ip.ip() += ip_offset;
 }
 
 }
