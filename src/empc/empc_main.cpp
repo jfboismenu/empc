@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 #include <empc/empc.h>
-#include <empc/empc_util.h>
+#include <empc/debug.h>
 
 #include <docopt.h>
 #include <spdlog/sinks/stdout_color_sinks.h>

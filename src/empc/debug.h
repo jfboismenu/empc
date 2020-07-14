@@ -25,6 +25,5 @@
 
 namespace empc {
 class CPU;
-
 std::string get_state(const CPU& cpu);
 }

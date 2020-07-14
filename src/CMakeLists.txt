@@ -22,11 +22,11 @@
 
 include_directories(empc-tests INTERFACE ".")
 
-FILE(GLOB CppEmpcSources empc/*/*.cpp empc/empc.cpp)
+FILE(GLOB CppEmpcSources empc/*/*.cpp empc/empc.cpp empc/debug.cpp)
 add_library(empclib STATIC ${CppEmpcSources})
 target_link_libraries(empclib CONAN_PKG::fmt)
 
-add_executable(empc empc/empc_main.cpp empc/empc_util.cpp)
+add_executable(empc empc/empc_main.cpp)
 target_link_libraries(empc empclib)
 target_link_libraries(empc CONAN_PKG::docopt)
 target_link_libraries(empc CONAN_PKG::spdlog)
