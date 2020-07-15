@@ -52,18 +52,25 @@ private:
     template <typename Operand>
     void _jmp_near(Operand ip_offset) noexcept;
 
+    template <typename DataType>
+    void _mov_imm(DataType& reg);
+    template <typename DataType>
+    void _mov_reg_to_mem(const DataType& data, address addr);
+    template <typename DataType>
+    void _mov_mem_to_reg(DataType &data, address addr);
+
     void _unknown_opcode(byte opcode) const;
     address _get_program_counter() const noexcept;
     // ================
     // Utility methods
     // ================
-    byte _read_instruction_byte() noexcept;
-    word _read_instruction_word() noexcept;
+    template <typename DataType>
+    DataType _fetch_operand() noexcept;
 
-// =============
-// Data members
-// =============
-    Memory& _memory;
+    // =============
+    // Data members
+    // =============
+    Memory &_memory;
 
     DataRegisters _dr;
     PointerAndIndexRegisters _pair;

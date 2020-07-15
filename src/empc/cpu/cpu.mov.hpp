@@ -20,28 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#pragma once
-
-#include <empc/base/types.h>
-#include <iosfwd>
-#include <vector>
+#include <iostream>
 
 namespace empc {
 
-class Memory {
-public:
-    Memory(size_t size);
+template <typename DataType>
+void CPU::_mov_imm(DataType &reg)
+{
+    reg = _fetch_operand<DataType>();
+}
 
-    template<typename DataType>
-    DataType read(address addr) const noexcept;
+template <typename DataType>
+void CPU::_mov_reg_to_mem(const DataType &data, address addr)
+{
+    _memory.write_word(addr, data);
+}
 
-    void write_byte(address, byte);
-    void write_word(address, word);
-
-    void write_region(address, std::istream& stream);
-
-private:
-    std::vector<byte> _bytes;
-};
+template <typename DataType>
+void CPU::_mov_mem_to_reg(DataType &data, address addr)
+{
+    data = _memory.read<word>(addr);
+}
 
 }

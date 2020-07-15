@@ -31,6 +31,6 @@ target_link_libraries(empc_tests CONAN_PKG::Catch2)
 add_test(empc-tests empc_tests)
 
 # Compile all assembly files.
-add_custom_command(OUTPUT test_mov.bin COMMAND nasm -f bin "${CMAKE_CURRENT_SOURCE_DIR}/test_mov.asm" -o "${CMAKE_CURRENT_BINARY_DIR}/test_mov.bin")
+add_custom_command(OUTPUT test_mov.bin MAIN_DEPENDENCY test_mov.asm COMMAND nasm -f bin "${CMAKE_CURRENT_SOURCE_DIR}/test_mov.asm" -o "${CMAKE_CURRENT_BINARY_DIR}/test_mov.bin")
 # Add them to a custom target for assemblies.
 add_custom_target(assemblies ALL DEPENDS test_mov.bin)

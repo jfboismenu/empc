@@ -29,8 +29,9 @@ bits 16
 %macro  reg2mem2reg 3
     mov %1, %2
     mov [%3], %1
-    xor %1, %1
+    mov %1, 0
     mov %1, [%3]
+    mov %1, 0
 %endmacro
 
 ; Test moving data from register to another
@@ -38,7 +39,7 @@ bits 16
 %macro reg2reg 3
     mov %1, %3
     mov %2, %1
-    xor %1, %1
+    mov %1, 0
     mov %1, %2
 %endmacro
 

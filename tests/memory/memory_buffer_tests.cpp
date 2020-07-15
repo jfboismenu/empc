@@ -28,21 +28,21 @@ TEST_CASE("Memory", "[memory]")
     empc::Memory buffer { 16 };
 
     buffer.write_byte(0, 1);
-    REQUIRE(buffer.read_byte(0) == 1);
-    REQUIRE(buffer.read_word(0) == 1);
+    REQUIRE(buffer.read<byte>(0) == 1);
+    REQUIRE(buffer.read<word>(0) == 1);
 
     buffer.write_byte(1, 2);
-    REQUIRE(buffer.read_byte(0) == 1);
-    REQUIRE(buffer.read_byte(1) == 2);
-    REQUIRE(buffer.read_word(0) == 513);
-    REQUIRE(buffer.read_word(1) == 2);
+    REQUIRE(buffer.read<byte>(0) == 1);
+    REQUIRE(buffer.read<byte>(1) == 2);
+    REQUIRE(buffer.read<word>(0) == 513);
+    REQUIRE(buffer.read<word>(1) == 2);
 
     buffer.write_word(0, 0);
-    REQUIRE(buffer.read_word(0) == 0);
-    REQUIRE(buffer.read_byte(0) == 0);
-    REQUIRE(buffer.read_word(1) == 0);
+    REQUIRE(buffer.read<word>(0) == 0);
+    REQUIRE(buffer.read<byte>(0) == 0);
+    REQUIRE(buffer.read<word>(1) == 0);
 
     buffer.write_word(0, 1026);
-    REQUIRE(buffer.read_byte(0) == 2);
-    REQUIRE(buffer.read_byte(1) == 4);
+    REQUIRE(buffer.read<byte>(0) == 2);
+    REQUIRE(buffer.read<byte>(1) == 4);
 }

@@ -22,6 +22,7 @@
 
 #include <empc/cpu/cpu.h>
 #include <empc/cpu/cpu.jmp.hpp>
+#include <empc/cpu/cpu.mov.hpp>
 #include <empc/memory/memory.imp.h>
 #include <fmt/core.h>
 
@@ -45,15 +46,70 @@ void CPU::reset() noexcept
     _sr.ss() = 0;
 }
 
+// 000 AX 000 AL
+// 001 CX 001 CL
+// 010 DX 010 DL
+// 011 BX 011 BL
+// 100 SP 100 AH
+// 101 BP 101 CH
+// 110 SI 110 DH
+// 111 DI 111 BH
+
 void CPU::emulate_once()
 {
-    const byte opcode { _read_instruction_byte() };
+    const byte opcode { _fetch_operand<byte>() };
     switch (opcode) {
+    case 0xA1:
+    {
+        _mov_mem_to_reg(_dr.ax(), _fetch_operand<word>());
+    } break;
+    case 0xA3:
+    {
+        _mov_reg_to_mem(_dr.ax(), _fetch_operand<word>());
+    } break;
+    case 0xB8: {
+        _mov_imm(_dr.ax());
+    } break;
+    case 0xB9:
+    {
+        _mov_imm(_dr.cx());
+    }
+    break;
+    case 0xBA:
+    {
+        _mov_imm(_dr.dx());
+    }
+    break;
+    case 0xBB:
+    {
+        _mov_imm(_dr.bx());
+    }
+    break;
+    case 0xBC:
+    {
+        _mov_imm(_pair.sp());
+    }
+    break;
+    case 0xBD:
+    {
+        _mov_imm(_pair.bp());
+    }
+    break;
+    case 0xBE:
+    {
+        _mov_imm(_pair.si());
+    }
+    break;
+    case 0xBF:
+    {
+        _mov_imm(_pair.di());
+    }
+    break;
     case 0xE9: {
-        _jmp_near(_read_instruction_word());
+        _jmp_near(_fetch_operand<word>());
     } break;
     case 0xEA: {
-        _jmp_absolute(_read_instruction_word(), _read_instruction_word());
+        _jmp_absolute(_fetch_operand<word>(), _fetch_operand<word>());
     } break;
     default: {
         _unknown_opcode(opcode);
@@ -66,17 +122,11 @@ void CPU::_unknown_opcode(byte opcode) const
     throw std::runtime_error(fmt::format("Unexpected opcode {:02x}", opcode));
 }
 
-byte CPU::_read_instruction_byte() noexcept
+template <typename DataType>
+DataType CPU::_fetch_operand() noexcept
 {
-    const byte result { _memory.read_byte(_get_program_counter()) };
-    _ip.add<byte>();
-    return result;
-}
-
-word CPU::_read_instruction_word() noexcept
-{
-    const word result { _memory.read_word(_get_program_counter()) };
-    _ip.add<word>();
+    const DataType result{_memory.read<DataType>(_get_program_counter())};
+    _ip.add<DataType>();
     return result;
 }
 

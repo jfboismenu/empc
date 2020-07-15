@@ -31,19 +31,15 @@ inline Memory::Memory(size_t size)
 {
 }
 
-inline byte Memory::read_byte(address addr) const
+template<typename DataType>
+inline DataType Memory::read(address addr) const noexcept
 {
-    return _bytes[addr];
+    return reinterpret_cast<const DataType&>(_bytes[addr]);
 }
 
 inline void Memory::write_byte(address addr, byte data)
 {
     _bytes[addr] = data;
-}
-
-inline word Memory::read_word(address addr) const
-{
-    return reinterpret_cast<const word&>(_bytes[addr]);
 }
 
 inline void Memory::write_word(address addr, word data)
