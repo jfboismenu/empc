@@ -35,6 +35,8 @@ public:
     template<typename DataType>
     DataType read(address addr) const noexcept;
 
+    template<typename DataType>
+    void write(address, DataType);
     void write_byte(address, byte);
     void write_word(address, word);
 

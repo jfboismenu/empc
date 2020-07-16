@@ -42,4 +42,16 @@ void CPU::_mov_mem_to_reg(DataType &data, address addr)
     data = _memory.read<word>(addr);
 }
 
+void CPU::_mov_reg_to_memreg()
+{
+    byte modrm = _fetch_operand<byte>();
+
+    if (modrm == 0x1E) {
+        _memory.write(_fetch_operand<word>(), _dr.bx());
+    }
+    else {
+        throw std::runtime_error(fmt::format("Unknown modrm {:02x}", modrm));
+    }
+}
+
 }

@@ -21,8 +21,6 @@
 // SOFTWARE.
 
 #include <empc/cpu/cpu.h>
-#include <empc/cpu/cpu.jmp.hpp>
-#include <empc/cpu/cpu.mov.hpp>
 #include <empc/memory/memory.imp.h>
 #include <fmt/core.h>
 
@@ -46,19 +44,13 @@ void CPU::reset() noexcept
     _sr.ss() = 0;
 }
 
-// 000 AX 000 AL
-// 001 CX 001 CL
-// 010 DX 010 DL
-// 011 BX 011 BL
-// 100 SP 100 AH
-// 101 BP 101 CH
-// 110 SI 110 DH
-// 111 DI 111 BH
-
 void CPU::emulate_once()
 {
     const byte opcode { _fetch_operand<byte>() };
     switch (opcode) {
+    case 0x89: {
+        _mov_reg_to_memreg();
+    } break;
     case 0xA1:
     {
         _mov_mem_to_reg(_dr.ax(), _fetch_operand<word>());
@@ -157,3 +149,6 @@ const PointerAndIndexRegisters &CPU::pointer_and_index_registers() const
 
 
 }
+
+#include <empc/cpu/cpu.jmp.hpp>
+#include <empc/cpu/cpu.mov.hpp>

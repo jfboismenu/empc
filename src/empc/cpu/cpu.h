@@ -58,6 +58,7 @@ private:
     void _mov_reg_to_mem(const DataType& data, address addr);
     template <typename DataType>
     void _mov_mem_to_reg(DataType &data, address addr);
+    void _mov_reg_to_memreg();
 
     void _unknown_opcode(byte opcode) const;
     address _get_program_counter() const noexcept;

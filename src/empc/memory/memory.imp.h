@@ -37,6 +37,12 @@ inline DataType Memory::read(address addr) const noexcept
     return reinterpret_cast<const DataType&>(_bytes[addr]);
 }
 
+template <typename DataType>
+inline void Memory::write(address addr, DataType data)
+{
+    reinterpret_cast<DataType &>(_bytes[addr]) = data;
+}
+
 inline void Memory::write_byte(address addr, byte data)
 {
     _bytes[addr] = data;
