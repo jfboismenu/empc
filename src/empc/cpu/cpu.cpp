@@ -27,7 +27,8 @@
 namespace empc {
 
 CPU::CPU(Memory& memory)
-    : _memory(memory)
+    : _memory(memory),
+    _is_halted{false}
 {
 }
 
@@ -48,6 +49,12 @@ void CPU::emulate_once()
 {
     const byte opcode { _fetch_operand<byte>() };
     switch (opcode) {
+    case 0x90: {
+        // NOP!
+    };
+    case 0xF4: {
+        _hlt();
+    } break;
     case 0x88: {
         _mov_88_89<byte>();
     } break;
@@ -130,6 +137,11 @@ void CPU::emulate_once()
         _unknown_opcode(opcode);
     } break;
     }
+}
+
+void CPU::_hlt()
+{
+    _is_halted = true;
 }
 
 void CPU::_unknown_opcode(byte opcode) const

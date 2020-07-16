@@ -51,6 +51,8 @@ public:
     void emulate_once();
     void reset() noexcept;
 
+    bool is_halted() const;
+
     const DataRegisters& data_registers() const;
     const SegmentRegisters& segment_registers() const;
     const InstructionPointer &instruction_pointer_register() const;
@@ -78,6 +80,8 @@ private:
     template <typename DataType>
     void _mov_8a_8b();
 
+    void _hlt();
+
     void _unknown_opcode(byte opcode) const;
     address _get_program_counter() const noexcept;
     // ================
@@ -101,6 +105,8 @@ private:
     PointerAndIndexRegisters _pair;
     InstructionPointer _ip;
     SegmentRegisters _sr;
+
+    bool _is_halted;
 };
 
 }
