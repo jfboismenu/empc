@@ -30,6 +30,7 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <chrono>
 
 const char USAGE[] =
     R"(EMpathy PC emulator
@@ -66,6 +67,8 @@ int main(int argc, char** argv)
 
         unsigned int nb_instructions{0};
         const long nb_iterations(args["--nb-iterations"].asLong());
+
+        auto start = std::chrono::high_resolution_clock::now();
         for(unsigned i = 0; i < nb_iterations; ++i) {
             pc.reset();
             while(!pc.cpu().is_halted()) {
@@ -73,7 +76,16 @@ int main(int argc, char** argv)
                 ++nb_instructions;
             }
         }
-        console->info("Nb instructions {}", nb_instructions);
+        auto elapsed{std::chrono::high_resolution_clock::now() - start};
+
+        const double seconds{std::chrono::duration<double>(elapsed).count()};
+
+        console->info("Nb iterations:       {}", nb_iterations);
+        console->info("Nb instructions:     {}", nb_instructions);
+        console->info("Time elapsed:        {}", seconds);
+        console->info("Instructions/second: {:.2f}", nb_instructions / seconds);
+        console->info("Nb CPU Cycles:       {:n}", pc.cpu().cpu_time());
+        console->info("Clockrate:           {:.2f}Mhz", pc.cpu().cpu_time() / seconds);
     }
     return 0;
 }

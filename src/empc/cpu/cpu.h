@@ -52,6 +52,7 @@ public:
     void reset() noexcept;
 
     bool is_halted() const;
+    unsigned long long cpu_time() const;
 
     const DataRegisters& data_registers() const;
     const SegmentRegisters& segment_registers() const;
@@ -72,9 +73,9 @@ private:
     template <typename DataType>
     void _mov_imm(DataType& reg);
     template <typename DataType>
-    void _mov_reg_to_mem(const DataType& data, address addr);
+    void _mov_a2_a3(const DataType& data, address addr);
     template <typename DataType>
-    void _mov_mem_to_reg(DataType &data, address addr);
+    void _mov_a0_a1(DataType &data, address addr);
     template <typename DataType>
     void _mov_88_89();
     template <typename DataType>
@@ -107,6 +108,7 @@ private:
     SegmentRegisters _sr;
 
     bool _is_halted;
+    unsigned long long _cpu_time;
 };
 
 }

@@ -28,7 +28,8 @@ namespace empc {
 
 CPU::CPU(Memory& memory)
     : _memory(memory),
-    _is_halted{false}
+    _is_halted{false},
+    _cpu_time{0}
 {
 }
 
@@ -46,12 +47,18 @@ void CPU::reset() noexcept
     _is_halted = false;
 }
 
+unsigned long long CPU::cpu_time() const
+{
+    return _cpu_time;
+}
+
 void CPU::emulate_once()
 {
     const byte opcode { _fetch_operand<byte>() };
     switch (opcode) {
     case 0x90: {
         // NOP!
+        _cpu_time += 3;
     };
     case 0xF4: {
         _hlt();
@@ -69,16 +76,16 @@ void CPU::emulate_once()
         _mov_8a_8b<word>();
     } break;
     case 0xA0: {
-        _mov_mem_to_reg(_dr.al(), _fetch_operand<word>());
+        _mov_a0_a1(_dr.al(), _fetch_operand<word>());
     } break;
     case 0xA1: {
-        _mov_mem_to_reg(_dr.ax(), _fetch_operand<word>());
+        _mov_a0_a1(_dr.ax(), _fetch_operand<word>());
     } break;
     case 0xA2: {
-        _mov_reg_to_mem(_dr.al(), _fetch_operand<word>());
+        _mov_a2_a3(_dr.al(), _fetch_operand<word>());
     } break;
     case 0xA3: {
-        _mov_reg_to_mem(_dr.ax(), _fetch_operand<word>());
+        _mov_a2_a3(_dr.ax(), _fetch_operand<word>());
     } break;
     case 0xB0: {
         _mov_imm(_dr.al());
@@ -143,6 +150,7 @@ void CPU::emulate_once()
 void CPU::_hlt()
 {
     _is_halted = true;
+    _cpu_time += 2;
 }
 
 bool CPU::is_halted() const
