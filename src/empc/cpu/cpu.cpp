@@ -48,17 +48,70 @@ void CPU::emulate_once()
 {
     const byte opcode { _fetch_operand<byte>() };
     switch (opcode) {
+    case 0x88: {
+        _mov_88_89<byte>();
+    } break;
     case 0x89: {
-        _mov_reg_to_memreg();
+        _mov_88_89<word>();
+    } break;
+    case 0x8a: {
+        _mov_8a_8b<byte>();
+    } break;
+    case 0x8b: {
+        _mov_8a_8b<word>();
+    } break;
+    case 0xA0: {
+        _mov_mem_to_reg(_dr.al(), _fetch_operand<word>());
     } break;
     case 0xA1:
     {
         _mov_mem_to_reg(_dr.ax(), _fetch_operand<word>());
     } break;
+    case 0xA2: {
+        _mov_reg_to_mem(_dr.al(), _fetch_operand<word>());
+    } break;
     case 0xA3:
     {
         _mov_reg_to_mem(_dr.ax(), _fetch_operand<word>());
     } break;
+    case 0xB0: {
+        _mov_imm(_dr.al());
+    } break;
+    case 0xB1:
+    {
+        _mov_imm(_dr.cl());
+    }
+    break;
+    case 0xB2:
+    {
+        _mov_imm(_dr.dl());
+    }
+    break;
+    case 0xB3:
+    {
+        _mov_imm(_dr.bl());
+    }
+    break;
+    case 0xB4:
+    {
+        _mov_imm(_dr.ah());
+    }
+    break;
+    case 0xB5:
+    {
+        _mov_imm(_dr.ch());
+    }
+    break;
+    case 0xB6:
+    {
+        _mov_imm(_dr.dh());
+    }
+    break;
+    case 0xB7:
+    {
+        _mov_imm(_dr.bh());
+    }
+    break;
     case 0xB8: {
         _mov_imm(_dr.ax());
     } break;
@@ -147,6 +200,71 @@ const PointerAndIndexRegisters &CPU::pointer_and_index_registers() const
     return _pair;
 }
 
+template<>
+word& CPU::_get_register_from_modrm(const ModRMByte data) {
+    switch(data.bits.reg) {
+    case 0: {
+        return _dr.ax();
+    }
+    case 1: {
+        return _dr.cx();
+    }
+    case 2: {
+        return _dr.dx();
+    }
+    case 3: {
+        return _dr.bx();
+    }
+    case 4: {
+        return _pair.sp();
+    }
+    case 5: {
+        return _pair.bp();
+    }
+    case 6: {
+        return _pair.si();
+    }
+    case 7: {
+        return _pair.di();
+    }
+    default: {
+        throw std::runtime_error("Unknown reg");
+    }
+    }
+}
+
+template<>
+byte& CPU::_get_register_from_modrm(const ModRMByte data) {
+    switch(data.bits.reg) {
+    case 0: {
+        return _dr.al();
+    }
+    case 1: {
+        return _dr.cl();
+    }
+    case 2: {
+        return _dr.dl();
+    }
+    case 3: {
+        return _dr.bl();
+    }
+    case 4: {
+        return _dr.ah();
+    }
+    case 5: {
+        return _dr.ch();
+    }
+    case 6: {
+        return _dr.dh();
+    }
+    case 7: {
+        return _dr.bh();
+    }
+    default: {
+        throw std::runtime_error("Unknown reg");
+    }
+    }
+}
 
 }
 

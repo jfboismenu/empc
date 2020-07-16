@@ -20,8 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <iostream>
-
 namespace empc {
 
 template <typename DataType>
@@ -42,16 +40,50 @@ void CPU::_mov_mem_to_reg(DataType &data, address addr)
     data = _memory.read<word>(addr);
 }
 
-void CPU::_mov_reg_to_memreg()
-{
-    byte modrm = _fetch_operand<byte>();
+// if mod = 00 then DISP = 0*, disp-Iow and disp-high are absent
+// if mod = 01 then DISP = disp-Iow sign-extended to 16 bits, disp-high is absent
+// if mod = 10 then DISP = disp-high:disp-Iow
+// if r/m = 000 then EA = (BX) + (SI) + DISP
+// if r/m = 001 then EA = (BX) + (DI) + DISP
+// if r/m = 010 then EA = (BP) + (SI) + DISP
+// if r/m = 011 then EA = (BP) + (DI) + DISP
+// if r/m = 100 then EA = (SI) + DISP
+// if r/m = 101 then EA = (DI) + DISP
+// if r/m = 110 then EA = (BP) + DISP*
+// if r/m = 111 then EA = (BX) + DISP
 
-    if (modrm == 0x1E) {
-        _memory.write(_fetch_operand<word>(), _dr.bx());
+#include <iostream>
+
+template<typename DataType>
+void CPU::_mov_88_89()
+{
+    const ModRMByte modrm{_fetch_operand<byte>()};
+
+    if (modrm.bits.mode != 0) {
+        throw std::runtime_error(fmt::format("Unsupported mode {:02b}", modrm.bits.mode));
     }
-    else {
-        throw std::runtime_error(fmt::format("Unknown modrm {:02x}", modrm));
+
+    if (modrm.bits.rm != 0b110) {
+        throw std::runtime_error(fmt::format("Unsupported rm {:03b}", modrm.bits.rm));
     }
+
+    _memory.write(_fetch_operand<word>(), _get_register_from_modrm<DataType>(modrm));
+}
+
+template <typename DataType>
+void CPU::_mov_8a_8b()
+{
+    const ModRMByte modrm{_fetch_operand<byte>()};
+
+    if (modrm.bits.mode != 0) {
+        throw std::runtime_error(fmt::format("Unsupported mode {:02b}", modrm.bits.mode));
+    }
+
+    if (modrm.bits.rm != 0b110) {
+        throw std::runtime_error(fmt::format("Unsupported rm {:03b}", modrm.bits.rm));
+    }
+
+    _get_register_from_modrm<DataType>(modrm) = _memory.read<DataType>(_fetch_operand<word>());
 }
 
 }

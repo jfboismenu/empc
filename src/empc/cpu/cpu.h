@@ -30,6 +30,21 @@
 
 namespace empc {
 
+
+struct ModRMByte {
+    ModRMByte(byte data) : full(data) {
+    }
+    union {
+        struct {
+            // Bit fields are defined from lsb to msb.
+            byte rm : 3;
+            byte reg : 3;
+            byte mode : 2;
+        } bits;
+        byte full;
+    };
+};
+
 class CPU {
 public:
     CPU(Memory& memory);
@@ -58,7 +73,10 @@ private:
     void _mov_reg_to_mem(const DataType& data, address addr);
     template <typename DataType>
     void _mov_mem_to_reg(DataType &data, address addr);
-    void _mov_reg_to_memreg();
+    template <typename DataType>
+    void _mov_88_89();
+    template <typename DataType>
+    void _mov_8a_8b();
 
     void _unknown_opcode(byte opcode) const;
     address _get_program_counter() const noexcept;
@@ -67,6 +85,9 @@ private:
     // ================
     template <typename DataType>
     DataType _fetch_operand() noexcept;
+
+    template <typename DataType>
+    DataType& _get_register_from_modrm(const ModRMByte data);
 
     // =============
     // Data members
