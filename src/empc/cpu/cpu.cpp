@@ -63,93 +63,63 @@ void CPU::emulate_once()
     case 0xA0: {
         _mov_mem_to_reg(_dr.al(), _fetch_operand<word>());
     } break;
-    case 0xA1:
-    {
+    case 0xA1: {
         _mov_mem_to_reg(_dr.ax(), _fetch_operand<word>());
     } break;
     case 0xA2: {
         _mov_reg_to_mem(_dr.al(), _fetch_operand<word>());
     } break;
-    case 0xA3:
-    {
+    case 0xA3: {
         _mov_reg_to_mem(_dr.ax(), _fetch_operand<word>());
     } break;
     case 0xB0: {
         _mov_imm(_dr.al());
     } break;
-    case 0xB1:
-    {
+    case 0xB1: {
         _mov_imm(_dr.cl());
-    }
-    break;
-    case 0xB2:
-    {
+    } break;
+    case 0xB2: {
         _mov_imm(_dr.dl());
-    }
-    break;
-    case 0xB3:
-    {
+    } break;
+    case 0xB3: {
         _mov_imm(_dr.bl());
-    }
-    break;
-    case 0xB4:
-    {
+    } break;
+    case 0xB4: {
         _mov_imm(_dr.ah());
-    }
-    break;
-    case 0xB5:
-    {
+    } break;
+    case 0xB5: {
         _mov_imm(_dr.ch());
-    }
-    break;
-    case 0xB6:
-    {
+    } break;
+    case 0xB6: {
         _mov_imm(_dr.dh());
-    }
-    break;
-    case 0xB7:
-    {
+    } break;
+    case 0xB7: {
         _mov_imm(_dr.bh());
-    }
-    break;
+    } break;
     case 0xB8: {
         _mov_imm(_dr.ax());
     } break;
-    case 0xB9:
-    {
+    case 0xB9: {
         _mov_imm(_dr.cx());
-    }
-    break;
-    case 0xBA:
-    {
+    } break;
+    case 0xBA: {
         _mov_imm(_dr.dx());
-    }
-    break;
-    case 0xBB:
-    {
+    } break;
+    case 0xBB: {
         _mov_imm(_dr.bx());
-    }
-    break;
-    case 0xBC:
-    {
+    } break;
+    case 0xBC: {
         _mov_imm(_pair.sp());
-    }
-    break;
-    case 0xBD:
-    {
+    } break;
+    case 0xBD: {
         _mov_imm(_pair.bp());
-    }
-    break;
-    case 0xBE:
-    {
+    } break;
+    case 0xBE: {
         _mov_imm(_pair.si());
-    }
-    break;
-    case 0xBF:
-    {
+    } break;
+    case 0xBF: {
         _mov_imm(_pair.di());
-    }
-    break;
+    } break;
     case 0xE9: {
         _jmp_near(_fetch_operand<word>());
     } break;
