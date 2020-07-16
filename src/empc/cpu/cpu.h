@@ -87,7 +87,10 @@ private:
     DataType _fetch_operand() noexcept;
 
     template <typename DataType>
-    DataType& _get_register_from_modrm(const ModRMByte data);
+    DataType& _get_reg_from_modrm(const ModRMByte data);
+
+    template <typename DataType>
+    DataType& _get_rm_reg_from_modrm(const ModRMByte data);
 
     // =============
     // Data members

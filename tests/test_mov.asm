@@ -41,6 +41,8 @@ bits 16
     mov %2, %1
     mov %1, 0
     mov %1, %2
+    mov %1, 0
+    mov %2, 0
 %endmacro
 
 ; This is the test entry point. It will be written from 0xf0000
@@ -69,9 +71,16 @@ test:
 
     reg2reg cx, dx, 0xBCDE
 
+    mov ax, 0x1234
     mov ax, ax
+
+    mov bx, 0x2345
     mov bx, bx
+
+    mov cx, 0x3456
     mov cx, cx
+
+    mov dx, 0x4567
     mov dx, dx
 
     hlt

@@ -171,7 +171,7 @@ const PointerAndIndexRegisters &CPU::pointer_and_index_registers() const
 }
 
 template<>
-word& CPU::_get_register_from_modrm(const ModRMByte data) {
+word& CPU::_get_reg_from_modrm(const ModRMByte data) {
     switch(data.bits.reg) {
     case 0: {
         return _dr.ax();
@@ -204,8 +204,74 @@ word& CPU::_get_register_from_modrm(const ModRMByte data) {
 }
 
 template<>
-byte& CPU::_get_register_from_modrm(const ModRMByte data) {
+byte& CPU::_get_reg_from_modrm(const ModRMByte data) {
     switch(data.bits.reg) {
+    case 0: {
+        return _dr.al();
+    }
+    case 1: {
+        return _dr.cl();
+    }
+    case 2: {
+        return _dr.dl();
+    }
+    case 3: {
+        return _dr.bl();
+    }
+    case 4: {
+        return _dr.ah();
+    }
+    case 5: {
+        return _dr.ch();
+    }
+    case 6: {
+        return _dr.dh();
+    }
+    case 7: {
+        return _dr.bh();
+    }
+    default: {
+        throw std::runtime_error("Unknown reg");
+    }
+    }
+}
+
+template<>
+word& CPU::_get_rm_reg_from_modrm(const ModRMByte data) {
+    switch(data.bits.rm) {
+    case 0: {
+        return _dr.ax();
+    }
+    case 1: {
+        return _dr.cx();
+    }
+    case 2: {
+        return _dr.dx();
+    }
+    case 3: {
+        return _dr.bx();
+    }
+    case 4: {
+        return _pair.sp();
+    }
+    case 5: {
+        return _pair.bp();
+    }
+    case 6: {
+        return _pair.si();
+    }
+    case 7: {
+        return _pair.di();
+    }
+    default: {
+        throw std::runtime_error("Unknown reg");
+    }
+    }
+}
+
+template<>
+byte& CPU::_get_rm_reg_from_modrm(const ModRMByte data) {
+    switch(data.bits.rm) {
     case 0: {
         return _dr.al();
     }

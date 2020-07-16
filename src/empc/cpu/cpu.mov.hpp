@@ -59,15 +59,18 @@ void CPU::_mov_88_89()
 {
     const ModRMByte modrm{_fetch_operand<byte>()};
 
-    if (modrm.bits.mode != 0) {
+    if (modrm.bits.mode == 0) {
+        if (modrm.bits.rm != 0b110) {
+            throw std::runtime_error(fmt::format("Unsupported rm {:03b}", modrm.bits.rm));
+        }
+        _memory.write(_fetch_operand<word>(), _get_reg_from_modrm<DataType>(modrm));
+    } else if (modrm.bits.mode == 0b11) {
+        _get_rm_reg_from_modrm<DataType>(modrm) = _get_reg_from_modrm<DataType>(modrm);
+    } else {
         throw std::runtime_error(fmt::format("Unsupported mode {:02b}", modrm.bits.mode));
     }
 
-    if (modrm.bits.rm != 0b110) {
-        throw std::runtime_error(fmt::format("Unsupported rm {:03b}", modrm.bits.rm));
-    }
 
-    _memory.write(_fetch_operand<word>(), _get_register_from_modrm<DataType>(modrm));
 }
 
 template <typename DataType>
@@ -83,7 +86,7 @@ void CPU::_mov_8a_8b()
         throw std::runtime_error(fmt::format("Unsupported rm {:03b}", modrm.bits.rm));
     }
 
-    _get_register_from_modrm<DataType>(modrm) = _memory.read<DataType>(_fetch_operand<word>());
+    _get_reg_from_modrm<DataType>(modrm) = _memory.read<DataType>(_fetch_operand<word>());
 }
 
 }
