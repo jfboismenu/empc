@@ -43,6 +43,7 @@ void CPU::reset() noexcept
     _sr.ds() = 0;
     _sr.es() = 0;
     _sr.ss() = 0;
+    _is_halted = false;
 }
 
 void CPU::emulate_once()
@@ -142,6 +143,11 @@ void CPU::emulate_once()
 void CPU::_hlt()
 {
     _is_halted = true;
+}
+
+bool CPU::is_halted() const
+{
+    return _is_halted;
 }
 
 void CPU::_unknown_opcode(byte opcode) const

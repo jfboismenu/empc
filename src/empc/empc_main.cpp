@@ -35,7 +35,11 @@ const char USAGE[] =
     R"(EMpathy PC emulator
 
 Usage:
-    empc --bios <path-to-bios>
+    empc test <path-to-binary> [--nb-iterations=<nb-iterations>]
+
+Options:
+    --nb-iterations nb-iterations  Number of times to run the test.  [default: 1000000]
+
 )";
 
 int main(int argc, char** argv)
@@ -47,21 +51,29 @@ int main(int argc, char** argv)
         true,
         "EMpathy PC emulator 0.1");
 
-    const std::string bios_path(args["<path-to-bios>"].asString());
-    if (!std::filesystem::exists(bios_path)) {
-        spdlog::get("console")->info("BIOS not found on disk: {}", bios_path);
-        return -1;
-    }
+    if (args["test"].asBool()) {
+        const std::string path_to_binary(args["<path-to-binary>"].asString());
+        if (!std::filesystem::exists(path_to_binary)) {
+            spdlog::get("console")->info("Binary not found on disk: {}", path_to_binary);
+            return -1;
+        }
 
-    console->info("Starting emulation");
+        console->info("Starting emulation");
 
-    empc::EmPC pc;
-    std::ifstream ifs(bios_path.c_str());
-    pc.load_bios(ifs);
-    pc.reset();
-    for(;;) {
-        std::cout << empc::get_state(pc.cpu()) << std::endl;
-        pc.emulate_once();
+        empc::EmPC pc;
+        std::ifstream ifs(path_to_binary);
+        pc.load_bios(ifs);
+
+        unsigned int nb_instructions{0};
+        const long nb_iterations(args["--nb-iterations"].asLong());
+        for(unsigned i = 0; i < nb_iterations; ++i) {
+            pc.reset();
+            while(!pc.cpu().is_halted()) {
+                pc.emulate_once();
+                ++nb_instructions;
+            }
+        }
+        console->info("Nb instructions {}", nb_instructions);
     }
     return 0;
 }
