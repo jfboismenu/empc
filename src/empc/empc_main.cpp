@@ -39,7 +39,7 @@ Usage:
     empc test <path-to-binary> [--nb-iterations=<nb-iterations>]
 
 Options:
-    --nb-iterations nb-iterations  Number of times to run the test.  [default: 1000000]
+    --nb-iterations nb-iterations  Number of times to run the test.  [default: 1000]
 
 )";
 

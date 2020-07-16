@@ -61,7 +61,6 @@ void CPU::_mov_88_89()
     const ModRMByte modrm{_fetch_operand<byte>()};
 
     if (modrm.bits.mode == 0) {
-
         // Base instruction if 9 cycles
         _cpu_time += 9;
         if (modrm.bits.rm != 0b110) {
