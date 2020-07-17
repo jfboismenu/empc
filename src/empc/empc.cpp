@@ -27,8 +27,8 @@
 namespace empc {
 
 EmPC::EmPC()
-    : _cpu { _memory }
-    , _memory { 1024 * 1024 }
+    : _memory{1024 * 1024},
+    _cpu{_memory}
 {
 }
 

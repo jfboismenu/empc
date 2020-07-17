@@ -25,6 +25,7 @@ project (empc)
 enable_testing()
 
 set(CMAKE_CXX_STANDARD 20)
+add_compile_options(-Wall -Wextra -Werror)
 
 set(THIRD_PARTY_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/3rdParty")
 

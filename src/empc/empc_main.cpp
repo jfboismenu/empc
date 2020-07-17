@@ -85,7 +85,8 @@ int main(int argc, char** argv)
         console->info("Time elapsed:        {}", seconds);
         console->info("Instructions/second: {:.2f}", nb_instructions / seconds);
         console->info("Nb CPU Cycles:       {:n}", pc.cpu().cpu_time());
-        console->info("Clockrate:           {:.2f}Mhz", pc.cpu().cpu_time() / seconds);
+        console->info("Clockrate:           {:.2f}Mhz",
+                      pc.cpu().cpu_time() / seconds / 1000 / 1000);
     }
     return 0;
 }
