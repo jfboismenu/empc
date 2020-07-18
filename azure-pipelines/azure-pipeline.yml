@@ -44,11 +44,7 @@ steps:
       azure-pipelines/configure_$(platform).sh
       python -m pip install conan
     displayName: Install tools
-  - bash: |
-      set -e
-      mkdir build
-      cd build
-      cmake -G Ninja ..
+  - bash: ./make_build.sh Release
     displayName: CMake Build
   - bash: |
       set -e
