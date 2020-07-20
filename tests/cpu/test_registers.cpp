@@ -25,7 +25,7 @@
 #include <empc/cpu/pointer_and_index_registers.h>
 #include <empc/cpu/segment_registers.h>
 
-TEST_CASE("Register tests", "[registers]")
+TEST_CASE("Register tests", "[cpu][registers]")
 {
     SECTION("General Purpose Registers")
     {

@@ -59,6 +59,11 @@ public:
     const InstructionPointer &instruction_pointer_register() const;
     const PointerAndIndexRegisters &pointer_and_index_registers() const;
 
+    DataRegisters &data_registers();
+    SegmentRegisters &segment_registers();
+    InstructionPointer &instruction_pointer_register();
+    PointerAndIndexRegisters &pointer_and_index_registers();
+
 private:
 // =============
 // Instructions
@@ -96,6 +101,14 @@ private:
 
     template <typename DataType>
     DataType& _get_rm_reg_from_modrm(const ModRMByte data);
+
+    template <typename DataType>
+    DataType _get_source_from_modrm(const ModRMByte data);
+
+    word _get_rm_mem_from_modrm(const ModRMByte byte);
+
+    word _data_segment() const;
+    word _stack_segment() const;
 
     // =============
     // Data members

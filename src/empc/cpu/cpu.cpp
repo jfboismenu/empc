@@ -196,6 +196,26 @@ const PointerAndIndexRegisters &CPU::pointer_and_index_registers() const
     return _pair;
 }
 
+DataRegisters &CPU::data_registers()
+{
+    return _dr;
+}
+
+SegmentRegisters &CPU::segment_registers()
+{
+    return _sr;
+}
+
+InstructionPointer &CPU::instruction_pointer_register()
+{
+    return _ip;
+}
+
+PointerAndIndexRegisters &CPU::pointer_and_index_registers()
+{
+    return _pair;
+}
+
 template<>
 word& CPU::_get_reg_from_modrm(const ModRMByte data) {
     switch(data.bits.reg) {
@@ -323,11 +343,103 @@ byte& CPU::_get_rm_reg_from_modrm(const ModRMByte data) {
         return _dr.bh();
     }
     default: {
-        throw std::runtime_error("Unknown reg");
+        throw std::runtime_error("Unknown reg byte");
     }
     }
 }
 
+// if mod = 00 then DISP = 0*, disp-Iow and disp-high are absent
+// if mod = 01 then DISP = disp-Iow sign-extended to 16 bits, disp-high is absent
+// if mod = 10 then DISP = disp-high:disp-Iow
+// if r/m = 000 then EA = (BX) + (SI) + DISP
+// if r/m = 001 then EA = (BX) + (DI) + DISP
+// if r/m = 010 then EA = (BP) + (SI) + DISP
+// if r/m = 011 then EA = (BP) + (DI) + DISP
+// if r/m = 100 then EA = (SI) + DISP
+// if r/m = 101 then EA = (DI) + DISP
+// if r/m = 110 then EA = (BP) + DISP*
+// if r/m = 111 then EA = (BX) + DISP
+
+word CPU::_get_rm_mem_from_modrm(const ModRMByte data)
+{
+    word disp;
+    if (data.bits.mode == 0) {
+        if (data.bits.rm == 0b110)
+        {
+            return _fetch_operand<word>();
+        }
+        else {
+            disp = 0;
+        }
+    }
+    else if (data.bits.mode == 0b01)
+    {
+        // Sign extended to word.
+        disp = static_cast<word>(_fetch_operand<byte>());
+    }
+    else
+    {
+        disp = _fetch_operand<word>();
+    }
+
+    switch(data.bits.rm) {
+    case 0: {
+        return _data_segment() + _dr.bx() + _pair.si() + disp;
+    }
+    case 1: {
+        return _data_segment() + _dr.bx() + _pair.di() + disp;
+    }
+    case 2: {
+        return _stack_segment() + _pair.bp() + _pair.si() + disp;
+    }
+    case 3: {
+        return _stack_segment() + _pair.sp() + _pair.di() + disp;
+    }
+    case 4: {
+        return _data_segment() + _pair.si() + disp;
+    }
+    case 5: {
+        return _data_segment() + _pair.di() + disp;
+    }
+    case 6: {
+        return _stack_segment() + _pair.bp() + disp;
+    }
+    case 7: {
+        return _stack_segment() + _dr.bx() + disp;
+    }
+    default: {
+        throw std::runtime_error("Unexpected rm byte");
+    }
+    }
+}
+
+template <typename DataType>
+DataType CPU::_get_source_from_modrm(const ModRMByte data)
+{
+    // The source is a register.
+    if (data.bits.mode == 0b11) {
+        // Read the register from the modrm byte.
+        return _get_rm_reg_from_modrm<DataType>(data);
+    }
+    else {
+        // Read the memory associated with the modrm byte.
+        return _memory.read<DataType>(_get_rm_mem_from_modrm(data));
+    }
+}
+
+word CPU::_data_segment() const
+{
+    // FIXME: When segment override operations are implemented,
+    // this method should return the right segment.
+    return _sr.ds() << 0x4;
+}
+
+word CPU::_stack_segment() const
+{
+    // FIXME: When segment override operations are implemented,
+    // this method should return the right segment.
+    return _sr.ss() << 0x4;
+}
 }
 
 #include <empc/cpu/cpu.jmp.hpp>

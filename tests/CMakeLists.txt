@@ -27,6 +27,7 @@ include_directories(empc-tests INTERFACE "../src")
 FILE(GLOB CppTestsSources */*.cpp)
 add_executable(empc_tests empc_tests.cpp ${CppTestsSources})
 target_link_libraries(empc_tests CONAN_PKG::Catch2)
+target_link_libraries(empc_tests empclib)
 
 add_test(empc-tests empc_tests)
 

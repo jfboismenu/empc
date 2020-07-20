@@ -72,6 +72,7 @@ int main(int argc, char** argv)
         for(unsigned i = 0; i < nb_iterations; ++i) {
             pc.reset();
             while(!pc.cpu().is_halted()) {
+                std::cout << empc::get_state(pc.cpu()) << std::endl;
                 pc.emulate_once();
                 ++nb_instructions;
             }

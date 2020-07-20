@@ -43,18 +43,6 @@ void CPU::_mov_a0_a1(DataType &data, address addr)
     _cpu_time += 10;
 }
 
-// if mod = 00 then DISP = 0*, disp-Iow and disp-high are absent
-// if mod = 01 then DISP = disp-Iow sign-extended to 16 bits, disp-high is absent
-// if mod = 10 then DISP = disp-high:disp-Iow
-// if r/m = 000 then EA = (BX) + (SI) + DISP
-// if r/m = 001 then EA = (BX) + (DI) + DISP
-// if r/m = 010 then EA = (BP) + (SI) + DISP
-// if r/m = 011 then EA = (BP) + (DI) + DISP
-// if r/m = 100 then EA = (SI) + DISP
-// if r/m = 101 then EA = (DI) + DISP
-// if r/m = 110 then EA = (BP) + DISP*
-// if r/m = 111 then EA = (BX) + DISP
-
 template<typename DataType>
 void CPU::_mov_88_89()
 {
@@ -76,27 +64,14 @@ void CPU::_mov_88_89()
     } else {
         throw std::runtime_error(fmt::format("Unsupported mode {:02b}", modrm.bits.mode));
     }
-
-
 }
 
 template <typename DataType>
 void CPU::_mov_8a_8b()
 {
     const ModRMByte modrm{_fetch_operand<byte>()};
-
     _cpu_time += 8;
-
-    if (modrm.bits.mode != 0) {
-        throw std::runtime_error(fmt::format("Unsupported mode {:02b}", modrm.bits.mode));
-    }
-
-    if (modrm.bits.rm != 0b110) {
-        throw std::runtime_error(fmt::format("Unsupported rm {:03b}", modrm.bits.rm));
-    }
-
-    _cpu_time += 6;
-    _get_reg_from_modrm<DataType>(modrm) = _memory.read<DataType>(_fetch_operand<word>());
+    _get_reg_from_modrm<DataType>(modrm) = _get_source_from_modrm<DataType>(modrm);
 }
 
 }

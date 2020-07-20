@@ -45,6 +45,25 @@ bits 16
     mov %2, 0
 %endmacro
 
+; Moving moving data from a memory location into a
+; register using the pointer and index registers
+%macro pair2reg 1
+    mov bx, 0xff00
+    mov si, 0x02
+    mov di, 0x04
+    mov sp, 0x08
+    mov bp, 0x10
+    mov %1, [bx + si + 0x100]
+    mov %1, [bx + di + 0x100]
+    mov %1, [bp + si + 0x100]
+    mov %1, [bp + di + 0x100]
+    mov %1, [si + 0x100]
+    mov %1, [di + 0x100]
+    mov %1, [bp + 0x100]
+    mov %1, [bx + 0x100]
+%endmacro
+
+
 ; This is the test entry point. It will be written from 0xf0000
 test:
     reg2mem2reg ax, 0x1234, 0x9000
@@ -125,7 +144,24 @@ test:
     mov di, 0x6789
     mov di, di
 
+    pair2reg ax
+    pair2reg al
+    pair2reg ah
+
+    pair2reg cx
+    pair2reg cl
+    pair2reg ch
+
+    pair2reg dx
+    pair2reg dl
+    pair2reg dh
+
+    pair2reg sp
+
     hlt
+
+times   0xff00-($-$$) DB 0x90
+    db 0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0A,0x0B,0x0C,0x0D,0x0E,0x0F,0x10,0x11,0x12,0x13,0x14,0x15,0x16,0x17,0x18,0x19
 
 ; PC jumps to FFFF0 on startup, so let's jump to the beginning of the test.
 times   0xfff0-($-$$) DB 0x90
