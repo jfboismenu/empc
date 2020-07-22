@@ -45,6 +45,70 @@ struct ModRMByte {
     };
 };
 
+struct CPUState {
+
+    CPUState();
+    void reset();
+
+    const byte &al() const;
+    byte &al();
+    const byte &ah() const;
+    byte &ah();
+    const word &ax() const;
+    word &ax();
+
+    const byte &bl() const;
+    byte &bl();
+    const byte &bh() const;
+    byte &bh();
+    const word &bx() const;
+    word &bx();
+
+    const byte &cl() const;
+    byte &cl();
+    const byte &ch() const;
+    byte &ch();
+    const word &cx() const;
+    word &cx();
+
+    const byte &dl() const;
+    byte &dl();
+    const byte &dh() const;
+    byte &dh();
+    const word &dx() const;
+    word &dx();
+
+private:
+    union
+    {
+        struct
+        {
+            byte al;
+            byte ah;
+            byte bl;
+            byte bh;
+            byte cl;
+            byte ch;
+            byte dl;
+            byte dh;
+        } r8;
+        struct
+        {
+            word ax;
+            word bx;
+            word cx;
+            word dx;
+        } r16;
+    } _data_regs;
+
+    PointerAndIndexRegisters _pair;
+    InstructionPointer _ip;
+    SegmentRegisters _sr;
+
+    bool _is_halted;
+    unsigned long long _cpu_time;
+}
+
 class CPU {
 public:
     CPU(Memory& memory);
@@ -114,14 +178,7 @@ private:
     // Data members
     // =============
     Memory &_memory;
-
-    DataRegisters _dr;
-    PointerAndIndexRegisters _pair;
-    InstructionPointer _ip;
-    SegmentRegisters _sr;
-
-    bool _is_halted;
-    unsigned long long _cpu_time;
+    CPUState _state;
 };
 
 }

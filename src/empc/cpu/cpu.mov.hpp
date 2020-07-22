@@ -74,4 +74,7 @@ void CPU::_mov_8a_8b()
     _get_reg_from_modrm<DataType>(modrm) = _get_source_from_modrm<DataType>(modrm);
 }
 
+
+void execute_mov_8a_8b(CPUState& state, Memory& memory);
+
 }
