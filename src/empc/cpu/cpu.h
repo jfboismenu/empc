@@ -22,10 +22,7 @@
 
 #pragma once
 
-#include <empc/cpu/data_registers.h>
-#include <empc/cpu/instruction_pointer.h>
-#include <empc/cpu/pointer_and_index_registers.h>
-#include <empc/cpu/segment_registers.h>
+#include <empc/cpu/cpu_state.h>
 #include <empc/memory/memory.h>
 
 namespace empc {
@@ -45,88 +42,17 @@ struct ModRMByte {
     };
 };
 
-struct CPUState {
-
-    CPUState();
-    void reset();
-
-    const byte &al() const;
-    byte &al();
-    const byte &ah() const;
-    byte &ah();
-    const word &ax() const;
-    word &ax();
-
-    const byte &bl() const;
-    byte &bl();
-    const byte &bh() const;
-    byte &bh();
-    const word &bx() const;
-    word &bx();
-
-    const byte &cl() const;
-    byte &cl();
-    const byte &ch() const;
-    byte &ch();
-    const word &cx() const;
-    word &cx();
-
-    const byte &dl() const;
-    byte &dl();
-    const byte &dh() const;
-    byte &dh();
-    const word &dx() const;
-    word &dx();
-
-private:
-    union
-    {
-        struct
-        {
-            byte al;
-            byte ah;
-            byte bl;
-            byte bh;
-            byte cl;
-            byte ch;
-            byte dl;
-            byte dh;
-        } r8;
-        struct
-        {
-            word ax;
-            word bx;
-            word cx;
-            word dx;
-        } r16;
-    } _data_regs;
-
-    PointerAndIndexRegisters _pair;
-    InstructionPointer _ip;
-    SegmentRegisters _sr;
-
-    bool _is_halted;
-    unsigned long long _cpu_time;
-}
-
 class CPU {
 public:
     CPU(Memory& memory);
     void emulate_once();
     void reset() noexcept;
 
+    CPUState& state();
+    const CPUState &state() const;
+
     bool is_halted() const;
     unsigned long long cpu_time() const;
-
-    const DataRegisters& data_registers() const;
-    const SegmentRegisters& segment_registers() const;
-    const InstructionPointer &instruction_pointer_register() const;
-    const PointerAndIndexRegisters &pointer_and_index_registers() const;
-
-    DataRegisters &data_registers();
-    SegmentRegisters &segment_registers();
-    InstructionPointer &instruction_pointer_register();
-    PointerAndIndexRegisters &pointer_and_index_registers();
 
 private:
 // =============

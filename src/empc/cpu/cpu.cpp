@@ -27,9 +27,7 @@
 namespace empc {
 
 CPU::CPU(Memory& memory)
-    : _memory(memory),
-    _is_halted{false},
-    _cpu_time{0}
+    : _memory(memory)
 {
 }
 
@@ -39,17 +37,22 @@ void CPU::reset() noexcept
     // Page 2-29, table 2-4.
 
     // FIXME: Empty flags
-    _sr.cs() = 0xFFFF;
-    _ip.ip() = 0;
-    _sr.ds() = 0;
-    _sr.es() = 0;
-    _sr.ss() = 0;
-    _is_halted = false;
+    _state.reset();
+}
+
+CPUState &CPU::state()
+{
+    return _state;
+}
+
+const CPUState &CPU::state() const
+{
+    return _state;
 }
 
 unsigned long long CPU::cpu_time() const
 {
-    return _cpu_time;
+    return _state.cpu_time;
 }
 
 void CPU::emulate_once()
@@ -58,7 +61,7 @@ void CPU::emulate_once()
     switch (opcode) {
     case 0x90: {
         // NOP!
-        _cpu_time += 3;
+        _state.cpu_time += 3;
     };
     case 0xF4: {
         _hlt();
@@ -76,64 +79,64 @@ void CPU::emulate_once()
         _mov_8a_8b<word>();
     } break;
     case 0xA0: {
-        _mov_a0_a1(_dr.al(), _fetch_operand<word>());
+        _mov_a0_a1(_state.al(), _fetch_operand<word>());
     } break;
     case 0xA1: {
-        _mov_a0_a1(_dr.ax(), _fetch_operand<word>());
+        _mov_a0_a1(_state.ax(), _fetch_operand<word>());
     } break;
     case 0xA2: {
-        _mov_a2_a3(_dr.al(), _fetch_operand<word>());
+        _mov_a2_a3(_state.al(), _fetch_operand<word>());
     } break;
     case 0xA3: {
-        _mov_a2_a3(_dr.ax(), _fetch_operand<word>());
+        _mov_a2_a3(_state.ax(), _fetch_operand<word>());
     } break;
     case 0xB0: {
-        _mov_imm(_dr.al());
+        _mov_imm(_state.al());
     } break;
     case 0xB1: {
-        _mov_imm(_dr.cl());
+        _mov_imm(_state.cl());
     } break;
     case 0xB2: {
-        _mov_imm(_dr.dl());
+        _mov_imm(_state.dl());
     } break;
     case 0xB3: {
-        _mov_imm(_dr.bl());
+        _mov_imm(_state.bl());
     } break;
     case 0xB4: {
-        _mov_imm(_dr.ah());
+        _mov_imm(_state.ah());
     } break;
     case 0xB5: {
-        _mov_imm(_dr.ch());
+        _mov_imm(_state.ch());
     } break;
     case 0xB6: {
-        _mov_imm(_dr.dh());
+        _mov_imm(_state.dh());
     } break;
     case 0xB7: {
-        _mov_imm(_dr.bh());
+        _mov_imm(_state.bh());
     } break;
     case 0xB8: {
-        _mov_imm(_dr.ax());
+        _mov_imm(_state.ax());
     } break;
     case 0xB9: {
-        _mov_imm(_dr.cx());
+        _mov_imm(_state.cx());
     } break;
     case 0xBA: {
-        _mov_imm(_dr.dx());
+        _mov_imm(_state.dx());
     } break;
     case 0xBB: {
-        _mov_imm(_dr.bx());
+        _mov_imm(_state.bx());
     } break;
     case 0xBC: {
-        _mov_imm(_pair.sp());
+        _mov_imm(_state.sp());
     } break;
     case 0xBD: {
-        _mov_imm(_pair.bp());
+        _mov_imm(_state.bp());
     } break;
     case 0xBE: {
-        _mov_imm(_pair.si());
+        _mov_imm(_state.si());
     } break;
     case 0xBF: {
-        _mov_imm(_pair.di());
+        _mov_imm(_state.di());
     } break;
     case 0xE9: {
         _jmp_near(_fetch_operand<word>());
@@ -149,13 +152,13 @@ void CPU::emulate_once()
 
 void CPU::_hlt()
 {
-    _is_halted = true;
-    _cpu_time += 2;
+    _state.is_halted = true;
+    _state.cpu_time += 2;
 }
 
 bool CPU::is_halted() const
 {
-    return _is_halted;
+    return _state.is_halted;
 }
 
 void CPU::_unknown_opcode(byte opcode) const
@@ -167,81 +170,41 @@ template <typename DataType>
 DataType CPU::_fetch_operand() noexcept
 {
     const DataType result{_memory.read<DataType>(_get_program_counter())};
-    _ip.add<DataType>();
+    _state.ip() += sizeof(DataType);
     return result;
 }
 
 address CPU::_get_program_counter() const noexcept
 {
-    return (_sr.cs() << 0x4) + _ip.ip();
-}
-
-const DataRegisters& CPU::data_registers() const
-{
-    return _dr;
-}
-
-const SegmentRegisters& CPU::segment_registers() const
-{
-    return _sr;
-}
-
-const InstructionPointer &CPU::instruction_pointer_register() const
-{
-    return _ip;
-}
-
-const PointerAndIndexRegisters &CPU::pointer_and_index_registers() const
-{
-    return _pair;
-}
-
-DataRegisters &CPU::data_registers()
-{
-    return _dr;
-}
-
-SegmentRegisters &CPU::segment_registers()
-{
-    return _sr;
-}
-
-InstructionPointer &CPU::instruction_pointer_register()
-{
-    return _ip;
-}
-
-PointerAndIndexRegisters &CPU::pointer_and_index_registers()
-{
-    return _pair;
+    return (_state.cs() << 0x4) + _state.ip();
 }
 
 template<>
 word& CPU::_get_reg_from_modrm(const ModRMByte data) {
     switch(data.bits.reg) {
     case 0: {
-        return _dr.ax();
+        return _state.ax();
     }
     case 1: {
-        return _dr.cx();
+        return _state.cx();
     }
     case 2: {
-        return _dr.dx();
+        return _state.dx();
     }
     case 3: {
-        return _dr.bx();
+        return _state.bx();
     }
     case 4: {
-        return _pair.sp();
+        return _state.sp();
     }
     case 5: {
-        return _pair.bp();
+        return _state.bp();
     }
     case 6: {
-        return _pair.si();
+        return _state.si();
     }
     case 7: {
-        return _pair.di();
+        return _state.di();
     }
     default: {
         throw std::runtime_error("Unknown reg");
@@ -253,28 +216,28 @@ template<>
 byte& CPU::_get_reg_from_modrm(const ModRMByte data) {
     switch(data.bits.reg) {
     case 0: {
-        return _dr.al();
+        return _state.al();
     }
     case 1: {
-        return _dr.cl();
+        return _state.cl();
     }
     case 2: {
-        return _dr.dl();
+        return _state.dl();
     }
     case 3: {
-        return _dr.bl();
+        return _state.bl();
     }
     case 4: {
-        return _dr.ah();
+        return _state.ah();
     }
     case 5: {
-        return _dr.ch();
+        return _state.ch();
     }
     case 6: {
-        return _dr.dh();
+        return _state.dh();
     }
     case 7: {
-        return _dr.bh();
+        return _state.bh();
     }
     default: {
         throw std::runtime_error("Unknown reg");
@@ -286,28 +249,28 @@ template<>
 word& CPU::_get_rm_reg_from_modrm(const ModRMByte data) {
     switch(data.bits.rm) {
     case 0: {
-        return _dr.ax();
+        return _state.ax();
     }
     case 1: {
-        return _dr.cx();
+        return _state.cx();
     }
     case 2: {
-        return _dr.dx();
+        return _state.dx();
     }
     case 3: {
-        return _dr.bx();
+        return _state.bx();
     }
     case 4: {
-        return _pair.sp();
+        return _state.sp();
     }
     case 5: {
-        return _pair.bp();
+        return _state.bp();
     }
     case 6: {
-        return _pair.si();
+        return _state.si();
     }
     case 7: {
-        return _pair.di();
+        return _state.di();
     }
     default: {
         throw std::runtime_error("Unknown reg");
@@ -319,28 +282,28 @@ template<>
 byte& CPU::_get_rm_reg_from_modrm(const ModRMByte data) {
     switch(data.bits.rm) {
     case 0: {
-        return _dr.al();
+        return _state.al();
     }
     case 1: {
-        return _dr.cl();
+        return _state.cl();
     }
     case 2: {
-        return _dr.dl();
+        return _state.dl();
     }
     case 3: {
-        return _dr.bl();
+        return _state.bl();
     }
     case 4: {
-        return _dr.ah();
+        return _state.ah();
     }
     case 5: {
-        return _dr.ch();
+        return _state.ch();
     }
     case 6: {
-        return _dr.dh();
+        return _state.dh();
     }
     case 7: {
-        return _dr.bh();
+        return _state.bh();
     }
     default: {
         throw std::runtime_error("Unknown reg byte");
@@ -384,28 +347,28 @@ word CPU::_get_rm_mem_from_modrm(const ModRMByte data)
 
     switch(data.bits.rm) {
     case 0: {
-        return _data_segment() + _dr.bx() + _pair.si() + disp;
+        return _data_segment() + _state.bx() + _state.si() + disp;
     }
     case 1: {
-        return _data_segment() + _dr.bx() + _pair.di() + disp;
+        return _data_segment() + _state.bx() + _state.di() + disp;
     }
     case 2: {
-        return _stack_segment() + _pair.bp() + _pair.si() + disp;
+        return _stack_segment() + _state.bp() + _state.si() + disp;
     }
     case 3: {
-        return _stack_segment() + _pair.sp() + _pair.di() + disp;
+        return _stack_segment() + _state.sp() + _state.di() + disp;
     }
     case 4: {
-        return _data_segment() + _pair.si() + disp;
+        return _data_segment() + _state.si() + disp;
     }
     case 5: {
-        return _data_segment() + _pair.di() + disp;
+        return _data_segment() + _state.di() + disp;
     }
     case 6: {
-        return _stack_segment() + _pair.bp() + disp;
+        return _stack_segment() + _state.bp() + disp;
     }
     case 7: {
-        return _stack_segment() + _dr.bx() + disp;
+        return _stack_segment() + _state.bx() + disp;
     }
     default: {
         throw std::runtime_error("Unexpected rm byte");
@@ -431,14 +394,14 @@ word CPU::_data_segment() const
 {
     // FIXME: When segment override operations are implemented,
     // this method should return the right segment.
-    return _sr.ds() << 0x4;
+    return _state.ds() << 0x4;
 }
 
 word CPU::_stack_segment() const
 {
     // FIXME: When segment override operations are implemented,
     // this method should return the right segment.
-    return _sr.ss() << 0x4;
+    return _state.ss() << 0x4;
 }
 }
 

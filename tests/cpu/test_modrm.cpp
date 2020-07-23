@@ -36,13 +36,13 @@ SCENARIO("ModRM byte tests", "[cpu][modrm]")
     empc::Memory memory(1024 * 1024);
     empc::CPU cpu(memory);
     cpu.reset();
-    cpu.data_registers().bx() = 0x100;
-    cpu.pointer_and_index_registers().bp() = 0x1000;
-    cpu.pointer_and_index_registers().sp() = 0x2000;
-    cpu.pointer_and_index_registers().si() = 0x4000;
-    cpu.pointer_and_index_registers().di() = 0x8000;
-    cpu.segment_registers().ss() = 0xE000;
-    cpu.segment_registers().ds() = 0xD000;
+    cpu.state().bx() = 0x100;
+    cpu.state().bp() = 0x1000;
+    cpu.state().sp() = 0x2000;
+    cpu.state().si() = 0x4000;
+    cpu.state().di() = 0x8000;
+    cpu.state().ss() = 0xE000;
+    cpu.state().ds() = 0xD000;
 
     // Assuming the displacement for all operations will be 0x80
     // Here we'll write the expected value for each memory addressing possible
@@ -74,7 +74,7 @@ SCENARIO("ModRM byte tests", "[cpu][modrm]")
     WHEN("Mod is 10 and rm is 000") {
         setModRM(memory, 0b10, 0);
         cpu.emulate_once();
-        REQUIRE(cpu.data_registers().ax() == 0x0304);
+        REQUIRE(cpu.state().ax() == 0x0304);
     }
 
     WHEN("Mod is 01")

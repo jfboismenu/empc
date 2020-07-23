@@ -28,17 +28,17 @@ template <typename Operand>
 void CPU::_jmp_absolute(Operand offset, Operand segment) noexcept
 {
     static_assert(std::is_same<Operand, word>(), "Unsupported operand type.");
-    _sr.cs() = segment;
-    _ip.ip() = offset;
-    _cpu_time += 15;
+    _state.cs() = segment;
+    _state.ip() = offset;
+    _state.cpu_time += 15;
 }
 
 template <typename Operand>
 void CPU::_jmp_near(Operand ip_offset) noexcept
 {
     static_assert(std::is_same<Operand, word>(), "Unsupported operand type.");
-    _ip.ip() += ip_offset;
-    _cpu_time += 15;
+    _state.ip() += ip_offset;
+    _state.cpu_time += 15;
 }
 
 }

@@ -44,19 +44,19 @@ std::string get_state(const CPU &cpu)
         "ds: {:04x} "
         "es: {:04x} "
         "ss: {:04x} ",
-        cpu.data_registers().ax(),
-        cpu.data_registers().bx(),
-        cpu.data_registers().cx(),
-        cpu.data_registers().dx(),
-        cpu.pointer_and_index_registers().si(),
-        cpu.pointer_and_index_registers().di(),
-        cpu.pointer_and_index_registers().bp(),
-        cpu.pointer_and_index_registers().sp(),
-        cpu.instruction_pointer_register().ip(),
-        cpu.segment_registers().cs(),
-        cpu.segment_registers().ds(),
-        cpu.segment_registers().es(),
-        cpu.segment_registers().ss()
+        cpu.state().ax(),
+        cpu.state().bx(),
+        cpu.state().cx(),
+        cpu.state().dx(),
+        cpu.state().si(),
+        cpu.state().di(),
+        cpu.state().bp(),
+        cpu.state().sp(),
+        cpu.state().ip(),
+        cpu.state().cs(),
+        cpu.state().ds(),
+        cpu.state().es(),
+        cpu.state().ss()
         );
 }
 

@@ -26,21 +26,21 @@ template <typename DataType>
 void CPU::_mov_imm(DataType &reg)
 {
     reg = _fetch_operand<DataType>();
-    _cpu_time += 4;
+    _state.cpu_time += 4;
 }
 
 template <typename DataType>
 void CPU::_mov_a2_a3(const DataType &data, address addr)
 {
     _memory.write_word(addr, data);
-    _cpu_time += 10;
+    _state.cpu_time += 10;
 }
 
 template <typename DataType>
 void CPU::_mov_a0_a1(DataType &data, address addr)
 {
     data = _memory.read<word>(addr);
-    _cpu_time += 10;
+    _state.cpu_time += 10;
 }
 
 template<typename DataType>
@@ -50,17 +50,17 @@ void CPU::_mov_88_89()
 
     if (modrm.bits.mode == 0) {
         // Base instruction if 9 cycles
-        _cpu_time += 9;
+        _state.cpu_time += 9;
         if (modrm.bits.rm != 0b110) {
             throw std::runtime_error(fmt::format("Unsupported rm {:03b}", modrm.bits.rm));
         }
 
         // Effective address of displacement cost is 6 cycles
-        _cpu_time += 6;
+        _state.cpu_time += 6;
         _memory.write(_fetch_operand<word>(), _get_reg_from_modrm<DataType>(modrm));
     } else if (modrm.bits.mode == 0b11) {
         _get_rm_reg_from_modrm<DataType>(modrm) = _get_reg_from_modrm<DataType>(modrm);
-        _cpu_time += 2;
+        _state.cpu_time += 2;
     } else {
         throw std::runtime_error(fmt::format("Unsupported mode {:02b}", modrm.bits.mode));
     }
@@ -70,11 +70,8 @@ template <typename DataType>
 void CPU::_mov_8a_8b()
 {
     const ModRMByte modrm{_fetch_operand<byte>()};
-    _cpu_time += 8;
+    _state.cpu_time += 8;
     _get_reg_from_modrm<DataType>(modrm) = _get_source_from_modrm<DataType>(modrm);
 }
-
-
-void execute_mov_8a_8b(CPUState& state, Memory& memory);
 
 }
