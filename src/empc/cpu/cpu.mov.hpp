@@ -20,14 +20,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#include <empc/cpu/instruction.h>
+
 namespace empc {
 
-template <typename DataType>
-void CPU::_mov_imm(DataType &reg)
+struct MovImm : public Instruction<MovImm>
 {
-    reg = _fetch_operand<DataType>();
-    _state.cpu_time += 4;
-}
+    template<typename DataType>
+    static void _execute(CPUState& state, Memory& memory, DataType& reg) {
+        reg = fetch_operand<DataType>(state, memory);
+        state.cpu_time += 4;
+    }
+};
+
 
 template <typename DataType>
 void CPU::_mov_a2_a3(const DataType &data, address addr)

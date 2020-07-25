@@ -20,9 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+
 #include <empc/cpu/cpu.h>
 #include <empc/memory/memory.imp.h>
 #include <fmt/core.h>
+
+
+#include <empc/cpu/cpu.jmp.hpp>
+#include <empc/cpu/cpu.mov.hpp>
+
 
 namespace empc {
 
@@ -91,52 +97,52 @@ void CPU::emulate_once()
         _mov_a2_a3(_state.ax(), _fetch_operand<word>());
     } break;
     case 0xB0: {
-        _mov_imm(_state.al());
+        MovImm::execute(_state, _memory, _state.al());
     } break;
     case 0xB1: {
-        _mov_imm(_state.cl());
+        MovImm::execute(_state, _memory, _state.cl());
     } break;
     case 0xB2: {
-        _mov_imm(_state.dl());
+        MovImm::execute(_state, _memory, _state.dl());
     } break;
     case 0xB3: {
-        _mov_imm(_state.bl());
+        MovImm::execute(_state, _memory, _state.bl());
     } break;
     case 0xB4: {
-        _mov_imm(_state.ah());
+        MovImm::execute(_state, _memory, _state.ah());
     } break;
     case 0xB5: {
-        _mov_imm(_state.ch());
+        MovImm::execute(_state, _memory, _state.ch());
     } break;
     case 0xB6: {
-        _mov_imm(_state.dh());
+        MovImm::execute(_state, _memory, _state.dh());
     } break;
     case 0xB7: {
-        _mov_imm(_state.bh());
+        MovImm::execute(_state, _memory, _state.bh());
     } break;
     case 0xB8: {
-        _mov_imm(_state.ax());
+        MovImm::execute(_state, _memory, _state.ax());
     } break;
     case 0xB9: {
-        _mov_imm(_state.cx());
+        MovImm::execute(_state, _memory, _state.cx());
     } break;
     case 0xBA: {
-        _mov_imm(_state.dx());
+        MovImm::execute(_state, _memory, _state.dx());
     } break;
     case 0xBB: {
-        _mov_imm(_state.bx());
+        MovImm::execute(_state, _memory, _state.bx());
     } break;
     case 0xBC: {
-        _mov_imm(_state.sp());
+        MovImm::execute(_state, _memory, _state.sp());
     } break;
     case 0xBD: {
-        _mov_imm(_state.bp());
+        MovImm::execute(_state, _memory, _state.bp());
     } break;
     case 0xBE: {
-        _mov_imm(_state.si());
+        MovImm::execute(_state, _memory, _state.si());
     } break;
     case 0xBF: {
-        _mov_imm(_state.di());
+        MovImm::execute(_state, _memory, _state.di());
     } break;
     case 0xE9: {
         _jmp_near(_fetch_operand<word>());
@@ -404,6 +410,3 @@ word CPU::_stack_segment() const
     return _state.ss() << 0x4;
 }
 }
-
-#include <empc/cpu/cpu.jmp.hpp>
-#include <empc/cpu/cpu.mov.hpp>

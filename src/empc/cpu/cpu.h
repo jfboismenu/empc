@@ -27,7 +27,6 @@
 
 namespace empc {
 
-
 struct ModRMByte {
     ModRMByte(byte data) : full(data) {
     }

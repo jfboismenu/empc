@@ -82,8 +82,11 @@ struct CPUState
     const word &ip() const;
     word &ip();
 
+    address get_program_counter() const noexcept;
+
     unsigned long long cpu_time;
     bool is_halted;
+    bool is_locked;
 
 private:
     union
@@ -123,6 +126,7 @@ private:
 
 inline CPUState::CPUState()
     : cpu_time{0}, is_halted{false},
+    is_locked{false},
     _data_regs{.r16 = {0, 0, 0, 0}},
     _si{0}, _di{0}, _bp{0}, _sp{0},
     _cs{0}, _ds{0}, _es{0}, _ss{0}
@@ -312,6 +316,11 @@ inline const word &CPUState::ip() const
 inline word &CPUState::ip()
 {
     return _ip;
+}
+
+inline address CPUState::get_program_counter() const noexcept
+{
+    return (cs() << 0x4) + ip();
 }
 
 }
