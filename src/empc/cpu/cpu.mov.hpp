@@ -33,20 +33,25 @@ struct MovImm : public Instruction<MovImm>
     }
 };
 
-
-template <typename DataType>
-void CPU::_mov_a2_a3(const DataType &data, address addr)
+struct MovA2A3 : public Instruction<MovA2A3>
 {
-    _memory.write_word(addr, data);
-    _state.cpu_time += 10;
-}
+    template <typename DataType>
+    static void _execute(CPUState &state, Memory &memory, const DataType &data)
+    {
+        memory.write(fetch_operand<word>(state, memory), data);
+        state.cpu_time += 10;
+    }
+};
 
-template <typename DataType>
-void CPU::_mov_a0_a1(DataType &data, address addr)
+struct MovA0A1 : public Instruction<MovA0A1>
 {
-    data = _memory.read<word>(addr);
-    _state.cpu_time += 10;
-}
+    template <typename DataType>
+    static void _execute(CPUState &state, Memory &memory, DataType &reg)
+    {
+        reg = memory.read<DataType>(fetch_operand<word>(state, memory));
+        state.cpu_time += 10;
+    }
+};
 
 template<typename DataType>
 void CPU::_mov_88_89()

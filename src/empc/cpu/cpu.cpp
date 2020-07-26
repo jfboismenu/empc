@@ -85,16 +85,16 @@ void CPU::emulate_once()
         _mov_8a_8b<word>();
     } break;
     case 0xA0: {
-        _mov_a0_a1(_state.al(), _fetch_operand<word>());
+        MovA0A1::execute(_state, _memory, _state.al());
     } break;
     case 0xA1: {
-        _mov_a0_a1(_state.ax(), _fetch_operand<word>());
+        MovA0A1::execute(_state, _memory, _state.ax());
     } break;
     case 0xA2: {
-        _mov_a2_a3(_state.al(), _fetch_operand<word>());
+        MovA2A3::execute(_state, _memory, _state.al());
     } break;
     case 0xA3: {
-        _mov_a2_a3(_state.ax(), _fetch_operand<word>());
+        MovA2A3::execute(_state, _memory, _state.ax());
     } break;
     case 0xB0: {
         MovImm::execute(_state, _memory, _state.al());
@@ -179,12 +179,10 @@ DataType CPU::_fetch_operand() noexcept
     _state.ip() += sizeof(DataType);
     return result;
 }
-
 address CPU::_get_program_counter() const noexcept
 {
     return (_state.cs() << 0x4) + _state.ip();
 }
-
 template<>
 word& CPU::_get_reg_from_modrm(const ModRMByte data) {
     switch(data.bits.reg) {
