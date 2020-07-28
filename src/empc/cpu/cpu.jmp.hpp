@@ -20,25 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <iostream>
+#include <empc/cpu/instruction.h>
 
 namespace empc {
 
-template <typename Operand>
-void CPU::_jmp_absolute(Operand offset, Operand segment) noexcept
+class JmpAbs : public Instruction<JmpAbs>
 {
-    static_assert(std::is_same<Operand, word>(), "Unsupported operand type.");
-    _state.cs() = segment;
-    _state.ip() = offset;
-    _state.cpu_time += 15;
-}
+public:
+    static void _execute(CPUState& state, Memory& memory)
+    {
+        const word offset {fetch_operand<word>(state, memory)};
+        const word segment{fetch_operand<word>(state, memory)};
+        state.ip() = offset;
+        state.cs() = segment;
+        state.cpu_time += 15;
+    }
+};
 
-template <typename Operand>
-void CPU::_jmp_near(Operand ip_offset) noexcept
+class JmpNear : public Instruction<JmpNear>
 {
-    static_assert(std::is_same<Operand, word>(), "Unsupported operand type.");
-    _state.ip() += ip_offset;
-    _state.cpu_time += 15;
-}
+public:
+    static void _execute(CPUState &state, Memory &memory) {
+        const word offset { fetch_operand<word>(state, memory)};
+        state.ip() += offset;
+        state.cpu_time += 15;
+    }
+};
 
 }

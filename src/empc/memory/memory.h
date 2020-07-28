@@ -31,6 +31,7 @@ namespace empc {
 class Memory {
 public:
     Memory(size_t size);
+    Memory(const Memory &) = delete;
 
     template<typename DataType>
     DataType read(address addr) const noexcept;

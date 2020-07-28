@@ -36,10 +36,11 @@ const char USAGE[] =
     R"(EMpathy PC emulator
 
 Usage:
-    empc test <path-to-binary> [--nb-iterations=<nb-iterations>]
+    empc test <path-to-binary> [--nb-iterations=<nb-iterations>] [--verbose]
 
 Options:
     --nb-iterations nb-iterations  Number of times to run the test.  [default: 1000]
+    --verbose  Prints debugging information.
 
 )";
 
@@ -68,12 +69,14 @@ int main(int argc, char** argv)
         unsigned int nb_instructions{0};
         const long nb_iterations{args["--nb-iterations"].asLong()};
         unsigned long long total_cyles{0};
-
+        const bool verbose{args["--verbose"].asBool()};
         auto start = std::chrono::high_resolution_clock::now();
         for(unsigned i = 0; i < nb_iterations; ++i) {
             pc.reset();
             while(!pc.cpu().is_halted()) {
-//                std::cout << empc::get_state(pc.cpu()) << std::endl;
+                if (verbose) {
+                    std::cout << empc::get_state(pc.cpu()) << std::endl;
+                }
                 pc.emulate_once();
                 ++nb_instructions;
             }

@@ -30,6 +30,7 @@ struct CPUState
 {
 
     CPUState();
+    CPUState(const CPUState &) = delete;
     void reset();
 
     const byte &al() const;

@@ -145,10 +145,10 @@ void CPU::emulate_once()
         MovImm::execute(_state, _memory, _state.di());
     } break;
     case 0xE9: {
-        _jmp_near(_fetch_operand<word>());
+        JmpNear::execute(_state, _memory);
     } break;
     case 0xEA: {
-        _jmp_absolute(_fetch_operand<word>(), _fetch_operand<word>());
+        JmpAbs::execute(_state, _memory);
     } break;
     default: {
         _unknown_opcode(opcode);
