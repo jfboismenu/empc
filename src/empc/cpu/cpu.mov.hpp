@@ -57,7 +57,6 @@ struct MovA0A1 : public Instruction<MovA0A1>
 template<typename DataType>
 struct Mov8889 : public ModRMInstruction<Mov8889<DataType> >
 {
-    using ThisClass = Mov8889<DataType>;
     static void _execute(CPUState &state, Memory &memory)
     {
         const ModRMByte modrm{imp::fetch_operand<byte>(state, memory)};

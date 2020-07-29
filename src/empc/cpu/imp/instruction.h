@@ -22,37 +22,12 @@
 
 #pragma once
 
-#include <empc/cpu/instruction.h>
-#include <empc/cpu/imp/modrm_instruction.h>
-#include <empc/cpu/cpu_state.h>
-
-namespace empc {
-
-template <typename IMPL, bool LOCKABLE = false>
-struct ModRMInstruction : public Instruction<IMPL, LOCKABLE>
+namespace empc { namespace imp {
+template <typename DataType>
+static DataType fetch_operand(CPUState &state, Memory &memory) noexcept
 {
-    template <typename DataType>
-    static DataType &get_reg_from_modrm(CPUState &state, const ModRMByte data)
-    {
-        return imp::get_reg_from_modrm<DataType>(state, data);
-    }
-
-    template <typename DataType>
-    static DataType &get_rm_reg_from_modrm(CPUState &state, const ModRMByte data)
-    {
-        return imp::get_rm_reg_from_modrm<DataType>(state, data);
-    }
-
-    template <typename DataType>
-    static DataType get_source_from_modrm(CPUState &state, Memory &memory, const ModRMByte data)
-    {
-        return imp::get_source_from_modrm<DataType>(state, memory, data);
-    }
-
-    static word get_rm_mem_from_modrm(CPUState &state, Memory &memory, const ModRMByte data)
-    {
-        return imp::get_rm_mem_from_modrm(state, memory, data);
-    }
-};
-
+    const DataType result{memory.read<DataType>(state.get_program_counter())};
+    state.ip() += sizeof(DataType);
+    return result;
 }
+}}
