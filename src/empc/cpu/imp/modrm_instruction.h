@@ -27,18 +27,18 @@
 namespace empc { namespace imp {
 
 template <typename DataType>
-DataType &get_reg_from_modrm(CPUState &state, const ModRMByte data);
+DataType &get_reg(CPUState &state, const ModRMByte data);
 
 template <typename DataType>
 DataType &get_reg_from_modrm_(CPUState &state, const ModRMByte data);
 
 template <typename DataType>
-DataType &get_rm_reg_from_modrm(CPUState &state, const ModRMByte data);
+DataType &get_rm_reg(CPUState &state, const ModRMByte data);
 
 template <typename DataType>
-DataType get_source_from_modrm(CPUState &state, Memory &memory, const ModRMByte data);
+DataType get_source(CPUState &state, Memory &memory, const ModRMByte data);
 
-word get_rm_mem_from_modrm(CPUState &state, Memory &memory, const ModRMByte data);
+word get_rm_mem(CPUState &state, Memory &memory, const ModRMByte data);
 
 word data_segment(CPUState &state)
 {
@@ -55,7 +55,7 @@ word stack_segment(CPUState &state)
 }
 
 template <>
-word &get_reg_from_modrm(CPUState &state, const ModRMByte data)
+word &get_reg(CPUState &state, const ModRMByte data)
 {
     switch (data.bits.reg)
     {
@@ -99,7 +99,7 @@ word &get_reg_from_modrm(CPUState &state, const ModRMByte data)
 }
 
 template <>
-byte &get_reg_from_modrm(CPUState& state, const ModRMByte data)
+byte &get_reg(CPUState& state, const ModRMByte data)
 {
     switch (data.bits.reg)
     {
@@ -143,7 +143,7 @@ byte &get_reg_from_modrm(CPUState& state, const ModRMByte data)
 }
 
 template <>
-word &get_rm_reg_from_modrm(CPUState& state, const ModRMByte data)
+word &get_rm_reg(CPUState& state, const ModRMByte data)
 {
     switch (data.bits.rm)
     {
@@ -187,7 +187,7 @@ word &get_rm_reg_from_modrm(CPUState& state, const ModRMByte data)
 }
 
 template <>
-byte &get_rm_reg_from_modrm(CPUState& state, const ModRMByte data)
+byte &get_rm_reg(CPUState& state, const ModRMByte data)
 {
     switch (data.bits.rm)
     {
@@ -243,7 +243,7 @@ byte &get_rm_reg_from_modrm(CPUState& state, const ModRMByte data)
 // if r/m = 110 then EA = (BP) + DISP*
 // if r/m = 111 then EA = (BX) + DISP
 
-word get_rm_mem_from_modrm(CPUState &state, Memory &memory, const ModRMByte data)
+word get_rm_mem(CPUState &state, Memory &memory, const ModRMByte data)
 {
     word disp;
     if (data.bits.mode == 0)
@@ -326,18 +326,18 @@ word get_rm_mem_from_modrm(CPUState &state, Memory &memory, const ModRMByte data
 }
 
 template <typename DataType>
-DataType get_source_from_modrm(CPUState& state, Memory& memory, const ModRMByte data)
+DataType get_source(CPUState& state, Memory& memory, const ModRMByte data)
 {
     // The source is a register.
     if (data.bits.mode == 0b11)
     {
         // Read the register from the modrm byte.
-        return imp::get_rm_reg_from_modrm<DataType>(state, data);
+        return imp::get_rm_reg<DataType>(state, data);
     }
     else
     {
         // Read the memory associated with the modrm byte.
-        return memory.read<DataType>(imp::get_rm_mem_from_modrm(state, memory, data));
+        return memory.read<DataType>(imp::get_rm_mem(state, memory, data));
     }
 }
 

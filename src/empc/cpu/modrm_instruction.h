@@ -31,24 +31,24 @@ namespace empc {
 template <typename IMPL, typename DATA_TYPE, bool LOCKABLE = false>
 struct ModRMInstruction : public Instruction<IMPL, LOCKABLE>
 {
-    static DATA_TYPE &get_reg_from_modrm(CPUState &state, const ModRMByte data)
+    static DATA_TYPE &get_reg(CPUState &state, const ModRMByte data)
     {
-        return imp::get_reg_from_modrm<DATA_TYPE>(state, data);
+        return imp::get_reg<DATA_TYPE>(state, data);
     }
 
-    static DATA_TYPE &get_rm_reg_from_modrm(CPUState &state, const ModRMByte data)
+    static DATA_TYPE &get_rm_reg(CPUState &state, const ModRMByte data)
     {
-        return imp::get_rm_reg_from_modrm<DATA_TYPE>(state, data);
+        return imp::get_rm_reg<DATA_TYPE>(state, data);
     }
 
-    static DATA_TYPE get_source_from_modrm(CPUState &state, Memory &memory, const ModRMByte data)
+    static DATA_TYPE get_source(CPUState &state, Memory &memory, const ModRMByte data)
     {
-        return imp::get_source_from_modrm<DATA_TYPE>(state, memory, data);
+        return imp::get_source<DATA_TYPE>(state, memory, data);
     }
 
-    static word get_rm_mem_from_modrm(CPUState &state, Memory &memory, const ModRMByte data)
+    static word get_rm_mem(CPUState &state, Memory &memory, const ModRMByte data)
     {
-        return imp::get_rm_mem_from_modrm(state, memory, data);
+        return imp::get_rm_mem(state, memory, data);
     }
 
     static void _execute(CPUState &state, Memory &memory);
@@ -67,7 +67,7 @@ void ModRMInstruction<IMPL, DATA_TYPE, LOCKABLE>::_execute(CPUState &state, Memo
         }
 
         const address addr{imp::fetch_operand<word>(state, memory)};
-        const DATA_TYPE &operand{imp::get_reg_from_modrm<DATA_TYPE>(state, modrm)};
+        const DATA_TYPE &operand{imp::get_reg<DATA_TYPE>(state, modrm)};
         const DATA_TYPE result{IMPL::_modrm_execute(state, memory, modrm, operand)};
 
         // Effective address of displacement cost is 6 cycles
@@ -76,8 +76,8 @@ void ModRMInstruction<IMPL, DATA_TYPE, LOCKABLE>::_execute(CPUState &state, Memo
     }
     else if (modrm.bits.mode == 0b11)
     {
-        imp::get_rm_reg_from_modrm<DATA_TYPE>(state, modrm) = IMPL::_modrm_execute(
-            state, memory, modrm, imp::get_reg_from_modrm<DATA_TYPE>(state, modrm));
+        imp::get_rm_reg<DATA_TYPE>(state, modrm) = IMPL::_modrm_execute(
+            state, memory, modrm, imp::get_reg<DATA_TYPE>(state, modrm));
     }
     else
     {
