@@ -60,12 +60,29 @@ struct Mov8889 : public ModRMInstruction<Mov8889<DATA_TYPE>, DATA_TYPE>
     static DATA_TYPE _modrm_execute(CPUState &state, Memory &memory, const ModRMByte modrm,
                                     const DATA_TYPE &value)
     {
-        (void)state;
+        // FIXME: modrm.is_dest_reg()
+        if (modrm.bits.mode == 0b11) {
+            state.cpu_time += 2;
+        } else {
+            state.cpu_time += 9;
+        }
         (void)memory;
-        (void)modrm;
         return value;
     }
 };
+
+// template<typename DATA_TYPE>
+// struct Mov8a8b : public ModRMInstruction<Mov8a8b<DATA_TYPE>, DATA_TYPE>
+// {
+//     static DATA_TYPE _modrm_execute(CPUState &state, Memory &memory, const ModRMByte modrm,
+//                                     const DATA_TYPE &value)
+//     {
+//         state.cpu_time += 8;
+//         (void)memory;
+//         (void)modrm;
+//         return value;
+//     }
+// }
 
 
 template <typename DataType>
@@ -73,6 +90,7 @@ void CPU::_mov_8a_8b()
 {
     const ModRMByte modrm{_fetch_operand<byte>()};
     _state.cpu_time += 8;
+    // Refactor this bit into how memory is read
     _get_reg_from_modrm<DataType>(modrm) = _get_source_from_modrm<DataType>(modrm);
 }
 

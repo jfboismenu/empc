@@ -31,24 +31,19 @@ namespace empc {
 template <typename IMPL, typename DATA_TYPE, bool LOCKABLE = false>
 struct ModRMInstruction : public Instruction<IMPL, LOCKABLE>
 {
-    using InstDataType = DATA_TYPE;
-
-    template <typename DataType>
-    static DataType &get_reg_from_modrm(CPUState &state, const ModRMByte data)
+    static DATA_TYPE &get_reg_from_modrm(CPUState &state, const ModRMByte data)
     {
-        return imp::get_reg_from_modrm<DataType>(state, data);
+        return imp::get_reg_from_modrm<DATA_TYPE>(state, data);
     }
 
-    template <typename DataType>
-    static DataType &get_rm_reg_from_modrm(CPUState &state, const ModRMByte data)
+    static DATA_TYPE &get_rm_reg_from_modrm(CPUState &state, const ModRMByte data)
     {
-        return imp::get_rm_reg_from_modrm<DataType>(state, data);
+        return imp::get_rm_reg_from_modrm<DATA_TYPE>(state, data);
     }
 
-    template <typename DataType>
-    static DataType get_source_from_modrm(CPUState &state, Memory &memory, const ModRMByte data)
+    static DATA_TYPE get_source_from_modrm(CPUState &state, Memory &memory, const ModRMByte data)
     {
-        return imp::get_source_from_modrm<DataType>(state, memory, data);
+        return imp::get_source_from_modrm<DATA_TYPE>(state, memory, data);
     }
 
     static word get_rm_mem_from_modrm(CPUState &state, Memory &memory, const ModRMByte data)
@@ -66,16 +61,14 @@ void ModRMInstruction<IMPL, DATA_TYPE, LOCKABLE>::_execute(CPUState &state, Memo
 
     if (modrm.bits.mode == 0)
     {
-        // Base instruction if 9 cycles
-        state.cpu_time += 9;
         if (modrm.bits.rm != 0b110)
         {
             throw std::runtime_error(fmt::format("Unsupported rm {:03b}", modrm.bits.rm));
         }
 
         const address addr{imp::fetch_operand<word>(state, memory)};
-        const InstDataType &operand{imp::get_reg_from_modrm<InstDataType>(state, modrm)};
-        const InstDataType result{IMPL::_modrm_execute(state, memory, modrm, operand)};
+        const DATA_TYPE &operand{imp::get_reg_from_modrm<DATA_TYPE>(state, modrm)};
+        const DATA_TYPE result{IMPL::_modrm_execute(state, memory, modrm, operand)};
 
         // Effective address of displacement cost is 6 cycles
         state.cpu_time += 6;
@@ -83,9 +76,8 @@ void ModRMInstruction<IMPL, DATA_TYPE, LOCKABLE>::_execute(CPUState &state, Memo
     }
     else if (modrm.bits.mode == 0b11)
     {
-        imp::get_rm_reg_from_modrm<InstDataType>(state, modrm) = IMPL::_modrm_execute(
-            state, memory, modrm, imp::get_reg_from_modrm<InstDataType>(state, modrm));
-        state.cpu_time += 2;
+        imp::get_rm_reg_from_modrm<DATA_TYPE>(state, modrm) = IMPL::_modrm_execute(
+            state, memory, modrm, imp::get_reg_from_modrm<DATA_TYPE>(state, modrm));
     }
     else
     {
