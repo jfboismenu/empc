@@ -91,7 +91,17 @@ void CPU::_mov_8a_8b()
     const ModRMByte modrm{_fetch_operand<byte>()};
     _state.cpu_time += 8;
     // Refactor this bit into how memory is read
+
+    // FIXME: Source can't be memory or register. it can only be mem
     _get_reg_from_modrm<DataType>(modrm) = _get_source_from_modrm<DataType>(modrm);
 }
+
+// get_reg_from_modrm
+// get_rm_mem_from_modrm
+// get_rm_reg_from_modrm
+// set_rm_from_modrm <- ModRMInstruction devrait implémenter ça. et mettre à jour
+// le bon reg ou mem
+// ModRMInstruction ne devrait pas implémenter de _execute
+// et la logique courante devrait aller dans set_rm_from_modrm
 
 }

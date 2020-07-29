@@ -250,6 +250,7 @@ word get_rm_mem_from_modrm(CPUState &state, Memory &memory, const ModRMByte data
     {
         if (data.bits.rm == 0b110)
         {
+            state.cpu_time += 6;
             return fetch_operand<word>(state, memory);
         }
         else
@@ -259,11 +260,19 @@ word get_rm_mem_from_modrm(CPUState &state, Memory &memory, const ModRMByte data
     }
     else if (data.bits.mode == 0b01)
     {
-        // Sign extended to word.
-        disp = static_cast<word>(fetch_operand<byte>(state, memory));
+        // When displacement is happening, we take a 4 cycle hit
+        state.cpu_time += 4;
+        disp = static_cast<word>(
+            // We sign extend the 8bit value, so read as a char,
+            // which goes from -128 to 127 and extend the sign to 16
+            // bit.
+            fetch_operand<char>(state, memory)
+            );
     }
     else
     {
+        // When displacement is happening, we take a 4 cycle hit
+        state.cpu_time += 4;
         disp = fetch_operand<word>(state, memory);
     }
 
@@ -271,34 +280,42 @@ word get_rm_mem_from_modrm(CPUState &state, Memory &memory, const ModRMByte data
     {
     case 0:
     {
+        state.cpu_time += 7;
         return data_segment(state) + state.bx() + state.si() + disp;
     }
     case 1:
     {
+        state.cpu_time += 7;
         return data_segment(state) + state.bx() + state.di() + disp;
     }
     case 2:
     {
+        state.cpu_time += 7;
         return stack_segment(state) + state.bp() + state.si() + disp;
     }
     case 3:
     {
+        state.cpu_time += 7;
         return stack_segment(state) + state.sp() + state.di() + disp;
     }
     case 4:
     {
+        state.cpu_time += 5;
         return data_segment(state) + state.si() + disp;
     }
     case 5:
     {
+        state.cpu_time += 5;
         return data_segment(state) + state.di() + disp;
     }
     case 6:
     {
+        state.cpu_time += 5;
         return stack_segment(state) + state.bp() + disp;
     }
     case 7:
     {
+        state.cpu_time += 5;
         return stack_segment(state) + state.bx() + disp;
     }
     default:
