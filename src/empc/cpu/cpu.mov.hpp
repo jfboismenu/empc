@@ -54,33 +54,19 @@ struct MovA0A1 : public Instruction<MovA0A1>
     }
 };
 
-template<typename DataType>
-struct Mov8889 : public ModRMInstruction<Mov8889<DataType> >
+template <typename DATA_TYPE>
+struct Mov8889 : public ModRMInstruction<Mov8889<DATA_TYPE>, DATA_TYPE>
 {
-    static void _execute(CPUState &state, Memory &memory)
+    static DATA_TYPE _modrm_execute(CPUState &state, Memory &memory, const ModRMByte modrm,
+                                    const DATA_TYPE &value)
     {
-        const ModRMByte modrm{imp::fetch_operand<byte>(state, memory)};
-
-        if (modrm.bits.mode == 0) {
-            // Base instruction if 9 cycles
-            state.cpu_time += 9;
-            if (modrm.bits.rm != 0b110) {
-                throw std::runtime_error(fmt::format("Unsupported rm {:03b}", modrm.bits.rm));
-            }
-
-            // Effective address of displacement cost is 6 cycles
-            state.cpu_time += 6;
-            memory.write(imp::fetch_operand<word>(state, memory),
-                         imp::get_reg_from_modrm<DataType>(state, modrm));
-        } else if (modrm.bits.mode == 0b11) {
-            imp::get_rm_reg_from_modrm<DataType>(state, modrm) = imp::get_reg_from_modrm<DataType>(
-                state, modrm);
-            state.cpu_time += 2;
-        } else {
-            throw std::runtime_error(fmt::format("Unsupported mode {:02b}", modrm.bits.mode));
-        }
+        (void)state;
+        (void)memory;
+        (void)modrm;
+        return value;
     }
 };
+
 
 template <typename DataType>
 void CPU::_mov_8a_8b()
