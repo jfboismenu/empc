@@ -1,0 +1,361 @@
+// MIT License
+//
+// Copyright (c) 2020 Jean-François Boismenu
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+#pragma once
+
+#include <empc/cpu/instruction.h>
+#include <empc/cpu/cpu_state.h>
+
+namespace empc {
+
+namespace imp {
+
+template<typename DataType>
+DataType &get_reg_from_modrm(CPUState& state, const ModRMByte data);
+
+template <typename DataType>
+DataType &get_reg_from_modrm_(CPUState &state, const ModRMByte data);
+
+template <typename DataType>
+DataType &get_rm_reg_from_modrm(CPUState &state, const ModRMByte data);
+
+template <typename DataType>
+DataType get_source_from_modrm(CPUState &state, Memory &memory, const ModRMByte data);
+
+word get_rm_mem_from_modrm(CPUState &state, Memory &memory, const ModRMByte data);
+}
+
+word _data_segment_imp(CPUState &state)
+{
+    // FIXME: When segment override operations are implemented,
+    // this method should return the right segment.
+    return state.ds() << 0x4;
+}
+
+word _stack_segment_imp(CPUState &state)
+{
+    // FIXME: When segment override operations are implemented,
+    // this method should return the right segment.
+    return state.ss() << 0x4;
+}
+
+template <typename IMPL, bool LOCKABLE = false>
+struct ModRMInstruction : public Instruction<IMPL, LOCKABLE>
+{
+    template <typename DataType>
+    static DataType &get_reg_from_modrm(CPUState &state, const ModRMByte data)
+    {
+        return imp::get_reg_from_modrm<DataType>(state, data);
+    }
+
+    template <typename DataType>
+    static DataType &get_rm_reg_from_modrm(CPUState &state, const ModRMByte data)
+    {
+        return imp::get_rm_reg_from_modrm<DataType>(state, data);
+    }
+
+    template <typename DataType>
+    static DataType get_source_from_modrm(CPUState &state, Memory &memory, const ModRMByte data)
+    {
+        return imp::get_source_from_modrm<DataType>(state, memory, data);
+    }
+
+    static word get_rm_mem_from_modrm(CPUState &state, Memory &memory, const ModRMByte data)
+    {
+        return imp::get_rm_mem_from_modrm(state, memory, data);
+    }
+};
+
+namespace imp {
+template <>
+word &get_reg_from_modrm(CPUState &state, const ModRMByte data)
+{
+    switch (data.bits.reg)
+    {
+    case 0:
+    {
+        return state.ax();
+    }
+    case 1:
+    {
+        return state.cx();
+    }
+    case 2:
+    {
+        return state.dx();
+    }
+    case 3:
+    {
+        return state.bx();
+    }
+    case 4:
+    {
+        return state.sp();
+    }
+    case 5:
+    {
+        return state.bp();
+    }
+    case 6:
+    {
+        return state.si();
+    }
+    case 7:
+    {
+        return state.di();
+    }
+    default:
+    {
+        throw std::runtime_error("Unknown reg");
+    }
+    }
+}
+
+template <>
+byte &get_reg_from_modrm(CPUState& state, const ModRMByte data)
+{
+    switch (data.bits.reg)
+    {
+    case 0:
+    {
+        return state.al();
+    }
+    case 1:
+    {
+        return state.cl();
+    }
+    case 2:
+    {
+        return state.dl();
+    }
+    case 3:
+    {
+        return state.bl();
+    }
+    case 4:
+    {
+        return state.ah();
+    }
+    case 5:
+    {
+        return state.ch();
+    }
+    case 6:
+    {
+        return state.dh();
+    }
+    case 7:
+    {
+        return state.bh();
+    }
+    default:
+    {
+        throw std::runtime_error("Unknown reg");
+    }
+    }
+}
+
+template <>
+word &get_rm_reg_from_modrm(CPUState& state, const ModRMByte data)
+{
+    switch (data.bits.rm)
+    {
+    case 0:
+    {
+        return state.ax();
+    }
+    case 1:
+    {
+        return state.cx();
+    }
+    case 2:
+    {
+        return state.dx();
+    }
+    case 3:
+    {
+        return state.bx();
+    }
+    case 4:
+    {
+        return state.sp();
+    }
+    case 5:
+    {
+        return state.bp();
+    }
+    case 6:
+    {
+        return state.si();
+    }
+    case 7:
+    {
+        return state.di();
+    }
+    default:
+    {
+        throw std::runtime_error("Unknown reg");
+    }
+    }
+}
+
+template <>
+byte &get_rm_reg_from_modrm(CPUState& state, const ModRMByte data)
+{
+    switch (data.bits.rm)
+    {
+    case 0:
+    {
+        return state.al();
+    }
+    case 1:
+    {
+        return state.cl();
+    }
+    case 2:
+    {
+        return state.dl();
+    }
+    case 3:
+    {
+        return state.bl();
+    }
+    case 4:
+    {
+        return state.ah();
+    }
+    case 5:
+    {
+        return state.ch();
+    }
+    case 6:
+    {
+        return state.dh();
+    }
+    case 7:
+    {
+        return state.bh();
+    }
+    default:
+    {
+        throw std::runtime_error("Unknown reg byte");
+    }
+    }
+}
+
+
+// if mod = 00 then DISP = 0*, disp-Iow and disp-high are absent
+// if mod = 01 then DISP = disp-Iow sign-extended to 16 bits, disp-high is absent
+// if mod = 10 then DISP = disp-high:disp-Iow
+// if r/m = 000 then EA = (BX) + (SI) + DISP
+// if r/m = 001 then EA = (BX) + (DI) + DISP
+// if r/m = 010 then EA = (BP) + (SI) + DISP
+// if r/m = 011 then EA = (BP) + (DI) + DISP
+// if r/m = 100 then EA = (SI) + DISP
+// if r/m = 101 then EA = (DI) + DISP
+// if r/m = 110 then EA = (BP) + DISP*
+// if r/m = 111 then EA = (BX) + DISP
+
+word get_rm_mem_from_modrm(CPUState &state, Memory &memory, const ModRMByte data)
+{
+    word disp;
+    if (data.bits.mode == 0)
+    {
+        if (data.bits.rm == 0b110)
+        {
+            return imp::fetch_operand<word>(state, memory);
+        }
+        else
+        {
+            disp = 0;
+        }
+    }
+    else if (data.bits.mode == 0b01)
+    {
+        // Sign extended to word.
+        disp = static_cast<word>(imp::fetch_operand<byte>(state, memory));
+    }
+    else
+    {
+        disp = imp::fetch_operand<word>(state, memory);
+    }
+
+    switch (data.bits.rm)
+    {
+    case 0:
+    {
+        return _data_segment_imp(state) + state.bx() + state.si() + disp;
+    }
+    case 1:
+    {
+        return _data_segment_imp(state) + state.bx() + state.di() + disp;
+    }
+    case 2:
+    {
+        return _stack_segment_imp(state) + state.bp() + state.si() + disp;
+    }
+    case 3:
+    {
+        return _stack_segment_imp(state) + state.sp() + state.di() + disp;
+    }
+    case 4:
+    {
+        return _data_segment_imp(state) + state.si() + disp;
+    }
+    case 5:
+    {
+        return _data_segment_imp(state) + state.di() + disp;
+    }
+    case 6:
+    {
+        return _stack_segment_imp(state) + state.bp() + disp;
+    }
+    case 7:
+    {
+        return _stack_segment_imp(state) + state.bx() + disp;
+    }
+    default:
+    {
+        throw std::runtime_error("Unexpected rm byte");
+    }
+    }
+}
+
+template <typename DataType>
+DataType get_source_from_modrm(CPUState& state, Memory& memory, const ModRMByte data)
+{
+    // The source is a register.
+    if (data.bits.mode == 0b11)
+    {
+        // Read the register from the modrm byte.
+        return imp::get_rm_reg_from_modrm<DataType>(state, data);
+    }
+    else
+    {
+        // Read the memory associated with the modrm byte.
+        return memory.read<DataType>(imp::get_rm_mem_from_modrm(state, memory, data));
+    }
+}
+
+}
+
+}

@@ -26,6 +26,16 @@
 
 namespace empc {
 
+namespace imp {
+template <typename DataType>
+static DataType fetch_operand(CPUState &state, Memory &memory) noexcept
+{
+    const DataType result{memory.read<DataType>(state.get_program_counter())};
+    state.ip() += sizeof(DataType);
+    return result;
+}
+}
+
 template <typename IMPL, bool LOCKABLE=false>
 struct Instruction
 {
@@ -38,9 +48,7 @@ struct Instruction
     template <typename DataType>
     static DataType fetch_operand(CPUState &state, Memory &memory) noexcept
     {
-        const DataType result{memory.read<DataType>(state.get_program_counter())};
-        state.ip() += sizeof(DataType);
-        return result;
+        return imp::fetch_operand<DataType>(state, memory);
     }
 };
 

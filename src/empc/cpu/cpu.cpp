@@ -73,10 +73,10 @@ void CPU::emulate_once()
         _hlt();
     } break;
     case 0x88: {
-        _mov_88_89<byte>();
+        Mov8889<byte>::execute(_state, _memory);
     } break;
     case 0x89: {
-        _mov_88_89<word>();
+        Mov8889<word>::execute(_state, _memory);
     } break;
     case 0x8a: {
         _mov_8a_8b<byte>();
