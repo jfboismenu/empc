@@ -41,8 +41,8 @@ repos:
   - repo: https://github.com/pocc/pre-commit-hooks
     rev: v1.1.1
     hooks:
-    - id: uncrustify
-      args: [--replace, --no-backup]
+    - id: clang-format
+      args: [-i]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.1.0
