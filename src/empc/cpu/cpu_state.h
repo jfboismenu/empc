@@ -85,6 +85,9 @@ struct CPUState
 
     address get_program_counter() const noexcept;
 
+    address data_segment() const noexcept;
+    address stack_segment() const noexcept;
+
     unsigned long long cpu_time;
     bool is_halted;
     bool is_locked;
@@ -324,4 +327,17 @@ inline address CPUState::get_program_counter() const noexcept
     return (cs() << 0x4) + ip();
 }
 
+inline address CPUState::data_segment() const noexcept
+{
+    // FIXME: When segment override operations are implemented,
+    // this method should return the right segment.
+    return address(ds()) << 0x4;
+}
+
+inline address CPUState::stack_segment() const noexcept
+{
+    // FIXME: When segment override operations are implemented,
+    // this method should return the right segment.
+    return address(ss()) << 0x4;
+}
 }

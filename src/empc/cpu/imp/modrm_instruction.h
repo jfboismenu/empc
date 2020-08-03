@@ -38,7 +38,7 @@ DataType &get_rm_reg(CPUState &state, const ModRMByte data);
 template <typename DataType>
 DataType get_source(CPUState &state, Memory &memory, const ModRMByte data);
 
-word get_rm_mem(CPUState &state, Memory &memory, const ModRMByte data);
+word get_rm_address(CPUState &state, Memory &memory, const ModRMByte data);
 
 word data_segment(CPUState &state)
 {
@@ -243,7 +243,7 @@ byte &get_rm_reg(CPUState& state, const ModRMByte data)
 // if r/m = 110 then EA = (BP) + DISP*
 // if r/m = 111 then EA = (BX) + DISP
 
-word get_rm_mem(CPUState &state, Memory &memory, const ModRMByte data)
+word get_rm_address(CPUState &state, Memory &memory, const ModRMByte data)
 {
     word disp;
     if (data.bits.mode == 0)
@@ -322,22 +322,6 @@ word get_rm_mem(CPUState &state, Memory &memory, const ModRMByte data)
     {
         throw std::runtime_error("Unexpected rm byte");
     }
-    }
-}
-
-template <typename DataType>
-DataType get_source(CPUState& state, Memory& memory, const ModRMByte data)
-{
-    // The source is a register.
-    if (data.bits.mode == 0b11)
-    {
-        // Read the register from the modrm byte.
-        return imp::get_rm_reg<DataType>(state, data);
-    }
-    else
-    {
-        // Read the memory associated with the modrm byte.
-        return memory.read<DataType>(imp::get_rm_mem(state, memory, data));
     }
 }
 

@@ -46,9 +46,11 @@ struct ModRMInstruction : public Instruction<IMPL, LOCKABLE>
         return imp::get_source<DATA_TYPE>(state, memory, data);
     }
 
-    static word get_rm_mem(CPUState &state, Memory &memory, const ModRMByte data)
+    static DATA_TYPE get_rm_mem(CPUState &state, Memory &memory, const ModRMByte data)
     {
-        return imp::get_rm_mem(state, memory, data);
+        return memory.read<DATA_TYPE>(
+            imp::get_rm_address(state, memory, data)
+            );
     }
 
     static void _execute(CPUState &state, Memory &memory);

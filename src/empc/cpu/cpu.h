@@ -24,22 +24,9 @@
 
 #include <empc/cpu/cpu_state.h>
 #include <empc/memory/memory.h>
+#include <empc/cpu/modrm.h>
 
 namespace empc {
-
-struct ModRMByte {
-    ModRMByte(byte data) : full(data) {
-    }
-    union {
-        struct {
-            // Bit fields are defined from lsb to msb.
-            byte rm : 3;
-            byte reg : 3;
-            byte mode : 2;
-        } bits;
-        byte full;
-    };
-};
 
 class CPU {
 public:
