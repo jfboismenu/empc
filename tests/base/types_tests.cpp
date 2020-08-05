@@ -27,14 +27,15 @@ TEST_CASE("Types", "[types]") {
     SECTION("words can be split") {
         // In memory this is 3412;
         word value(0x1234);
-        REQUIRE(split(value).second == 0x12);
-        REQUIRE(split(value).first == 0x34);
+
+        REQUIRE(std::get<0>(split(value)) == 0x12);
+        REQUIRE(std::get<1>(split(value)) == 0x34);
     }
 
     SECTION("dwords can be split") {
         // In memory this is 3412;
         dword value(0x12345678);
-        REQUIRE(split(value).second == 0x1234);
-        REQUIRE(split(value).first == 0x5678);
+        REQUIRE(std::get<0>(split(value)) == 0x1234);
+        REQUIRE(std::get<1>(split(value)) == 0x5678);
     }
 }

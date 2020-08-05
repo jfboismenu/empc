@@ -25,6 +25,8 @@
 #include <empc/base/types.h>
 #include <empc/cpu/imp/instruction.h>
 
+#include <exception>
+
 namespace empc {
 
 struct ModRMByte {

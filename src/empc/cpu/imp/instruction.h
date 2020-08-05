@@ -22,6 +22,8 @@
 
 #pragma once
 
+#include <empc/memory/memory.imp.h>
+
 namespace empc {
 namespace imp {
 template <typename DataType>
