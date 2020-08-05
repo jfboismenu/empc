@@ -23,12 +23,9 @@
 #include <catch2/catch.hpp>
 #include <empc/cpu/cpu_state.h>
 
-TEST_CASE("Register tests", "[cpu][registers]")
-{
-    SECTION("General Purpose Registers")
-    {
-        SECTION("Data registers can read and write")
-        {
+TEST_CASE("Register tests", "[cpu][registers]") {
+    SECTION("General Purpose Registers") {
+        SECTION("Data registers can read and write") {
             empc::CPUState regs;
 
             regs.al() = 0x01;
@@ -60,8 +57,7 @@ TEST_CASE("Register tests", "[cpu][registers]")
             REQUIRE(regs.dx() == 0x0010);
         }
 
-        SECTION("Pointer and index registers can read and write")
-        {
+        SECTION("Pointer and index registers can read and write") {
             empc::CPUState regs;
 
             regs.si() = 0x12;
@@ -76,8 +72,7 @@ TEST_CASE("Register tests", "[cpu][registers]")
         }
     }
 
-    SECTION("Segment registers")
-    {
+    SECTION("Segment registers") {
         empc::CPUState regs;
 
         regs.cs() = 0x12;

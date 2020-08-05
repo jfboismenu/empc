@@ -26,43 +26,34 @@
 
 namespace empc {
 
-inline Memory::Memory(size_t size)
-    : _bytes(size, byte { 0 })
-{
+inline Memory::Memory(size_t size) : _bytes(size, byte{0}) {
 }
 
-template<typename DataType>
-inline DataType Memory::read(address addr) const noexcept
-{
-    return reinterpret_cast<const DataType&>(_bytes[addr]);
+template <typename DataType> inline DataType Memory::read(address addr) const noexcept {
+    return reinterpret_cast<const DataType &>(_bytes[addr]);
 }
 
-template <typename DataType>
-inline void Memory::write(address addr, DataType data)
-{
+template <typename DataType> inline void Memory::write(address addr, DataType data) {
     reinterpret_cast<DataType &>(_bytes[addr]) = data;
 }
 
-inline void Memory::write_byte(address addr, byte data)
-{
+inline void Memory::write_byte(address addr, byte data) {
     _bytes[addr] = data;
 }
 
-inline void Memory::write_word(address addr, word data)
-{
-    reinterpret_cast<word&>(_bytes[addr]) = data;
+inline void Memory::write_word(address addr, word data) {
+    reinterpret_cast<word &>(_bytes[addr]) = data;
 }
 
-inline void Memory::write_region(address addr, std::istream& stream)
-{
-    char* current = reinterpret_cast<char*>(&_bytes[addr]);
+inline void Memory::write_region(address addr, std::istream &stream) {
+    char *current = reinterpret_cast<char *>(&_bytes[addr]);
 
     // get length of file:
     stream.seekg(0, stream.end);
-    const auto length { stream.tellg() };
+    const auto length{stream.tellg()};
     stream.seekg(0, stream.beg);
 
     stream.read(current, length);
 }
 
-}
+} // namespace empc

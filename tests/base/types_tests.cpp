@@ -20,22 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-
 #include <catch2/catch.hpp>
 #include <empc/base/types.h>
 
-TEST_CASE("Types", "[types]")
-{
-    SECTION("words can be split")
-    {
+TEST_CASE("Types", "[types]") {
+    SECTION("words can be split") {
         // In memory this is 3412;
         word value(0x1234);
         REQUIRE(split(value).second == 0x12);
         REQUIRE(split(value).first == 0x34);
     }
 
-    SECTION("dwords can be split")
-    {
+    SECTION("dwords can be split") {
         // In memory this is 3412;
         dword value(0x12345678);
         REQUIRE(split(value).second == 0x1234);

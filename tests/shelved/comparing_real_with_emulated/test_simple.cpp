@@ -20,11 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-extern "C" void test_movshort(short* word)
-{
+extern "C" void test_movshort(short *word) {
     *word = 3;
 }
 
-extern "C" void test_ret()
-{
+extern "C" void test_ret() {
 }

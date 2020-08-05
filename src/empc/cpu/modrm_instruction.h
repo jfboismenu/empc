@@ -22,49 +22,39 @@
 
 #pragma once
 
-#include <empc/cpu/instruction.h>
-#include <empc/cpu/imp/modrm_instruction.h>
 #include <empc/cpu/cpu_state.h>
+#include <empc/cpu/imp/modrm_instruction.h>
+#include <empc/cpu/instruction.h>
 
 namespace empc {
 
 template <typename IMPL, typename DATA_TYPE, bool LOCKABLE = false>
-struct ModRMInstruction : public Instruction<IMPL, LOCKABLE>
-{
-    static DATA_TYPE &get_reg(CPUState &state, const ModRMByte data)
-    {
+struct ModRMInstruction : public Instruction<IMPL, LOCKABLE> {
+    static DATA_TYPE &get_reg(CPUState &state, const ModRMByte data) {
         return imp::get_reg<DATA_TYPE>(state, data);
     }
 
-    static DATA_TYPE &get_rm_reg(CPUState &state, const ModRMByte data)
-    {
+    static DATA_TYPE &get_rm_reg(CPUState &state, const ModRMByte data) {
         return imp::get_rm_reg<DATA_TYPE>(state, data);
     }
 
-    static DATA_TYPE get_source(CPUState &state, Memory &memory, const ModRMByte data)
-    {
+    static DATA_TYPE get_source(CPUState &state, Memory &memory, const ModRMByte data) {
         return imp::get_source<DATA_TYPE>(state, memory, data);
     }
 
-    static DATA_TYPE get_rm_mem(CPUState &state, Memory &memory, const ModRMByte data)
-    {
-        return memory.read<DATA_TYPE>(
-            imp::get_rm_address(state, memory, data)
-            );
+    static DATA_TYPE get_rm_mem(CPUState &state, Memory &memory, const ModRMByte data) {
+        return memory.read<DATA_TYPE>(imp::get_rm_address(state, memory, data));
     }
 
     static void _execute(CPUState &state, Memory &memory);
 };
 
 template <typename IMPL, typename DATA_TYPE, bool LOCKABLE>
-void ModRMInstruction<IMPL, DATA_TYPE, LOCKABLE>::_execute(CPUState &state, Memory &memory)
-{
+void ModRMInstruction<IMPL, DATA_TYPE, LOCKABLE>::_execute(CPUState &state, Memory &memory) {
     const ModRMByte modrm{imp::fetch_operand<byte>(state, memory)};
 
-    if (modrm.bits.mode == 0)
-    {
-        if (modrm.bits.rm != 0b110)
-        {
+    if (modrm.bits.mode == 0) {
+        if (modrm.bits.rm != 0b110) {
             throw std::runtime_error(fmt::format("Unsupported rm {:03b}", modrm.bits.rm));
         }
 
@@ -75,15 +65,11 @@ void ModRMInstruction<IMPL, DATA_TYPE, LOCKABLE>::_execute(CPUState &state, Memo
         // Effective address of displacement cost is 6 cycles
         state.cpu_time += 6;
         memory.write(addr, result);
-    }
-    else if (modrm.bits.mode == 0b11)
-    {
-        imp::get_rm_reg<DATA_TYPE>(state, modrm) = IMPL::_modrm_execute(
-            state, memory, modrm, imp::get_reg<DATA_TYPE>(state, modrm));
-    }
-    else
-    {
+    } else if (modrm.bits.mode == 0b11) {
+        imp::get_rm_reg<DATA_TYPE>(state, modrm) =
+            IMPL::_modrm_execute(state, memory, modrm, imp::get_reg<DATA_TYPE>(state, modrm));
+    } else {
         throw std::runtime_error(fmt::format("Unsupported mode {:02b}", modrm.bits.mode));
     }
 }
-}
+} // namespace empc

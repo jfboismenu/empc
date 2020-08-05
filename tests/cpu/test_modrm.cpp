@@ -24,15 +24,14 @@
 #include <empc/cpu/cpu.h>
 #include <empc/memory/memory.imp.h>
 
-void setModRM(empc::Memory& mem, byte mode, byte rm) {
+void setModRM(empc::Memory &mem, byte mode, byte rm) {
     empc::ModRMByte data(0);
     data.bits.mode = mode;
     data.bits.rm = rm;
     mem.write(0xFFFF1, data.full);
 }
 
-SCENARIO("ModRM byte tests", "[cpu][modrm]")
-{
+SCENARIO("ModRM byte tests", "[cpu][modrm]") {
     empc::Memory memory(1024 * 1024);
     empc::CPU cpu(memory);
     cpu.reset();
@@ -70,18 +69,15 @@ SCENARIO("ModRM byte tests", "[cpu][modrm]")
     memory.write(0xFFFF0, 0x8B);
     memory.write(0xFFFF2, 0x100);
 
-
     WHEN("Mod is 10 and rm is 000") {
         setModRM(memory, 0b10, 0);
         cpu.emulate_once();
         REQUIRE(cpu.state().ax() == 0x0304);
     }
 
-    WHEN("Mod is 01")
-    {
+    WHEN("Mod is 01") {
     }
 
-    WHEN("Mod is 10")
-    {
+    WHEN("Mod is 10") {
     }
 }

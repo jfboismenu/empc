@@ -33,18 +33,16 @@ public:
     Memory(size_t size);
     Memory(const Memory &) = delete;
 
-    template<typename DataType>
-    DataType read(address addr) const noexcept;
+    template <typename DataType> DataType read(address addr) const noexcept;
 
-    template<typename DataType>
-    void write(address, DataType);
+    template <typename DataType> void write(address, DataType);
     void write_byte(address, byte);
     void write_word(address, word);
 
-    void write_region(address, std::istream& stream);
+    void write_region(address, std::istream &stream);
 
 private:
     std::vector<byte> _bytes;
 };
 
-}
+} // namespace empc

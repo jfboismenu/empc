@@ -26,8 +26,7 @@
 
 namespace empc {
 
-struct CPUState
-{
+struct CPUState {
 
     CPUState();
     CPUState(const CPUState &) = delete;
@@ -93,10 +92,8 @@ struct CPUState
     bool is_locked;
 
 private:
-    union
-    {
-        struct
-        {
+    union {
+        struct {
             byte al;
             byte ah;
             byte bl;
@@ -106,8 +103,7 @@ private:
             byte dl;
             byte dh;
         } r8;
-        struct
-        {
+        struct {
             word ax;
             word bx;
             word cx;
@@ -129,16 +125,11 @@ private:
 };
 
 inline CPUState::CPUState()
-    : cpu_time{0}, is_halted{false},
-    is_locked{false},
-    _data_regs{.r16 = {0, 0, 0, 0}},
-    _si{0}, _di{0}, _bp{0}, _sp{0},
-    _cs{0}, _ds{0}, _es{0}, _ss{0}
-{
+    : cpu_time{0}, is_halted{false}, is_locked{false}, _data_regs{.r16 = {0, 0, 0, 0}}, _si{0},
+      _di{0}, _bp{0}, _sp{0}, _cs{0}, _ds{0}, _es{0}, _ss{0} {
 }
 
-inline void CPUState::reset()
-{
+inline void CPUState::reset() {
     _cs = 0xFFFF;
     _ip = 0;
     _ds = 0;
@@ -148,196 +139,151 @@ inline void CPUState::reset()
     cpu_time = 0;
 }
 
-inline const byte &CPUState::al() const
-{
+inline const byte &CPUState::al() const {
     return _data_regs.r8.al;
 }
-inline byte &CPUState::al()
-{
+inline byte &CPUState::al() {
     return _data_regs.r8.al;
 }
-inline const byte &CPUState::ah() const
-{
+inline const byte &CPUState::ah() const {
     return _data_regs.r8.ah;
 }
-inline byte &CPUState::ah()
-{
+inline byte &CPUState::ah() {
     return _data_regs.r8.ah;
 }
-inline const word &CPUState::ax() const
-{
+inline const word &CPUState::ax() const {
     return _data_regs.r16.ax;
 }
-inline word &CPUState::ax()
-{
+inline word &CPUState::ax() {
     return _data_regs.r16.ax;
 }
-inline const byte &CPUState::bl() const
-{
+inline const byte &CPUState::bl() const {
     return _data_regs.r8.bl;
 }
-inline byte &CPUState::bl()
-{
+inline byte &CPUState::bl() {
     return _data_regs.r8.bl;
 }
-inline const byte &CPUState::bh() const
-{
+inline const byte &CPUState::bh() const {
     return _data_regs.r8.bh;
 }
-inline byte &CPUState::bh()
-{
+inline byte &CPUState::bh() {
     return _data_regs.r8.bh;
 }
-inline const word &CPUState::bx() const
-{
+inline const word &CPUState::bx() const {
     return _data_regs.r16.bx;
 }
-inline word &CPUState::bx()
-{
+inline word &CPUState::bx() {
     return _data_regs.r16.bx;
 }
-inline const byte &CPUState::cl() const
-{
+inline const byte &CPUState::cl() const {
     return _data_regs.r8.cl;
 }
-inline byte &CPUState::cl()
-{
+inline byte &CPUState::cl() {
     return _data_regs.r8.cl;
 }
-inline const byte &CPUState::ch() const
-{
+inline const byte &CPUState::ch() const {
     return _data_regs.r8.ch;
 }
-inline byte &CPUState::ch()
-{
+inline byte &CPUState::ch() {
     return _data_regs.r8.ch;
 }
-inline const word &CPUState::cx() const
-{
+inline const word &CPUState::cx() const {
     return _data_regs.r16.cx;
 }
-inline word &CPUState::cx()
-{
+inline word &CPUState::cx() {
     return _data_regs.r16.cx;
 }
-inline const byte &CPUState::dl() const
-{
+inline const byte &CPUState::dl() const {
     return _data_regs.r8.dl;
 }
-inline byte &CPUState::dl()
-{
+inline byte &CPUState::dl() {
     return _data_regs.r8.dl;
 }
-inline const byte &CPUState::dh() const
-{
+inline const byte &CPUState::dh() const {
     return _data_regs.r8.dh;
 }
-inline byte &CPUState::dh()
-{
+inline byte &CPUState::dh() {
     return _data_regs.r8.dh;
 }
-inline const word &CPUState::dx() const
-{
+inline const word &CPUState::dx() const {
     return _data_regs.r16.dx;
 }
-inline word &CPUState::dx()
-{
+inline word &CPUState::dx() {
     return _data_regs.r16.dx;
 }
 
-inline const word &CPUState::si() const
-{
+inline const word &CPUState::si() const {
     return _si;
 }
-inline const word &CPUState::di() const
-{
+inline const word &CPUState::di() const {
     return _di;
 }
-inline const word &CPUState::bp() const
-{
+inline const word &CPUState::bp() const {
     return _bp;
 }
-inline const word &CPUState::sp() const
-{
+inline const word &CPUState::sp() const {
     return _sp;
 }
 
-inline word &CPUState::si()
-{
+inline word &CPUState::si() {
     return _si;
 }
-inline word &CPUState::di()
-{
+inline word &CPUState::di() {
     return _di;
 }
-inline word &CPUState::bp()
-{
+inline word &CPUState::bp() {
     return _bp;
 }
-inline word &CPUState::sp()
-{
+inline word &CPUState::sp() {
     return _sp;
 }
 
-inline const word &CPUState::cs() const
-{
+inline const word &CPUState::cs() const {
     return _cs;
 }
-inline word &CPUState::cs()
-{
+inline word &CPUState::cs() {
     return _cs;
 }
-inline const word &CPUState::ds() const
-{
+inline const word &CPUState::ds() const {
     return _ds;
 }
-inline word &CPUState::ds()
-{
+inline word &CPUState::ds() {
     return _ds;
 }
-inline const word &CPUState::es() const
-{
+inline const word &CPUState::es() const {
     return _es;
 }
-inline word &CPUState::es()
-{
+inline word &CPUState::es() {
     return _es;
 }
-inline const word &CPUState::ss() const
-{
+inline const word &CPUState::ss() const {
     return _ss;
 }
-inline word &CPUState::ss()
-{
+inline word &CPUState::ss() {
     return _ss;
 }
 
-inline const word &CPUState::ip() const
-{
+inline const word &CPUState::ip() const {
     return _ip;
 }
 
-inline word &CPUState::ip()
-{
+inline word &CPUState::ip() {
     return _ip;
 }
 
-inline address CPUState::get_program_counter() const noexcept
-{
+inline address CPUState::get_program_counter() const noexcept {
     return (cs() << 0x4) + ip();
 }
 
-inline address CPUState::data_segment() const noexcept
-{
+inline address CPUState::data_segment() const noexcept {
     // FIXME: When segment override operations are implemented,
     // this method should return the right segment.
     return address(ds()) << 0x4;
 }
 
-inline address CPUState::stack_segment() const noexcept
-{
+inline address CPUState::stack_segment() const noexcept {
     // FIXME: When segment override operations are implemented,
     // this method should return the right segment.
     return address(ss()) << 0x4;
 }
-}
+} // namespace empc

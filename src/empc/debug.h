@@ -22,8 +22,7 @@
 
 #include <iosfwd>
 
-
 namespace empc {
 class CPU;
-std::string get_state(const CPU& cpu);
-}
+std::string get_state(const CPU &cpu);
+} // namespace empc

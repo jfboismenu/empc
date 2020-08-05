@@ -27,15 +27,11 @@
 
 namespace empc {
 
-struct ModRMByte
-{
-    ModRMByte(byte data) : full(data)
-    {
+struct ModRMByte {
+    ModRMByte(byte data) : full(data) {
     }
-    union
-    {
-        struct
-        {
+    union {
+        struct {
             // Bit fields are defined from lsb to msb.
             byte rm : 3;
             byte reg : 3;
@@ -45,39 +41,30 @@ struct ModRMByte
     };
 };
 
-
 class ModRM {
 public:
-    static ModRM decode(CPUState& state, Memory& memory)
-    {
+    static ModRM decode(CPUState &state, Memory &memory) {
         ModRMByte modrm_byte(imp::fetch_operand<byte>(state, memory));
         displacement16 disp;
         // If we're dealing with register to register, there's no address
         // computation required, so we can leave early.
-        if (modrm_byte.bits.mode == 0b11)
-        {
+        if (modrm_byte.bits.mode == 0b11) {
             return ModRM(modrm_byte, 0);
         }
 
-        if (modrm_byte.bits.mode == 0)
-        {
-            if (modrm_byte.bits.rm == 0b110)
-            {
+        if (modrm_byte.bits.mode == 0) {
+            if (modrm_byte.bits.rm == 0b110) {
                 // When loading an from an absolute address, we
                 // read at the memory specified directly in the operand
                 // and that's it.
                 state.cpu_time += 6;
                 address addr = imp::fetch_operand<word>(state, memory);
                 return ModRM(modrm_byte, addr);
-            }
-            else
-            {
+            } else {
                 // There is no displacement byte in mode 0 when rm is 110.
                 disp = 0;
             }
-        }
-        else if (modrm_byte.bits.mode == 0b01)
-        {
+        } else if (modrm_byte.bits.mode == 0b01) {
             // When displacement is happening, we take a 4 cycle hit.
             // This is an 8 bit displacement however, so we read a single
             // byte for the offset and stretch to a word.
@@ -90,86 +77,70 @@ public:
                 // how that 8bit displacement works. I'm assuming it works
                 // as -127 to 128, which means this is the wrong implementation.
                 imp::fetch_operand<displacement8>(state, memory));
-        }
-        else
-        {
+        } else {
             // When displacement is happening, we take a 4 cycle hit
             state.cpu_time += 4;
             disp = imp::fetch_operand<displacement16>(state, memory);
         }
 
         address addr;
-        switch (modrm_byte.bits.rm)
-        {
-        case 0:
-        {
-            state.cpu_time += 7;
-            addr = state.data_segment() + state.bx() + state.si();
-        }
-        case 1:
-        {
-            state.cpu_time += 7;
-            addr = state.data_segment() + state.bx() + state.di();
-        }
-        case 2:
-        {
-            state.cpu_time += 7;
-            addr = state.stack_segment() + state.bp() + state.si();
-        }
-        case 3:
-        {
-            state.cpu_time += 7;
-            addr = state.stack_segment() + state.sp() + state.di();
-        }
-        case 4:
-        {
-            state.cpu_time += 5;
-            addr = state.data_segment() + state.si();
-        }
-        case 5:
-        {
-            state.cpu_time += 5;
-            addr = state.data_segment() + state.di();
-        }
-        case 6:
-        {
-            state.cpu_time += 5;
-            addr = state.stack_segment() + state.bp();
-        }
-        case 7:
-        {
-            state.cpu_time += 5;
-            addr = state.stack_segment() + state.bx();
-        }
-        default:
-        {
-            throw std::runtime_error("Unexpected rm byte");
-        }
+        switch (modrm_byte.bits.rm) {
+            case 0: {
+                state.cpu_time += 7;
+                addr = state.data_segment() + state.bx() + state.si();
+            } break;
+            case 1: {
+                state.cpu_time += 7;
+                addr = state.data_segment() + state.bx() + state.di();
+            } break;
+            case 2: {
+                state.cpu_time += 7;
+                addr = state.stack_segment() + state.bp() + state.si();
+            } break;
+            case 3: {
+                state.cpu_time += 7;
+                addr = state.stack_segment() + state.sp() + state.di();
+            } break;
+            case 4: {
+                state.cpu_time += 5;
+                addr = state.data_segment() + state.si();
+            } break;
+            case 5: {
+                state.cpu_time += 5;
+                addr = state.data_segment() + state.di();
+            } break;
+            case 6: {
+                state.cpu_time += 5;
+                addr = state.stack_segment() + state.bp();
+            } break;
+            case 7: {
+                state.cpu_time += 5;
+                addr = state.stack_segment() + state.bx();
+            } break;
+            default: {
+                throw std::runtime_error("Unexpected rm byte");
+            }
         }
         return ModRM(modrm_byte, addr + disp);
     }
 
-    ModRM(const ModRMByte& modrm_byte, address addr);
+    ModRM(const ModRMByte &modrm_byte, address addr);
 
     ModRMByte modrm_byte() const;
-    address   effective_address() const;
+    address effective_address() const;
 
 private:
-
     ModRMByte _byte;
     address _address;
 };
 
-inline ModRM::ModRM(const ModRMByte& modrm_byte, address addr) : _byte{modrm_byte}, _address(addr)
-{
+inline ModRM::ModRM(const ModRMByte &modrm_byte, address addr) : _byte{modrm_byte}, _address(addr) {
 }
 
-inline ModRMByte ModRM::modrm_byte() const
-{
+inline ModRMByte ModRM::modrm_byte() const {
     return _byte;
 }
-inline address ModRM::effective_address() const
-{
+inline address ModRM::effective_address() const {
     return _address;
 }
-}
+} // namespace empc

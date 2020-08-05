@@ -22,42 +22,29 @@
 
 #include <empc/cpu/cpu.h>
 #include <fmt/core.h>
-#include <ostream>
 #include <iomanip>
+#include <ostream>
 
-namespace empc
-{
+namespace empc {
 
-std::string get_state(const CPU &cpu)
-{
-    return fmt::format(
-        "ax: {:04x} "
-        "bx: {:04x} "
-        "cx: {:04x} "
-        "dx: {:04x} "
-        "si: {:04x} "
-        "di: {:04x} "
-        "bp: {:04x} "
-        "sp: {:04x} "
-        "ip: {:04x} "
-        "cs: {:04x} "
-        "ds: {:04x} "
-        "es: {:04x} "
-        "ss: {:04x} ",
-        cpu.state().ax(),
-        cpu.state().bx(),
-        cpu.state().cx(),
-        cpu.state().dx(),
-        cpu.state().si(),
-        cpu.state().di(),
-        cpu.state().bp(),
-        cpu.state().sp(),
-        cpu.state().ip(),
-        cpu.state().cs(),
-        cpu.state().ds(),
-        cpu.state().es(),
-        cpu.state().ss()
-        );
+std::string get_state(const CPU &cpu) {
+    return fmt::format("ax: {:04x} "
+                       "bx: {:04x} "
+                       "cx: {:04x} "
+                       "dx: {:04x} "
+                       "si: {:04x} "
+                       "di: {:04x} "
+                       "bp: {:04x} "
+                       "sp: {:04x} "
+                       "ip: {:04x} "
+                       "cs: {:04x} "
+                       "ds: {:04x} "
+                       "es: {:04x} "
+                       "ss: {:04x} ",
+                       cpu.state().ax(), cpu.state().bx(), cpu.state().cx(), cpu.state().dx(),
+                       cpu.state().si(), cpu.state().di(), cpu.state().bp(), cpu.state().sp(),
+                       cpu.state().ip(), cpu.state().cs(), cpu.state().ds(), cpu.state().es(),
+                       cpu.state().ss());
 }
 
-}
+} // namespace empc

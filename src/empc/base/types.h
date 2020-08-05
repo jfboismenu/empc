@@ -33,18 +33,12 @@ using address = unsigned int;
 using displacement16 = short;
 using displacement8 = short;
 
-inline std::tuple<byte, byte> split(word value)
-{
-    return std::make_tuple(
-        static_cast<byte>(value),
-        static_cast<byte>(value >> 8));
+inline std::tuple<byte, byte> split(word value) {
+    return std::make_tuple(static_cast<byte>(value), static_cast<byte>(value >> 8));
 }
 
-inline std::tuple<word, word> split(dword value)
-{
-    return std::make_tuple(
-        static_cast<word>(value),
-        static_cast<word>(value >> 16));
+inline std::tuple<word, word> split(dword value) {
+    return std::make_tuple(static_cast<word>(value), static_cast<word>(value >> 16));
 }
 
-}
+} // namespace

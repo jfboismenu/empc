@@ -20,17 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <empc/empc.h>
 #include <empc/debug.h>
+#include <empc/empc.h>
 
 #include <docopt.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 
+#include <chrono>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <chrono>
 
 const char USAGE[] =
     R"(EMpathy PC emulator
@@ -44,14 +44,9 @@ Options:
 
 )";
 
-int main(int argc, char** argv)
-{
+int main(int argc, char **argv) {
     auto console = spdlog::stdout_color_mt("console");
-    auto args = docopt::docopt(
-        USAGE,
-        { argv + 1, argv + argc },
-        true,
-        "EMpathy PC emulator 0.1");
+    auto args = docopt::docopt(USAGE, {argv + 1, argv + argc}, true, "EMpathy PC emulator 0.1");
 
     if (args["test"].asBool()) {
         const std::string path_to_binary(args["<path-to-binary>"].asString());
@@ -71,9 +66,9 @@ int main(int argc, char** argv)
         unsigned long long total_cyles{0};
         const bool verbose{args["--verbose"].asBool()};
         auto start = std::chrono::high_resolution_clock::now();
-        for(unsigned i = 0; i < nb_iterations; ++i) {
+        for (unsigned i = 0; i < nb_iterations; ++i) {
             pc.reset();
-            while(!pc.cpu().is_halted()) {
+            while (!pc.cpu().is_halted()) {
                 if (verbose) {
                     std::cout << empc::get_state(pc.cpu()) << std::endl;
                 }
@@ -91,8 +86,7 @@ int main(int argc, char** argv)
         console->info("Time elapsed:        {}", seconds);
         console->info("Instructions/second: {:.2f}", nb_instructions / seconds);
         console->info("Nb CPU Cycles:       {:n}", total_cyles);
-        console->info("Clockrate:           {:.2f}Mhz",
-                      total_cyles / seconds / 1000 / 1000);
+        console->info("Clockrate:           {:.2f}Mhz", total_cyles / seconds / 1000 / 1000);
     }
     return 0;
 }

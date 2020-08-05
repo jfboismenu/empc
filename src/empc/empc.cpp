@@ -26,37 +26,29 @@
 
 namespace empc {
 
-EmPC::EmPC()
-    : _memory{1024 * 1024},
-    _cpu{_memory}
-{
+EmPC::EmPC() : _memory{1024 * 1024}, _cpu{_memory} {
 }
 
-const CPU &EmPC::cpu() const
-{
+const CPU &EmPC::cpu() const {
     return _cpu;
 }
 
-void EmPC::load_bios(std::istream& stream)
-{
+void EmPC::load_bios(std::istream &stream) {
     _memory.write_region(0xF0000, stream);
 }
 
-void EmPC::reset()
-{
+void EmPC::reset() {
     _cpu.reset();
 }
 
-void EmPC::emulate()
-{
+void EmPC::emulate() {
     while (true) {
         emulate_once();
     }
 }
 
-void EmPC::emulate_once()
-{
+void EmPC::emulate_once() {
     _cpu.emulate_once();
 }
 
-}
+} // namespace empc

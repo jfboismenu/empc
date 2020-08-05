@@ -24,12 +24,10 @@
 
 namespace empc {
 
-class JmpAbs : public Instruction<JmpAbs>
-{
+class JmpAbs : public Instruction<JmpAbs> {
 public:
-    static void _execute(CPUState& state, Memory& memory)
-    {
-        const word offset {fetch_operand<word>(state, memory)};
+    static void _execute(CPUState &state, Memory &memory) {
+        const word offset{fetch_operand<word>(state, memory)};
         const word segment{fetch_operand<word>(state, memory)};
         state.ip() = offset;
         state.cs() = segment;
@@ -37,14 +35,13 @@ public:
     }
 };
 
-class JmpNear : public Instruction<JmpNear>
-{
+class JmpNear : public Instruction<JmpNear> {
 public:
     static void _execute(CPUState &state, Memory &memory) {
-        const word offset { fetch_operand<word>(state, memory)};
+        const word offset{fetch_operand<word>(state, memory)};
         state.ip() += offset;
         state.cpu_time += 15;
     }
 };
 
-}
+} // namespace empc

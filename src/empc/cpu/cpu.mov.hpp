@@ -25,41 +25,34 @@
 
 namespace empc {
 
-struct MovImm : public Instruction<MovImm>
-{
-    template<typename DataType>
-    static void _execute(CPUState& state, Memory& memory, DataType& reg) {
+struct MovImm : public Instruction<MovImm> {
+    template <typename DataType>
+    static void _execute(CPUState &state, Memory &memory, DataType &reg) {
         reg = fetch_operand<DataType>(state, memory);
         state.cpu_time += 4;
     }
 };
 
-struct MovA2A3 : public Instruction<MovA2A3>
-{
+struct MovA2A3 : public Instruction<MovA2A3> {
     template <typename DataType>
-    static void _execute(CPUState &state, Memory &memory, const DataType &data)
-    {
+    static void _execute(CPUState &state, Memory &memory, const DataType &data) {
         memory.write(fetch_operand<word>(state, memory), data);
         state.cpu_time += 10;
     }
 };
 
-struct MovA0A1 : public Instruction<MovA0A1>
-{
+struct MovA0A1 : public Instruction<MovA0A1> {
     template <typename DataType>
-    static void _execute(CPUState &state, Memory &memory, DataType &reg)
-    {
+    static void _execute(CPUState &state, Memory &memory, DataType &reg) {
         reg = memory.read<DataType>(fetch_operand<word>(state, memory));
         state.cpu_time += 10;
     }
 };
 
 template <typename DATA_TYPE>
-struct Mov8889 : public ModRMInstruction<Mov8889<DATA_TYPE>, DATA_TYPE>
-{
+struct Mov8889 : public ModRMInstruction<Mov8889<DATA_TYPE>, DATA_TYPE> {
     static DATA_TYPE _modrm_execute(CPUState &state, Memory &memory, const ModRMByte modrm,
-                                    const DATA_TYPE &value)
-    {
+                                    const DATA_TYPE &value) {
         // FIXME: modrm.is_dest_reg()
         if (modrm.bits.mode == 0b11) {
             state.cpu_time += 2;
@@ -84,10 +77,7 @@ struct Mov8889 : public ModRMInstruction<Mov8889<DATA_TYPE>, DATA_TYPE>
 //     }
 // }
 
-
-template <typename DataType>
-void CPU::_mov_8a_8b()
-{
+template <typename DataType> void CPU::_mov_8a_8b() {
     const ModRMByte modrm{_fetch_operand<byte>()};
     _state.cpu_time += 8;
     // Refactor this bit into how memory is read
@@ -104,4 +94,4 @@ void CPU::_mov_8a_8b()
 // ModRMInstruction ne devrait pas implémenter de _execute
 // et la logique courante devrait aller dans set_rm_from_modrm
 
-}
+} // namespace empc

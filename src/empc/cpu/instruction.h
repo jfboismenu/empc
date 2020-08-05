@@ -22,26 +22,20 @@
 
 #pragma once
 
-#include <empc/cpu/imp/instruction.h>
 #include <empc/cpu/cpu_state.h>
+#include <empc/cpu/imp/instruction.h>
 
 namespace empc {
 
-template <typename IMPL, bool LOCKABLE=false>
-struct Instruction
-{
-    template <typename ... ArgTypes>
-    static void execute(ArgTypes& ... args)
-    {
-        IMPL::_execute(args ...);
+template <typename IMPL, bool LOCKABLE = false> struct Instruction {
+    template <typename... ArgTypes> static void execute(ArgTypes &... args) {
+        IMPL::_execute(args...);
     }
 
     template <typename DataType>
-    static DataType fetch_operand(CPUState &state, Memory &memory) noexcept
-    {
+    static DataType fetch_operand(CPUState &state, Memory &memory) noexcept {
         return imp::fetch_operand<DataType>(state, memory);
     }
 };
 
-
-}
+} // namespace empc
