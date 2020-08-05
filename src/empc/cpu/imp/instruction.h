@@ -22,6 +22,7 @@
 
 #pragma once
 
+#include <empc/cpu/cpu_state.h>
 #include <empc/memory/memory.imp.h>
 
 namespace empc {

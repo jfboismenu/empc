@@ -23,6 +23,7 @@
 #pragma once
 
 #include <empc/base/types.h>
+#include <empc/cpu/cpu_state.h>
 #include <empc/cpu/imp/instruction.h>
 
 #include <exception>

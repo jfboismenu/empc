@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#include <empc/cpu/cpu.h>
 #include <empc/cpu/instruction.h>
 #include <empc/cpu/modrm_instruction.h>
 

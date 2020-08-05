@@ -23,6 +23,7 @@
 #pragma once
 
 #include <empc/cpu/imp/instruction.h>
+#include <empc/cpu/modrm.h>
 
 namespace empc {
 namespace imp {

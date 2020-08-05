@@ -24,7 +24,7 @@
 
 #pragma once
 
-namespace {
+namespace empc {
 
 using byte = unsigned char;
 using word = unsigned short;
@@ -41,4 +41,4 @@ inline std::tuple<word, word> split(dword value) {
     return std::make_tuple(static_cast<word>(value), static_cast<word>(value >> 16));
 }
 
-} // namespace
+} // namespace empc

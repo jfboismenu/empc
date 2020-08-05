@@ -25,6 +25,7 @@
 #include <empc/cpu/cpu_state.h>
 #include <empc/cpu/imp/modrm_instruction.h>
 #include <empc/cpu/instruction.h>
+#include <fmt/core.h>
 
 namespace empc {
 

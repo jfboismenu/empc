@@ -44,7 +44,7 @@ repos:
     - id: clang-format
       args: [-i]
     - id: clang-tidy
-      args: [-warnings-as-errors=*, -p, build]
+      args: [-warnings-as-errors=*, -p=build]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.1.0

@@ -24,7 +24,7 @@
 #include <empc/cpu/cpu.h>
 #include <empc/memory/memory.imp.h>
 
-void setModRM(empc::Memory &mem, byte mode, byte rm) {
+void setModRM(empc::Memory &mem, empc::byte mode, empc::byte rm) {
     empc::ModRMByte data(0);
     data.bits.mode = mode;
     data.bits.rm = rm;

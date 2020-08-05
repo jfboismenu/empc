@@ -24,7 +24,9 @@
 #include <empc/memory/memory.imp.h>
 
 TEST_CASE("Memory", "[memory]") {
-    empc::Memory buffer{16};
+    using namespace empc;
+
+    Memory buffer{16};
 
     buffer.write_byte(0, 1);
     REQUIRE(buffer.read<byte>(0) == 1);

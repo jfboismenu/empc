@@ -23,11 +23,12 @@
 #include <catch2/catch.hpp>
 #include <empc/base/types.h>
 
+using namespace empc;
+
 TEST_CASE("Types", "[types]") {
     SECTION("words can be split") {
         // In memory this is 3412;
         word value(0x1234);
-
         REQUIRE(std::get<0>(split(value)) == 0x12);
         REQUIRE(std::get<1>(split(value)) == 0x34);
     }
