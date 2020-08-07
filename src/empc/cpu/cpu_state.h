@@ -126,7 +126,7 @@ private:
 
 inline CPUState::CPUState()
     : cpu_time{0}, is_halted{false}, is_locked{false}, _data_regs{.r16 = {0, 0, 0, 0}}, _si{0},
-      _di{0}, _bp{0}, _sp{0}, _cs{0}, _ds{0}, _es{0}, _ss{0} {
+      _di{0}, _bp{0}, _sp{0}, _cs{0}, _ds{0}, _es{0}, _ss{0}, _ip{0} {
 }
 
 inline void CPUState::reset() {

@@ -28,15 +28,15 @@ using namespace empc;
 TEST_CASE("Types", "[types]") {
     SECTION("words can be split") {
         // In memory this is 3412;
-        word value(0x1234);
-        REQUIRE(std::get<0>(split(value)) == 0x12);
-        REQUIRE(std::get<1>(split(value)) == 0x34);
+        auto [low, high] = split(word(0x1234));
+        REQUIRE(high == 0x12);
+        REQUIRE(low == 0x34);
     }
 
     SECTION("dwords can be split") {
         // In memory this is 3412;
-        dword value(0x12345678);
-        REQUIRE(std::get<0>(split(value)) == 0x1234);
-        REQUIRE(std::get<1>(split(value)) == 0x5678);
+        auto [low, high] = split(dword(0x12345678));
+        REQUIRE(high == 0x1234);
+        REQUIRE(low == 0x5678);
     }
 }

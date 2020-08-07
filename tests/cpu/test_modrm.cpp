@@ -22,6 +22,7 @@
 
 #include <catch2/catch.hpp>
 #include <empc/cpu/cpu.h>
+#include <empc/cpu/modrm.h>
 #include <empc/memory/memory.imp.h>
 
 void setModRM(empc::Memory &mem, empc::byte mode, empc::byte rm) {
@@ -33,15 +34,15 @@ void setModRM(empc::Memory &mem, empc::byte mode, empc::byte rm) {
 
 SCENARIO("ModRM byte tests", "[cpu][modrm]") {
     empc::Memory memory(1024 * 1024);
-    empc::CPU cpu(memory);
-    cpu.reset();
-    cpu.state().bx() = 0x100;
-    cpu.state().bp() = 0x1000;
-    cpu.state().sp() = 0x2000;
-    cpu.state().si() = 0x4000;
-    cpu.state().di() = 0x8000;
-    cpu.state().ss() = 0xE000;
-    cpu.state().ds() = 0xD000;
+    empc::CPUState state;
+    state.reset();
+    state.bx() = 0x100;
+    state.bp() = 0x1000;
+    state.sp() = 0x2000;
+    state.si() = 0x4000;
+    state.di() = 0x8000;
+    state.ss() = 0xE000;
+    state.ds() = 0xD000;
 
     // Assuming the displacement for all operations will be 0x80
     // Here we'll write the expected value for each memory addressing possible
@@ -67,12 +68,14 @@ SCENARIO("ModRM byte tests", "[cpu][modrm]") {
 
     // MOV reg16 <- mem16
     memory.write(0xFFFF0, 0x8B);
-    memory.write(0xFFFF2, 0x100);
+    memory.write(0xFFFF2, 0x80);
+    memory.write(0xFFFF3, 0x00);
 
     WHEN("Mod is 10 and rm is 000") {
         setModRM(memory, 0b10, 0);
-        cpu.emulate_once();
-        REQUIRE(cpu.state().ax() == 0x0304);
+        state.ip() += 1;
+        empc::ModRM modrm(empc::ModRM::decode(state, memory));
+        REQUIRE(modrm.effective_address() == 0xD4180);
     }
 
     WHEN("Mod is 01") {

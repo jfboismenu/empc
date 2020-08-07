@@ -1,6 +1,8 @@
 {
     "cmake.configureOnOpen": false,
     "files.associations": {
-        "utility": "cpp"
+        "utility": "cpp",
+        "locale": "cpp",
+        "string": "cpp"
     }
 }

@@ -26,6 +26,8 @@ FILE(GLOB CppEmpcSources empc/*/*.cpp empc/empc.cpp empc/debug.cpp)
 add_library(empclib STATIC ${CppEmpcSources})
 target_link_libraries(empclib CONAN_PKG::fmt)
 
+# set_property(TARGET empclib PROPERTY INTERPROCEDURAL_OPTIMIZATION True)
+
 add_executable(empc empc/empc_main.cpp)
 target_link_libraries(empc empclib)
 target_link_libraries(empc CONAN_PKG::docopt)

@@ -28,6 +28,9 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_compile_options(-Wall -Wextra -Werror)
 
+include(CheckIPOSupported)
+check_ipo_supported()
+
 set(THIRD_PARTY_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/3rdParty")
 
 # Download automatically, you can also just copy the conan.cmake file
