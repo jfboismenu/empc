@@ -50,9 +50,9 @@ steps:
       set -e
       cd build
       ninja
-    displayName: Ninja Build
-  # - bash: |
-  #     set -e
-  #     cd build
-  #     ninja test
-  #   displayName: Tests
+    displayName: Build
+  - bash: |
+      set -e
+      cd build
+      ninja test
+    displayName: Tests
