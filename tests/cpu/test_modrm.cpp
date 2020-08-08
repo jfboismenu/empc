@@ -34,63 +34,34 @@ empc::ModRM prep(empc::CPUState &state, empc::Memory &memory, empc::byte mode, e
     return empc::ModRM::decode(state, memory);
 }
 
-SCENARIO("ModRM byte tests", "[cpu][modrm]") {
-    empc::Memory memory(1024 * 1024);
-    empc::CPUState state;
-    state.reset();
-    state.bx() = 0x100;
-    state.bp() = 0x1000;
-    state.sp() = 0x2000;
-    state.si() = 0x4000;
-    state.di() = 0x8000;
-    state.ss() = 0xE000;
-    state.ds() = 0xD000;
+TEST_CASE("ModRM byte tests", "[cpu][modrm]") {
+    std::vector<std::tuple<empc::byte, empc::byte, empc::address>> expected_effective_address{
+        std::make_tuple(0b10, 0b000, 0xD4180), std::make_tuple(0b10, 0b001, 0xD8180),
+        std::make_tuple(0b10, 0b010, 0xE5080), std::make_tuple(0b10, 0b011, 0xE9080),
+        std::make_tuple(0b10, 0b100, 0xD4080), std::make_tuple(0b10, 0b101, 0xD8080),
+        std::make_tuple(0b10, 0b110, 0xE1080), std::make_tuple(0b10, 0b111, 0xD0180),
+    };
 
-    // MOV reg16 <- mem16
-    memory.write(0xFFFF0, 0x8B);
-    memory.write(0xFFFF2, 0x80);
-    memory.write(0xFFFF3, 0x00);
+    SECTION("Testing effective address computation") {
+        for (auto [mod, rm, effective_address] : expected_effective_address) {
 
-    GIVEN("Mod is 10") {
-        WHEN("and rm is 000") {
-            auto modrm = prep(state, memory, 0b10, 0b000);
-            REQUIRE(modrm.effective_address() == 0xD4180);
-        }
-        WHEN("and rm is 001") {
-            auto modrm = prep(state, memory, 0b10, 0b001);
-            REQUIRE(modrm.effective_address() == 0xD8180);
-        }
-        WHEN("and rm is 010") {
-            auto modrm = prep(state, memory, 0b10, 0b010);
-            REQUIRE(modrm.effective_address() == 0xE5080);
-        }
-        WHEN("and rm is 011") {
-            auto modrm = prep(state, memory, 0b10, 0b011);
-            REQUIRE(modrm.effective_address() == 0xE9080);
-        }
-        WHEN("and rm is 100") {
-            auto modrm = prep(state, memory, 0b10, 0b100);
-            REQUIRE(modrm.effective_address() == 0xD4080);
-        }
-        WHEN("and rm is 101") {
-            auto modrm = prep(state, memory, 0b10, 0b101);
-            REQUIRE(modrm.effective_address() == 0xD8080);
-        }
-        WHEN("and rm is 110") {
-            auto modrm = prep(state, memory, 0b10, 0b110);
-            REQUIRE(modrm.effective_address() == 0xE1080);
-        }
-        WHEN("and rm is 111") {
-            auto modrm = prep(state, memory, 0b10, 0b111);
-            REQUIRE(modrm.effective_address() == 0xD0180);
-        }
-    }
+            empc::Memory memory(1024 * 1024);
+            empc::CPUState state;
+            state.reset();
+            state.bx() = 0x100;
+            state.bp() = 0x1000;
+            state.sp() = 0x2000;
+            state.si() = 0x4000;
+            state.di() = 0x8000;
+            state.ss() = 0xE000;
+            state.ds() = 0xD000;
 
-    GIVEN("Mod is 01") {
-        auto modrm = prep(state, memory, 0b10, 0);
-        REQUIRE(modrm.effective_address() == 0xD4180);
-    }
-
-    WHEN("Mod is 10") {
+            // MOV reg16 <- mem16
+            memory.write(0xFFFF0, 0x8B);
+            memory.write(0xFFFF2, 0x80);
+            memory.write(0xFFFF3, 0x00);
+            auto modrm = prep(state, memory, mod, rm);
+            REQUIRE(modrm.effective_address() == effective_address);
+        }
     }
 }
