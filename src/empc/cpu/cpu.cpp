@@ -58,7 +58,7 @@ void CPU::emulate_once() {
         case 0x90: {
             // NOP!
             _state.cpu_time += 3;
-        };
+        } break;
         case 0xF4: {
             _hlt();
         } break;
