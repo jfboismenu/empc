@@ -27,4 +27,5 @@ set -e
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test
 sudo apt-get update
 sudo apt-get install g++-10
+sudo apt-get upgrade libstdc++
 sudo apt-get install nasm ninja-build cmake
