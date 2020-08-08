@@ -30,8 +30,6 @@ using byte = unsigned char;
 using word = unsigned short;
 using dword = unsigned int;
 using address = unsigned int;
-using displacement16 = short;
-using displacement8 = short;
 
 inline std::tuple<byte, byte> split(word value) {
     return std::make_tuple(static_cast<byte>(value), static_cast<byte>(value >> 8));
@@ -39,6 +37,14 @@ inline std::tuple<byte, byte> split(word value) {
 
 inline std::tuple<word, word> split(dword value) {
     return std::make_tuple(static_cast<word>(value), static_cast<word>(value >> 16));
+}
+
+inline word sign_extend(byte value) {
+    if (value & 0x80) {
+        return 0xFF00 | value;
+    } else {
+        return value;
+    }
 }
 
 } // namespace empc
