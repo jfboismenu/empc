@@ -25,11 +25,13 @@
 #include <empc/cpu/modrm.h>
 #include <empc/memory/memory.imp.h>
 
-void setModRM(empc::Memory &mem, empc::byte mode, empc::byte rm) {
+empc::ModRM prep(empc::CPUState &state, empc::Memory &memory, empc::byte mode, empc::byte rm) {
     empc::ModRMByte data(0);
     data.bits.mode = mode;
     data.bits.rm = rm;
-    mem.write(0xFFFF1, data.full);
+    memory.write(0xFFFF1, data.full);
+    state.ip() += 1;
+    return empc::ModRM::decode(state, memory);
 }
 
 SCENARIO("ModRM byte tests", "[cpu][modrm]") {
@@ -44,41 +46,49 @@ SCENARIO("ModRM byte tests", "[cpu][modrm]") {
     state.ss() = 0xE000;
     state.ds() = 0xD000;
 
-    // Assuming the displacement for all operations will be 0x80
-    // Here we'll write the expected value for each memory addressing possible
-    // in ModRM
-    // DS + DISP
-    memory.write(0xD0080, 0x0102);
-    // DS + BX + SI + DISP
-    memory.write(0xD4180, 0x0304);
-    // DS + BX + DI + DISP
-    memory.write(0xD8180, 0x0506);
-    // SS + BP + SI + DISP
-    memory.write(0xE3080, 0x0708);
-    // SS + BP + DI + DISP
-    memory.write(0xE9080, 0x090A);
-    // DS + SI + DISP
-    memory.write(0xD4080, 0x0B0C);
-    // DS + DI + DISP
-    memory.write(0xD8080, 0x0D0E);
-    // SS + BP + DISP
-    memory.write(0xE1080, 0x0F10);
-    // DS + BX + DISP
-    memory.write(0xD0180, 0x1112);
-
     // MOV reg16 <- mem16
     memory.write(0xFFFF0, 0x8B);
     memory.write(0xFFFF2, 0x80);
     memory.write(0xFFFF3, 0x00);
 
-    WHEN("Mod is 10 and rm is 000") {
-        setModRM(memory, 0b10, 0);
-        state.ip() += 1;
-        empc::ModRM modrm(empc::ModRM::decode(state, memory));
-        REQUIRE(modrm.effective_address() == 0xD4180);
+    GIVEN("Mod is 10") {
+        WHEN("and rm is 000") {
+            auto modrm = prep(state, memory, 0b10, 0b000);
+            REQUIRE(modrm.effective_address() == 0xD4180);
+        }
+        WHEN("and rm is 001") {
+            auto modrm = prep(state, memory, 0b10, 0b001);
+            REQUIRE(modrm.effective_address() == 0xD8180);
+        }
+        WHEN("and rm is 010") {
+            auto modrm = prep(state, memory, 0b10, 0b010);
+            REQUIRE(modrm.effective_address() == 0xE5080);
+        }
+        WHEN("and rm is 011") {
+            auto modrm = prep(state, memory, 0b10, 0b011);
+            REQUIRE(modrm.effective_address() == 0xE9080);
+        }
+        WHEN("and rm is 100") {
+            auto modrm = prep(state, memory, 0b10, 0b100);
+            REQUIRE(modrm.effective_address() == 0xD4080);
+        }
+        WHEN("and rm is 101") {
+            auto modrm = prep(state, memory, 0b10, 0b101);
+            REQUIRE(modrm.effective_address() == 0xD8080);
+        }
+        WHEN("and rm is 110") {
+            auto modrm = prep(state, memory, 0b10, 0b110);
+            REQUIRE(modrm.effective_address() == 0xE1080);
+        }
+        WHEN("and rm is 111") {
+            auto modrm = prep(state, memory, 0b10, 0b111);
+            REQUIRE(modrm.effective_address() == 0xD0180);
+        }
     }
 
-    WHEN("Mod is 01") {
+    GIVEN("Mod is 01") {
+        auto modrm = prep(state, memory, 0b10, 0);
+        REQUIRE(modrm.effective_address() == 0xD4180);
     }
 
     WHEN("Mod is 10") {

@@ -102,7 +102,7 @@ public:
             } break;
             case 3: {
                 state.cpu_time += 7;
-                addr = state.stack_segment() + state.sp() + state.di();
+                addr = state.stack_segment() + state.bp() + state.di();
             } break;
             case 4: {
                 state.cpu_time += 5;
@@ -118,7 +118,7 @@ public:
             } break;
             case 7: {
                 state.cpu_time += 5;
-                addr = state.stack_segment() + state.bx();
+                addr = state.data_segment() + state.bx();
             } break;
             default: {
                 throw std::runtime_error("Unexpected rm byte");
