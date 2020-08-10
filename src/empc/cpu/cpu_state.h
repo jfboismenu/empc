@@ -130,6 +130,7 @@ inline CPUState::CPUState()
 }
 
 inline void CPUState::reset() {
+    // FIXME: Empty flags
     _cs = 0xFFFF;
     _ip = 0;
     _ds = 0;

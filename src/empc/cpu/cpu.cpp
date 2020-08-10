@@ -35,8 +35,6 @@ CPU::CPU(Memory &memory) : _memory(memory) {
 void CPU::reset() noexcept {
     // Source: The 8086 Family User's Manual, October 1979
     // Page 2-29, table 2-4.
-
-    // FIXME: Empty flags
     _state.reset();
 }
 
@@ -53,7 +51,7 @@ unsigned long long CPU::cpu_time() const {
 }
 
 void CPU::emulate_once() {
-    const byte opcode{_fetch_operand<byte>()};
+    const byte opcode{imp::fetch_operand<byte>(_state, _memory)};
     switch (opcode) {
         case 0x90: {
             // NOP!
@@ -157,15 +155,6 @@ bool CPU::is_halted() const {
 
 void CPU::_unknown_opcode(byte opcode) const {
     throw std::runtime_error(fmt::format("Unexpected opcode {:02x}", opcode));
-}
-
-template <typename DataType> DataType CPU::_fetch_operand() noexcept {
-    const DataType result{_memory.read<DataType>(_get_program_counter())};
-    _state.ip() += sizeof(DataType);
-    return result;
-}
-address CPU::_get_program_counter() const noexcept {
-    return (_state.cs() << 0x4) + _state.ip();
 }
 
 } // namespace empc

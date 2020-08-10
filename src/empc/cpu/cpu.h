@@ -51,7 +51,6 @@ private:
     void _hlt();
 
     void _unknown_opcode(byte opcode) const;
-    address _get_program_counter() const noexcept;
     // ================
     // Utility methods
     // ================

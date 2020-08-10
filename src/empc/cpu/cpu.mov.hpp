@@ -23,7 +23,6 @@
 #include <empc/cpu/cpu.h>
 #include <empc/cpu/instruction.h>
 #include <empc/cpu/modrm.h>
-#include <empc/cpu/modrm_instruction.h>
 
 namespace empc {
 
@@ -63,8 +62,7 @@ template <typename DATA_TYPE> struct Mov8889 : public Instruction<Mov8889<DATA_T
     }
 };
 
-template <typename DATA_TYPE>
-struct Mov8a8b : public ModRMInstruction<Mov8a8b<DATA_TYPE>, DATA_TYPE> {
+template <typename DATA_TYPE> struct Mov8a8b : public Instruction<Mov8a8b<DATA_TYPE>> {
     static void _execute(CPUState &state, Memory &memory) {
         auto modrm = ModRM::decode(state, memory);
         modrm.write_reg(state, modrm.read_rm_mem<DATA_TYPE>(memory));
