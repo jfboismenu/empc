@@ -46,14 +46,7 @@ private:
     // =============
 
     template <typename Operand> void _jmp_absolute(Operand offset, Operand segment) noexcept;
-
     template <typename Operand> void _jmp_near(Operand ip_offset) noexcept;
-
-    template <typename DataType> void _mov_imm(DataType &reg);
-    template <typename DataType> void _mov_a2_a3(const DataType &data, address addr);
-    template <typename DataType> void _mov_a0_a1(DataType &data, address addr);
-    template <typename DataType> void _mov_88_89();
-    template <typename DataType> void _mov_8a_8b();
 
     void _hlt();
 
@@ -63,17 +56,6 @@ private:
     // Utility methods
     // ================
     template <typename DataType> DataType _fetch_operand() noexcept;
-
-    template <typename DataType> DataType &_get_reg_from_modrm(const ModRMByte data);
-
-    template <typename DataType> DataType &_get_rm_reg_from_modrm(const ModRMByte data);
-
-    template <typename DataType> DataType _get_source_from_modrm(const ModRMByte data);
-
-    word _get_rm_mem_from_modrm(const ModRMByte byte);
-
-    word _data_segment() const;
-    word _stack_segment() const;
 
     // =============
     // Data members
