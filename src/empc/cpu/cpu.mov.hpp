@@ -22,6 +22,7 @@
 
 #include <empc/cpu/cpu.h>
 #include <empc/cpu/instruction.h>
+#include <empc/cpu/modrm.h>
 #include <empc/cpu/modrm_instruction.h>
 
 namespace empc {
@@ -50,18 +51,15 @@ struct MovA0A1 : public Instruction<MovA0A1> {
     }
 };
 
-template <typename DATA_TYPE>
-struct Mov8889 : public ModRMInstruction<Mov8889<DATA_TYPE>, DATA_TYPE> {
-    static DATA_TYPE _modrm_execute(CPUState &state, Memory &memory, const ModRMByte modrm,
-                                    const DATA_TYPE &value) {
-        // FIXME: modrm.is_dest_reg()
-        if (modrm.bits.mode == 0b11) {
+template <typename DATA_TYPE> struct Mov8889 : public Instruction<Mov8889<DATA_TYPE>> {
+    static void _execute(CPUState &state, Memory &memory) {
+        auto modrm = ModRM::decode(state, memory);
+        modrm.write_rm(state, memory, modrm.read_reg<DATA_TYPE>(state));
+        if (modrm.modrm_byte().is_rm_reg()) {
             state.cpu_time += 2;
         } else {
             state.cpu_time += 9;
         }
-        (void)memory;
-        return value;
     }
 };
 
@@ -79,12 +77,9 @@ struct Mov8889 : public ModRMInstruction<Mov8889<DATA_TYPE>, DATA_TYPE> {
 // }
 
 template <typename DataType> void CPU::_mov_8a_8b() {
-    const ModRMByte modrm{_fetch_operand<byte>()};
+    auto modrm = ModRM::decode(_state, _memory);
+    modrm.write_reg(_state, modrm.read_rm_mem<DataType>(_memory));
     _state.cpu_time += 8;
-    // Refactor this bit into how memory is read
-
-    // FIXME: Source can't be memory or register. it can only be mem
-    _get_reg_from_modrm<DataType>(modrm) = _get_source_from_modrm<DataType>(modrm);
 }
 
 // get_reg_from_modrm
