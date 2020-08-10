@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 #include <empc/cpu/cpu.h>
-#include <empc/cpu/instruction.h>
+#include <empc/cpu/instructions/instruction.h>
 #include <empc/cpu/modrm.h>
 
 namespace empc {

@@ -20,43 +20,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#pragma once
-
-#include <empc/cpu/cpu_state.h>
-#include <empc/cpu/modrm.h>
-#include <empc/memory/memory.h>
+#include <empc/cpu/instructions/instruction.h>
 
 namespace empc {
 
-class CPU {
+class JmpAbs : public Instruction<JmpAbs> {
 public:
-    CPU(Memory &memory);
-    void emulate_once();
-    void reset() noexcept;
+    static void _execute(CPUState &state, Memory &memory) {
+        const word offset{fetch_operand<word>(state, memory)};
+        const word segment{fetch_operand<word>(state, memory)};
+        state.ip() = offset;
+        state.cs() = segment;
+        state.cpu_time += 15;
+    }
+};
 
-    CPUState &state();
-    const CPUState &state() const;
-
-    bool is_halted() const;
-    unsigned long long cpu_time() const;
-
-private:
-    // =============
-    // Instructions
-    // =============
-    void _hlt();
-
-    void _unknown_opcode(byte opcode) const;
-    // ================
-    // Utility methods
-    // ================
-    template <typename DataType> DataType _fetch_operand() noexcept;
-
-    // =============
-    // Data members
-    // =============
-    Memory &_memory;
-    CPUState _state;
+class JmpNear : public Instruction<JmpNear> {
+public:
+    static void _execute(CPUState &state, Memory &memory) {
+        const word offset{fetch_operand<word>(state, memory)};
+        state.ip() += offset;
+        state.cpu_time += 15;
+    }
 };
 
 } // namespace empc

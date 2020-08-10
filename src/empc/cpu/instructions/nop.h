@@ -20,27 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <empc/cpu/instruction.h>
+#pragma once
+
+#include <empc/cpu/instructions/instruction.h>
 
 namespace empc {
 
-class JmpAbs : public Instruction<JmpAbs> {
-public:
+struct Nop : public Instruction<Nop> {
     static void _execute(CPUState &state, Memory &memory) {
-        const word offset{fetch_operand<word>(state, memory)};
-        const word segment{fetch_operand<word>(state, memory)};
-        state.ip() = offset;
-        state.cs() = segment;
-        state.cpu_time += 15;
-    }
-};
-
-class JmpNear : public Instruction<JmpNear> {
-public:
-    static void _execute(CPUState &state, Memory &memory) {
-        const word offset{fetch_operand<word>(state, memory)};
-        state.ip() += offset;
-        state.cpu_time += 15;
+        state.cpu_time += 3;
+        // Silence compiler for unused var.
+        (void)memory;
     }
 };
 

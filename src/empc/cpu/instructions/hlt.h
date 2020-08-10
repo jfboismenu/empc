@@ -22,41 +22,17 @@
 
 #pragma once
 
-#include <empc/cpu/cpu_state.h>
-#include <empc/cpu/modrm.h>
-#include <empc/memory/memory.h>
+#include <empc/cpu/instructions/instruction.h>
 
 namespace empc {
 
-class CPU {
-public:
-    CPU(Memory &memory);
-    void emulate_once();
-    void reset() noexcept;
-
-    CPUState &state();
-    const CPUState &state() const;
-
-    bool is_halted() const;
-    unsigned long long cpu_time() const;
-
-private:
-    // =============
-    // Instructions
-    // =============
-    void _hlt();
-
-    void _unknown_opcode(byte opcode) const;
-    // ================
-    // Utility methods
-    // ================
-    template <typename DataType> DataType _fetch_operand() noexcept;
-
-    // =============
-    // Data members
-    // =============
-    Memory &_memory;
-    CPUState _state;
+struct Hlt : public Instruction<Hlt> {
+    static void _execute(CPUState &state, Memory &memory) {
+        state.is_halted = true;
+        state.cpu_time += 2;
+        // Silence compiler for unused var.
+        (void)memory;
+    }
 };
 
 } // namespace empc

@@ -24,8 +24,10 @@
 #include <empc/memory/memory.imp.h>
 #include <fmt/core.h>
 
-#include <empc/cpu/cpu.jmp.hpp>
-#include <empc/cpu/cpu.mov.hpp>
+#include <empc/cpu/instructions/hlt.h>
+#include <empc/cpu/instructions/jmp.h>
+#include <empc/cpu/instructions/mov.h>
+#include <empc/cpu/instructions/nop.h>
 
 namespace empc {
 
@@ -54,11 +56,10 @@ void CPU::emulate_once() {
     const byte opcode{imp::fetch_operand<byte>(_state, _memory)};
     switch (opcode) {
         case 0x90: {
-            // NOP!
-            _state.cpu_time += 3;
+            Nop::execute(_state, _memory);
         } break;
         case 0xF4: {
-            _hlt();
+            Hlt::execute(_state, _memory);
         } break;
         case 0x88: {
             Mov8889<byte>::execute(_state, _memory);
