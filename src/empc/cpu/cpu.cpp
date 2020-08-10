@@ -69,10 +69,10 @@ void CPU::emulate_once() {
             Mov8889<word>::execute(_state, _memory);
         } break;
         case 0x8a: {
-            _mov_8a_8b<byte>();
+            Mov8a8b<byte>::execute(_state, _memory);
         } break;
         case 0x8b: {
-            _mov_8a_8b<word>();
+            Mov8a8b<word>::execute(_state, _memory);
         } break;
         case 0xA0: {
             MovA0A1::execute(_state, _memory, _state.al());

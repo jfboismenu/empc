@@ -63,31 +63,13 @@ template <typename DATA_TYPE> struct Mov8889 : public Instruction<Mov8889<DATA_T
     }
 };
 
-// template<typename DATA_TYPE>
-// struct Mov8a8b : public ModRMInstruction<Mov8a8b<DATA_TYPE>, DATA_TYPE>
-// {
-//     static DATA_TYPE _modrm_execute(CPUState &state, Memory &memory, const ModRMByte modrm,
-//                                     const DATA_TYPE &value)
-//     {
-//         state.cpu_time += 8;
-//         (void)memory;
-//         (void)modrm;
-//         return value;
-//     }
-// }
-
-template <typename DataType> void CPU::_mov_8a_8b() {
-    auto modrm = ModRM::decode(_state, _memory);
-    modrm.write_reg(_state, modrm.read_rm_mem<DataType>(_memory));
-    _state.cpu_time += 8;
-}
-
-// get_reg_from_modrm
-// get_rm_mem_from_modrm
-// get_rm_reg_from_modrm
-// set_rm_from_modrm <- ModRMInstruction devrait implémenter ça. et mettre à jour
-// le bon reg ou mem
-// ModRMInstruction ne devrait pas implémenter de _execute
-// et la logique courante devrait aller dans set_rm_from_modrm
+template <typename DATA_TYPE>
+struct Mov8a8b : public ModRMInstruction<Mov8a8b<DATA_TYPE>, DATA_TYPE> {
+    static void _execute(CPUState &state, Memory &memory) {
+        auto modrm = ModRM::decode(state, memory);
+        modrm.write_reg(state, modrm.read_rm_mem<DATA_TYPE>(memory));
+        state.cpu_time += 8;
+    }
+};
 
 } // namespace empc
