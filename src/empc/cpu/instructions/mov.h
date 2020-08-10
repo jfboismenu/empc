@@ -22,18 +22,14 @@
 
 #include <empc/cpu/cpu.h>
 #include <empc/cpu/instructions/instruction.h>
-
-#include <empc/cpu/instructions/register_accessor.h>
-
 #include <empc/cpu/modrm.h>
 
 namespace empc {
 
-template <Register REG> struct MovImm : public Instruction<MovImm<REG>> {
-    using DataType = typename RegisterType<REG>::DataType;
-
-    static void _execute(CPUState &state, Memory &memory) {
-        state.get<REG>() = imp::fetch_operand<DataType>(state, memory);
+struct MovImm : public Instruction<MovImm> {
+    template <typename DataType>
+    static void _execute(CPUState &state, Memory &memory, DataType &reg) {
+        reg = fetch_operand<DataType>(state, memory);
         state.cpu_time += 4;
     }
 };
@@ -46,10 +42,10 @@ struct MovA2A3 : public Instruction<MovA2A3> {
     }
 };
 
-template <Register REG> struct MovA0A1 : public Instruction<MovA0A1<REG>> {
-    using DataType = typename RegisterType<REG>::DataType;
-    static void _execute(CPUState &state, Memory &memory) {
-        state.get<REG>() = memory.read<DataType>(imp::fetch_operand<word>(state, memory));
+struct MovA0A1 : public Instruction<MovA0A1> {
+    template <typename DataType>
+    static void _execute(CPUState &state, Memory &memory, DataType &reg) {
+        reg = memory.read<DataType>(fetch_operand<word>(state, memory));
         state.cpu_time += 10;
     }
 };

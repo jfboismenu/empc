@@ -24,8 +24,6 @@
 #include <empc/memory/memory.imp.h>
 #include <fmt/core.h>
 
-#include <empc/cpu/instructions/register_accessor.h>
-
 #include <empc/cpu/instructions/hlt.h>
 #include <empc/cpu/instructions/jmp.h>
 #include <empc/cpu/instructions/mov.h>
@@ -76,10 +74,10 @@ void CPU::emulate_once() {
             Mov8a8b<word>::execute(_state, _memory);
         } break;
         case 0xA0: {
-            MovA0A1<Register::AL>::execute(_state, _memory);
+            MovA0A1::execute(_state, _memory, _state.al());
         } break;
         case 0xA1: {
-            MovA0A1<Register::AX>::execute(_state, _memory);
+            MovA0A1::execute(_state, _memory, _state.ax());
         } break;
         case 0xA2: {
             MovA2A3::execute(_state, _memory, _state.al());
@@ -88,52 +86,52 @@ void CPU::emulate_once() {
             MovA2A3::execute(_state, _memory, _state.ax());
         } break;
         case 0xB0: {
-            MovImm<Register::AL>::execute(_state, _memory);
+            MovImm::execute(_state, _memory, _state.al());
         } break;
         case 0xB1: {
-            MovImm<Register::CL>::execute(_state, _memory);
+            MovImm::execute(_state, _memory, _state.cl());
         } break;
         case 0xB2: {
-            MovImm<Register::DL>::execute(_state, _memory);
+            MovImm::execute(_state, _memory, _state.dl());
         } break;
         case 0xB3: {
-            MovImm<Register::BL>::execute(_state, _memory);
+            MovImm::execute(_state, _memory, _state.bl());
         } break;
         case 0xB4: {
-            MovImm<Register::AH>::execute(_state, _memory);
+            MovImm::execute(_state, _memory, _state.ah());
         } break;
         case 0xB5: {
-            MovImm<Register::CH>::execute(_state, _memory);
+            MovImm::execute(_state, _memory, _state.ch());
         } break;
         case 0xB6: {
-            MovImm<Register::DH>::execute(_state, _memory);
+            MovImm::execute(_state, _memory, _state.dh());
         } break;
         case 0xB7: {
-            MovImm<Register::BH>::execute(_state, _memory);
+            MovImm::execute(_state, _memory, _state.bh());
         } break;
         case 0xB8: {
-            MovImm<Register::AX>::execute(_state, _memory);
+            MovImm::execute(_state, _memory, _state.ax());
         } break;
         case 0xB9: {
-            MovImm<Register::CX>::execute(_state, _memory);
+            MovImm::execute(_state, _memory, _state.cx());
         } break;
         case 0xBA: {
-            MovImm<Register::DX>::execute(_state, _memory);
+            MovImm::execute(_state, _memory, _state.dx());
         } break;
         case 0xBB: {
-            MovImm<Register::BX>::execute(_state, _memory);
+            MovImm::execute(_state, _memory, _state.bx());
         } break;
         case 0xBC: {
-            MovImm<Register::SP>::execute(_state, _memory);
+            MovImm::execute(_state, _memory, _state.sp());
         } break;
         case 0xBD: {
-            MovImm<Register::BP>::execute(_state, _memory);
+            MovImm::execute(_state, _memory, _state.bp());
         } break;
         case 0xBE: {
-            MovImm<Register::SI>::execute(_state, _memory);
+            MovImm::execute(_state, _memory, _state.si());
         } break;
         case 0xBF: {
-            MovImm<Register::DI>::execute(_state, _memory);
+            MovImm::execute(_state, _memory, _state.di());
         } break;
         case 0xE9: {
             JmpNear::execute(_state, _memory);
