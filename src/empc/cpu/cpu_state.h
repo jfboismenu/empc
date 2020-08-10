@@ -23,6 +23,7 @@
 #pragma once
 
 #include <empc/base/types.h>
+#include <empc/cpu/instructions/register_accessor.h>
 
 namespace empc {
 
@@ -90,6 +91,10 @@ struct CPUState {
     unsigned long long cpu_time;
     bool is_halted;
     bool is_locked;
+
+    template <Register REG> const typename RegisterType<REG>::DataType &get() const;
+
+    template <Register REG> typename RegisterType<REG>::DataType &get();
 
 private:
     union {
@@ -287,4 +292,133 @@ inline address CPUState::stack_segment() const noexcept {
     // this method should return the right segment.
     return address(ss()) << 0x4;
 }
+
+template <> inline word &CPUState::get<Register::AX>() {
+    return ax();
+}
+
+template <> inline byte &CPUState::get<Register::AL>() {
+    return al();
+}
+
+template <> inline byte &CPUState::get<Register::AH>() {
+    return ah();
+}
+
+template <> inline word &CPUState::get<Register::BX>() {
+    return bx();
+}
+
+template <> inline byte &CPUState::get<Register::BL>() {
+    return bl();
+}
+
+template <> inline byte &CPUState::get<Register::BH>() {
+    return bh();
+}
+
+template <> inline word &CPUState::get<Register::CX>() {
+    return cx();
+}
+
+template <> inline byte &CPUState::get<Register::CL>() {
+    return cl();
+}
+
+template <> inline byte &CPUState::get<Register::CH>() {
+    return ch();
+}
+
+template <> inline word &CPUState::get<Register::DX>() {
+    return dx();
+}
+
+template <> inline byte &CPUState::get<Register::DL>() {
+    return dl();
+}
+
+template <> inline byte &CPUState::get<Register::DH>() {
+    return dh();
+}
+
+template <> inline word &CPUState::get<Register::SP>() {
+    return sp();
+}
+
+template <> inline word &CPUState::get<Register::BP>() {
+    return bp();
+}
+
+template <> inline word &CPUState::get<Register::SI>() {
+    return si();
+}
+
+template <> inline word &CPUState::get<Register::DI>() {
+    return di();
+}
+
+template <> inline const word &CPUState::get<Register::AX>() const {
+    return ax();
+}
+
+template <> inline const byte &CPUState::get<Register::AL>() const {
+    return al();
+}
+
+template <> inline const byte &CPUState::get<Register::AH>() const {
+    return ah();
+}
+
+template <> inline const word &CPUState::get<Register::BX>() const {
+    return bx();
+}
+
+template <> inline const byte &CPUState::get<Register::BL>() const {
+    return bl();
+}
+
+template <> inline const byte &CPUState::get<Register::BH>() const {
+    return bh();
+}
+
+template <> inline const word &CPUState::get<Register::CX>() const {
+    return cx();
+}
+
+template <> inline const byte &CPUState::get<Register::CL>() const {
+    return cl();
+}
+
+template <> inline const byte &CPUState::get<Register::CH>() const {
+    return ch();
+}
+
+template <> inline const word &CPUState::get<Register::DX>() const {
+    return dx();
+}
+
+template <> inline const byte &CPUState::get<Register::DL>() const {
+    return dl();
+}
+
+template <> inline const byte &CPUState::get<Register::DH>() const {
+    return dh();
+}
+
+template <> inline const word &CPUState::get<Register::SP>() const {
+    return sp();
+}
+
+template <> inline const word &CPUState::get<Register::BP>() const {
+    return bp();
+}
+
+template <> inline const word &CPUState::get<Register::SI>() const {
+    return si();
+}
+
+template <> inline const word &CPUState::get<Register::DI>() const {
+    return di();
+}
+
 } // namespace empc
