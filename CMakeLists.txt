@@ -22,14 +22,17 @@
 
 cmake_minimum_required (VERSION 3.17)
 project (empc)
-enable_testing()
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_compile_options(-Wall -Wextra -Werror)
 
+enable_testing()
+
 include(CheckIPOSupported)
 check_ipo_supported()
+
+include(cmake/coverage.cmake)
 
 set(THIRD_PARTY_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/3rdParty")
 

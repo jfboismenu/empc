@@ -30,7 +30,7 @@ repos:
     - id: forbid-tabs
     - id: remove-tabs
     - id: insert-license
-      files: (\.yaml$)|(\.yml$)|(\.sh$)|(\.py$)
+      files: (\.yaml$)|(\.yml$)|(\.sh$)|(\.py$)|(\.cmake$)
     - id: insert-license
       files: (\.c$)|(\.h$)|(\.cpp$)
       args: [--comment-style, //]
