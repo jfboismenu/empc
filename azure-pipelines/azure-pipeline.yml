@@ -20,6 +20,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+# We want azure to run on commits from a PR and on the master branch.
+trigger:
+  branches:
+    include:
+    - master
+pr:
+  branches:
+    include:
+    - "*"
+
 strategy:
   matrix:
     # 'Windows':
