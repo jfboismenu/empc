@@ -44,7 +44,7 @@ steps:
       azure-pipelines/configure_$(platform).sh
       python -m pip install conan
     displayName: Install tools
-  - bash: ./make_build.sh Release
+  - bash: ./make_build.sh coverage
     displayName: CMake Build
   - bash: |
       set -e
@@ -56,3 +56,9 @@ steps:
       cd build
       ninja test
     displayName: Tests
+  - bash: |
+      set -e
+      cd build
+      bash <(curl -s https://codecov.io/bash)
+    env:
+      CODECOV_TOKEN: $(codecov.token)
