@@ -49,16 +49,15 @@ steps:
   - bash: |
       set -e
       cd build
-      ninja
+      ninja -vv
     displayName: Build
   - bash: |
       set -e
       cd build
-      ninja test
+      ninja ccov-empc_tests -vv
     displayName: Tests
   - bash: |
       set -e
-      cd build
-      bash <(curl -s https://codecov.io/bash)
+      bash <(curl -s https://codecov.io/bash) build/tests/coverage.info
     env:
       CODECOV_TOKEN: $(codecov.token)

@@ -55,4 +55,16 @@ if(CMAKE_BUILD_TYPE STREQUAL "coverage")
     else()
         message(FATAL_ERROR "Code coverage requires Clang or GCC. Aborting.")
     endif()
+
+    function (add_coverage target_name)
+        # Where target_name is the executable target's name
+        # Lifted from http://www.stablecoder.ca/2018/10/30/full-cmake-helper-suite.html
+        add_custom_target(ccov-${target_name}
+            COMMAND LLVM_PROFILE_FILE=${target_name}.profraw $<TARGET_FILE:${target_name}>
+            COMMAND xcrun llvm-profdata merge -sparse ${target_name}.profraw -o ${target_name}.profdata
+            COMMAND xcrun llvm-cov report $<TARGET_FILE:${target_name}> -instr-profile=${target_name}.profdata
+            COMMAND xcrun llvm-cov export $<TARGET_FILE:${target_name}> -instr-profile=${target_name}.profdata -format lcov > coverage.info
+            DEPENDS ${target_name}
+        )
+    endfunction()
 endif()
