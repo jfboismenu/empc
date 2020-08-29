@@ -25,9 +25,9 @@ strategy:
     # 'Windows':
     #   image: 'windows-2019'
     #   platform: windows
-    'Linux':
-      image: 'ubuntu-18.04'
-      platform: linux
+    # 'Linux':
+    #   image: 'ubuntu-18.04'
+    #   platform: linux
     'macOS':
       image: 'macos-10.15'
       platform: macOS
