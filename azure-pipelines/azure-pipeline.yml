@@ -59,5 +59,6 @@ steps:
   - bash: |
       set -e
       bash <(curl -s https://codecov.io/bash) build/tests/coverage.info
+    displayName: Upload code coverage
     env:
       CODECOV_TOKEN: $(codecov.token)
