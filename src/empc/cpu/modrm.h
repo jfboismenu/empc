@@ -81,8 +81,6 @@ public:
     template <typename T> void write_rm(CPUState &state, Memory &memory, T value) const;
 
 private:
-    template <typename T> T &_get_reg(CPUState &state, byte pattern) const;
-
     const ModRMByte _byte;
     const address _address;
 };
@@ -172,11 +170,11 @@ inline address ModRM::effective_address() const {
 }
 
 template <typename T> inline T ModRM::read_reg(CPUState &state) const {
-    return _get_reg<T>(state, _byte.bits.reg);
+    return imp::get_reg<T>(state, _byte.bits.reg);
 }
 
 template <typename T> inline void ModRM::write_reg(CPUState &state, T value) const {
-    _get_reg<T>(state, _byte.bits.reg) = value;
+    imp::get_reg<T>(state, _byte.bits.reg) = value;
 }
 
 template <typename T> inline T ModRM::read_rm_mem(Memory &memory) const {
@@ -188,11 +186,11 @@ template <typename T> inline void ModRM::write_rm_mem(Memory &memory, T value) c
 }
 
 // template <typename T> inline T ModRM::read_rm_reg(CPUState &state) const {
-//     return _get_reg<T>(state, _byte.bits.rm);
+//     return imp::get_reg<T>(state, _byte.bits.rm);
 // }
 
 template <typename T> inline void ModRM::write_rm_reg(CPUState &state, T value) const {
-    _get_reg<T>(state, _byte.bits.rm) = value;
+    imp::get_reg<T>(state, _byte.bits.rm) = value;
 }
 
 template <typename T> inline void ModRM::write_rm(CPUState &state, Memory &memory, T value) const {
@@ -200,70 +198,6 @@ template <typename T> inline void ModRM::write_rm(CPUState &state, Memory &memor
         write_rm_mem<T>(memory, value);
     } else {
         write_rm_reg<T>(state, value);
-    }
-}
-
-template <> inline word &ModRM::_get_reg(CPUState &state, byte pattern) const {
-    switch (pattern) {
-        case 0: {
-            return state.ax();
-        }
-        case 1: {
-            return state.cx();
-        }
-        case 2: {
-            return state.dx();
-        }
-        case 3: {
-            return state.bx();
-        }
-        case 4: {
-            return state.sp();
-        }
-        case 5: {
-            return state.bp();
-        }
-        case 6: {
-            return state.si();
-        }
-        case 7: {
-            return state.di();
-        }
-        default: {
-            throw std::runtime_error("Unknown reg");
-        }
-    }
-}
-
-template <> inline byte &ModRM::_get_reg(CPUState &state, byte pattern) const {
-    switch (pattern) {
-        case 0: {
-            return state.al();
-        }
-        case 1: {
-            return state.cl();
-        }
-        case 2: {
-            return state.dl();
-        }
-        case 3: {
-            return state.bl();
-        }
-        case 4: {
-            return state.ah();
-        }
-        case 5: {
-            return state.ch();
-        }
-        case 6: {
-            return state.dh();
-        }
-        case 7: {
-            return state.bh();
-        }
-        default: {
-            throw std::runtime_error("Unknown reg");
-        }
     }
 }
 

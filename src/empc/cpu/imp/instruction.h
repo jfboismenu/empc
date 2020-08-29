@@ -28,10 +28,77 @@
 namespace empc {
 namespace imp {
 template <typename DataType>
-static DataType fetch_operand(CPUState &state, Memory &memory) noexcept {
+inline DataType fetch_operand(CPUState &state, Memory &memory) noexcept {
     const DataType result{memory.read<DataType>(state.get_program_counter())};
     state.ip() += sizeof(DataType);
     return result;
 }
+
+template <typename T> T &get_reg(CPUState &state, byte pattern);
+
+template <> inline word &get_reg<>(CPUState &state, byte pattern) {
+    switch (pattern) {
+        case 0: {
+            return state.ax();
+        }
+        case 1: {
+            return state.cx();
+        }
+        case 2: {
+            return state.dx();
+        }
+        case 3: {
+            return state.bx();
+        }
+        case 4: {
+            return state.sp();
+        }
+        case 5: {
+            return state.bp();
+        }
+        case 6: {
+            return state.si();
+        }
+        case 7: {
+            return state.di();
+        }
+        default: {
+            throw std::runtime_error("Unknown reg");
+        }
+    }
+}
+
+template <> inline byte &get_reg<>(CPUState &state, byte pattern) {
+    switch (pattern) {
+        case 0: {
+            return state.al();
+        }
+        case 1: {
+            return state.cl();
+        }
+        case 2: {
+            return state.dl();
+        }
+        case 3: {
+            return state.bl();
+        }
+        case 4: {
+            return state.ah();
+        }
+        case 5: {
+            return state.ch();
+        }
+        case 6: {
+            return state.dh();
+        }
+        case 7: {
+            return state.bh();
+        }
+        default: {
+            throw std::runtime_error("Unknown reg");
+        }
+    }
+}
+
 } // namespace imp
 } // namespace empc
